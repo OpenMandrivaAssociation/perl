@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.1
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 2
+Release:  %mkrel 3
 Epoch:    2
 
 %define rel %{nil}
@@ -151,7 +151,7 @@ Conflicts: perl-Net-DBus < 0.33.5-2
 Conflicts: perl-XML-Parser < 2.35
 Conflicts: drakxtools-backend < 10.6.4
 # perl-suid is gone is perl 5.12
-Conflicts: perl-suid
+Obsoletes: perl-suid
 
 %package devel
 Version:  %{version}
