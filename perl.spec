@@ -15,9 +15,9 @@
 %define perl_root %{_prefix}/lib/perl5
 
 Name:     perl
-Version:  5.12.1
+Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 3
+Release:  %mkrel 1
 Epoch:    2
 
 %define rel %{nil}
@@ -89,16 +89,13 @@ Provides: perl(subs)
 
 Provides:  perl-MIME-Base64 = 3.080.0
 Obsoletes: perl-MIME-Base64 < 3.080.0
-Provides:  perl-libnet
-Obsoletes: perl-libnet
 Provides:  perl-Storable = 2.200.0
 Obsoletes: perl-Storable < 2.200.0
 Provides:  perl-Digest-MD5 = 2.390.0
-Obsoletes: perl-Digest-MD5
+Obsoletes: perl-Digest-MD5 < 2.390.0
 Provides:  perl-Time-HiRes = 1:1.971.900
 Obsoletes: perl-Time-HiRes < 1:1.971.900
 Provides:  perl-Locale-Codes
-Obsoletes: perl-Locale-Codes
 Provides:  perl-Test-Simple = 0.920.0
 Obsoletes: perl-Test-Simple < 0.920.0
 Provides:  perl-Test-Builder-Tester = 1.180.0
@@ -140,6 +137,7 @@ Group:    Development/Perl
 Url:      http://www.perl.org/
 Provides: perlapi-5.12.0
 Provides: perlapi-5.12.1
+Provides: perlapi-5.12.2
 # explicit file provides
 Provides: /usr/bin/perl
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
@@ -283,7 +281,7 @@ remove_util perldoc
 %endif
 
 sh Configure -des \
-  -Dinc_version_list="5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
+  -Dinc_version_list="5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
   -Darchname=%{arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
