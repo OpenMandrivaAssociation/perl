@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 3
+Release:  %mkrel 4
 Epoch:    2
 
 %define rel %{nil}
@@ -316,11 +316,11 @@ sh Configure -des \
 %check
 # for test, building a perl with no rpath
 # for test, unset RPM_BUILD_ROOT so that the MakeMaker trick is not triggered
-#rm -f perl
+rm -f perl
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
-#PATH=$PWD/utils:$PATH RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
-#rm -f perl
-#make perl
+PATH=$PWD/utils:$PATH RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
+rm -f perl
+make perl
 
 %install
 rm -rf $RPM_BUILD_ROOT
