@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 1
+Release:  %mkrel 2
 Epoch:    2
 
 %define rel %{nil}
@@ -89,6 +89,7 @@ Provides: perl(subs)
 
 Provides:  perl-MIME-Base64 = 3.080.0
 Obsoletes: perl-MIME-Base64 < 3.080.0
+Provides:  perl-libnet
 Provides:  perl-Storable = 2.200.0
 Obsoletes: perl-Storable < 2.200.0
 Provides:  perl-Digest-MD5 = 2.390.0
