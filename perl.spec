@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 2
+Release:  %mkrel 3
 Epoch:    2
 
 %define rel %{nil}
@@ -50,6 +50,8 @@ Patch44:  perl-5.10.1-RC1-h2ph--handle-relative-include.patch
 # mdvbz#34505, get rid of this patch as soon as possible :-/
 Patch48:  perl-5.10.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
+# mdv#60956 - fix h2ph
+Patch50:  perl-5.12.2-fix-h2ph.patch
 
 #
 # fixes taken from debian
@@ -217,6 +219,7 @@ It contains also the 'perldoc' program.
 %patch44 -p0
 %patch48 -p1
 %patch49 -p1
+%patch50 -p1
 
 %patch65 -p1
 
