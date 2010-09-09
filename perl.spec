@@ -318,7 +318,7 @@ sh Configure -des \
 # for test, unset RPM_BUILD_ROOT so that the MakeMaker trick is not triggered
 rm -f perl
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
-RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
+PATH=$PWD/utils:$PATH RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
 rm -f perl
 make perl
 
