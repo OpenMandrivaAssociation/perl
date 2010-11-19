@@ -1,7 +1,7 @@
 %define threading 1
 %define debugging 0
 
-%define _default_patch_fuzz 2
+#%%define _default_patch_fuzz 2
 
 %if %threading
 %define thread_arch -thread-multi
@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 4
+Release:  %mkrel 5
 Epoch:    2
 
 %define rel %{nil}
@@ -52,6 +52,8 @@ Patch48:  perl-5.10.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
 # mdv#60956 - fix h2ph
 Patch50:  perl-5.12.2-fix-h2ph.patch
+# (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=74088
+Patch51: 0001-perl-74088.patch
 
 #
 # fixes taken from debian
@@ -217,9 +219,10 @@ It contains also the 'perldoc' program.
 %patch38 -p0
 %patch43 -p0
 %patch44 -p0
-%patch48 -p1
+%patch48 -p0
 %patch49 -p1
 %patch50 -p1
+%patch51 -p1
 
 %patch65 -p1
 
