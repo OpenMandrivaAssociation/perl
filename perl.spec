@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 5
+Release:  %mkrel 6
 Epoch:    2
 
 %define rel %{nil}
@@ -300,6 +300,7 @@ sh Configure -des \
   -Dsiteprefix=%_prefix -Dsitebin=%_prefix/local/bin \
   -Dsiteman1dir=%_prefix/local/share/man/man1 \
   -Dsiteman3dir=%_prefix/local/share/man/man3 \
+  -Dman3dir=%_mandir/man3pm \
   -Dman3ext=3pm \
   -Dcf_by=Mandriva -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
   -Ud_csh \
@@ -590,7 +591,7 @@ EOF
    rel_mandir=`echo %{_mandir} | sed "s,/,,"`
    (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc.list
    (cd $RPM_BUILD_ROOT ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
-   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man3 ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
+   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
    (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
    (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
 
