@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.2
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 6
+Release:  %mkrel 7
 Epoch:    2
 
 %define rel %{nil}
@@ -301,6 +301,7 @@ sh Configure -des \
   -Dsiteman1dir=%_prefix/local/share/man/man1 \
   -Dsiteman3dir=%_prefix/local/share/man/man3 \
   -Dman3dir=%_mandir/man3pm \
+  -Dvendorman3dir=%_mandir/man3 \
   -Dman3ext=3pm \
   -Dcf_by=Mandriva -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
   -Ud_csh \
