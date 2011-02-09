@@ -15,9 +15,9 @@
 %define perl_root %{_prefix}/lib/perl5
 
 Name:     perl
-Version:  5.12.2
+Version:  5.12.3
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 7
+Release:  %mkrel 1
 Epoch:    2
 
 %define rel %{nil}
