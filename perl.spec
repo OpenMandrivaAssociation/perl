@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.3
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 2
+Release:  %mkrel 3
 Epoch:    2
 
 %define rel %{nil}
@@ -143,6 +143,7 @@ Url:      http://www.perl.org/
 Provides: perlapi-5.12.0
 Provides: perlapi-5.12.1
 Provides: perlapi-5.12.2
+Provides: perlapi-5.12.3
 # explicit file provides
 Provides: /usr/bin/perl
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
