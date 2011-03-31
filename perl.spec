@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.3
 #Release:  %mkrel 0.RC4.1
-Release:  %mkrel 4
+Release:  %mkrel 5
 Epoch:    2
 
 %define rel %{nil}
@@ -123,7 +123,7 @@ Conflicts: apache-mod_perl <= 1.3.24_1.26-1mdk
 %define _requires_exceptions Mac\\|VMS\\|perl >=\\|perl(Errno)\\|perl(Fcntl)\\|perl(IO)\\|perl(IO::File)\\|perl(IO::Socket::INET)\\|perl(IO::Socket::UNIX)\\|perl(Tk)\\|perl(Tk::Pod)\\|perlapi-
 
 # for NDBM
-BuildRequires: db4-devel
+BuildRequires: db5-devel
 BuildRequires: gdbm-devel
 %if "%{_lib}" == "lib64"
 BuildRequires: devel(libgdbm_compat(64bit))
