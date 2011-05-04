@@ -16,8 +16,8 @@
 
 Name:     perl
 Version:  5.12.3
-#Release:  %mkrel 0.RC4.1
-Release:  %mkrel 5
+#Release:  %mkrel 0.RC4.2
+Release:  %mkrel 6
 Epoch:    2
 
 %define rel %{nil}
