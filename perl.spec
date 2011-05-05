@@ -610,7 +610,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files base -f perl-base.list
 %defattr(-,root,root)
-%{perl_root}/vendor_perl
 
 %files devel -f perl-devel.list
 %defattr(-,root,root)
