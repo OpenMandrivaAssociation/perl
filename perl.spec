@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.3
 #Release:  %mkrel 0.RC4.2
-Release:  %mkrel 6
+Release:  %mkrel 7
 Epoch:    2
 
 %define rel %{nil}
@@ -54,6 +54,8 @@ Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch50:  perl-5.12.2-fix-h2ph.patch
 # (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=74088
 Patch51: 0001-perl-74088.patch
+# (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=87336
+Patch52: perl-5.12.3-CVE-2011-1487.diff
 
 #
 # fixes taken from debian
@@ -224,6 +226,7 @@ It contains also the 'perldoc' program.
 %patch49 -p1
 %patch50 -p1
 %patch51 -p1
+%patch52 -p1
 
 %patch65 -p1
 
