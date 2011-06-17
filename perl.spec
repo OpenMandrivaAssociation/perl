@@ -186,6 +186,7 @@ Version:  %{version}
 Summary:  The Perl programming language (documentation)
 Group:    Development/Perl
 Url:      http://www.perl.org/
+BuildArch:	noarch
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: groff-for-man
 Requires: perl(Pod::Perldoc)
