@@ -412,6 +412,8 @@ perl -ni -e 'print unless m/sub __syscall_nr/' $RPM_BUILD_ROOT/%{perl_root}/%{ve
 %{perl_root}/%{version}/strict.pm
 %{perl_root}/%{version}/utf8.pm
 %{perl_root}/%{version}/utf8_heavy.pl
+%dir %{perl_root}/%{version}/unicore
+%dir %{perl_root}/%{version}/unicore/To
 %{perl_root}/%{version}/unicore/To/Lower.pl
 %{perl_root}/%{version}/unicore/To/Fold.pl
 %{perl_root}/%{version}/unicore/To/Upper.pl
@@ -422,6 +424,7 @@ perl -ni -e 'print unless m/sub __syscall_nr/' $RPM_BUILD_ROOT/%{perl_root}/%{ve
 %dir %{perl_root}/%{version}/%{full_arch}
 %{perl_root}/%{version}/%{full_arch}/lib.pm
 %{perl_root}/%{version}/%{full_arch}/Cwd.pm
+%dir %{perl_root}/%{version}/%{full_arch}/File
 %{perl_root}/%{version}/%{full_arch}/File/Spec.pm
 %{perl_root}/%{version}/%{full_arch}/File/Spec/Unix.pm
 %dir %{perl_root}/%{version}/%{full_arch}/File/Spec
