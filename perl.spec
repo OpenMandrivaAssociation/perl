@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.3
 #Release:  %mkrel 0.RC4.2
-Release:  %mkrel 7
+Release:  %mkrel 8
 Epoch:    2
 
 %define rel %{nil}
@@ -132,7 +132,8 @@ BuildRequires: devel(libgdbm_compat(64bit))
 %else
 BuildRequires: devel(libgdbm_compat)
 %endif
-BuildRequires: rpm-mandriva-setup-build >= 1.8
+# we need >= 1.129 to get perl(abi) deps
+BuildRequires: rpm-mandriva-setup-build >= 1.129
 
 BuildRequires: man
 
@@ -142,6 +143,9 @@ Summary:  The Perl programming language (base)
 Provides: perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
 Group:    Development/Perl
 Url:      http://www.perl.org/
+# notice that theese are only kept for backwards compatibility, from now
+# on a perl(abi) = <version> will automatically be added by the dep generator
+# and packages will depend on perl(abi) >= <version>
 Provides: perlapi-5.12.0
 Provides: perlapi-5.12.1
 Provides: perlapi-5.12.2
