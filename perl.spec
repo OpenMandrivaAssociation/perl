@@ -305,6 +305,11 @@ sh Configure -des \
 %else
   -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING=-g \
 %endif
+  -Dccflags="%{optflags} -fno-strict-aliasing" \
+  -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
+  -Dlibpth='' \
   -Dprefix=%_prefix -Dvendorprefix=%_prefix \
   -Dsiteprefix=%_prefix -Dsitebin=%_prefix/local/bin \
   -Dsiteman1dir=%_prefix/local/share/man/man1 \
