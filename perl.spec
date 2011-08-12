@@ -323,7 +323,7 @@ sh Configure -des \
 %if %threading
   -Duseithreads \
 %endif
-%ifarch %{sparcx}
+%ifarch %{sparc}
   -Ud_longdbl \
 %endif
   -Di_db \
