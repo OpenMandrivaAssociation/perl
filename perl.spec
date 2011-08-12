@@ -318,7 +318,7 @@ sh Configure -des \
 %if %threading
   -Duseithreads \
 %endif
-%ifarch %{sunsparc}
+%ifarch %{sparcx}
   -Ud_longdbl \
 %endif
   -Di_db \
