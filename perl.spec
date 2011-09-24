@@ -17,7 +17,7 @@
 Name:     perl
 Version:  5.12.3
 #Release:  %mkrel 0.RC4.2
-Release:  %mkrel 8
+Release:  %mkrel 9
 Epoch:    2
 
 %define rel %{nil}
@@ -152,6 +152,10 @@ Provides: perlapi-5.12.2
 Provides: perlapi-5.12.3
 # explicit file provides
 Provides: /usr/bin/perl
+# MD perl binary is linked to libfreebl3.so which can be found in lib*nss3
+# but there is no automatic linking done in the rpm itself
+# this manual require can be removed if ever fixed
+Requires: %{_lib}nss3
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
 Conflicts: perl-URPM < 3.07-2
 Conflicts: perl-RPM4 < 0.23-4
