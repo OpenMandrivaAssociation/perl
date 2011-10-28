@@ -16,7 +16,6 @@
 
 Name:     perl
 Version:  5.12.3
-#Release:  %mkrel 0.RC4.2
 Release:  %mkrel 11
 Epoch:    2
 
@@ -304,11 +303,6 @@ sh Configure -des \
 %else
   -Doptimize="%(echo %{optflags} %{ldflags} -pthread|sed -e 's/-Wl,--no-undefined//')" -DDEBUGGING=-g \
 %endif
-  -Dccflags="%{optflags} -fno-strict-aliasing" \
-  -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
-  -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
-  -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
-  -Dlibpth='' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
   -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
   -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
@@ -620,13 +614,9 @@ EOF
 
 
 %files -f perl.list
-%defattr(-,root,root)
 
 %files base -f perl-base.list
-%defattr(-,root,root)
 
 %files devel -f perl-devel.list
-%defattr(-,root,root)
 
 %files doc -f perl-doc.list
-%defattr(-,root,root)
