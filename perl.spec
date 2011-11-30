@@ -16,7 +16,8 @@
 
 Name:     perl
 Version:  5.12.3
-Release:  %mkrel 11
+#Release:  %mkrel 0.RC4.2
+Release:  %mkrel 9
 Epoch:    2
 
 %define rel %{nil}
@@ -55,25 +56,17 @@ Patch50:  perl-5.12.2-fix-h2ph.patch
 Patch51: 0001-perl-74088.patch
 # (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=87336
 Patch52: perl-5.12.3-CVE-2011-1487.diff
+
 #
 # fixes taken from debian
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:  local_symtab.diff
 
-# for NDBM
-BuildRequires: db5-devel
-BuildRequires: gdbm-devel
-%if "%{_lib}" == "lib64"
-BuildRequires: devel(libgdbm_compat(64bit))
-%else
-BuildRequires: devel(libgdbm_compat)
-%endif
-# we need >= 1.129 to get perl(abi) deps
-BuildRequires: rpm-mandriva-setup-build >= 1.129
-BuildRequires: man
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
 
 Requires: perl-base = %{epoch}:%{version}-%{release}
+
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
 # that think that installing "perl" will have a full perl as shipped by
@@ -130,6 +123,19 @@ Conflicts: perl-Parse-RecDescent < 1.80-6mdk
 Conflicts: perl-Filter < 1.28-6mdk
 Conflicts: apache-mod_perl <= 1.3.24_1.26-1mdk
 %define _requires_exceptions Mac\\|VMS\\|perl >=\\|perl(Errno)\\|perl(Fcntl)\\|perl(IO)\\|perl(IO::File)\\|perl(IO::Socket::INET)\\|perl(IO::Socket::UNIX)\\|perl(Tk)\\|perl(Tk::Pod)\\|perlapi-
+
+# for NDBM
+BuildRequires: db5-devel
+BuildRequires: gdbm-devel
+%if "%{_lib}" == "lib64"
+BuildRequires: devel(libgdbm_compat(64bit))
+%else
+BuildRequires: devel(libgdbm_compat)
+%endif
+# we need >= 1.129 to get perl(abi) deps
+BuildRequires: rpm-mandriva-setup-build >= 1.129
+
+BuildRequires: man
 
 %package base
 Version:  %{version}
@@ -291,29 +297,34 @@ remove_util perldoc
 
 %build
 %ifarch ppc
-   RPM_OPT_FLAGS=`echo "%{optflags}"|sed -e 's/-O2/-O1/g'`
+   RPM_OPT_FLAGS=`echo "$RPM_OPT_FLAGS"|sed -e 's/-O2/-O1/g'`
 %endif
 
 sh Configure -des \
   -Dinc_version_list="5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
   -Darchname=%{arch}-%{_os} \
   -Dcc='%{__cc}' \
-%if %{debugging}
+%if %debugging
   -Doptimize=-g -DDEBUGGING \
 %else
-  -Doptimize="%(echo %{optflags} %{ldflags} -pthread|sed -e 's/-Wl,--no-undefined//')" -DDEBUGGING=-g \
+  -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING=-g \
 %endif
-  -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
-  -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
-  -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
-  -Dsiteman3dir=%{_prefix}/local/share/man/man3 \
-  -Dman3dir=%{_mandir}/man3pm \
-  -Dvendorman3dir=%{_mandir}/man3 \
+  -Dccflags="%{optflags} -fno-strict-aliasing" \
+  -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
+  -Dlibpth='' \
+  -Dprefix=%_prefix -Dvendorprefix=%_prefix \
+  -Dsiteprefix=%_prefix -Dsitebin=%_prefix/local/bin \
+  -Dsiteman1dir=%_prefix/local/share/man/man1 \
+  -Dsiteman3dir=%_prefix/local/share/man/man3 \
+  -Dman3dir=%_mandir/man3pm \
+  -Dvendorman3dir=%_mandir/man3 \
   -Dman3ext=3pm \
   -Dcf_by=Mandriva -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
   -Ud_csh \
   -Duseshrplib \
-%if %{threading}
+%if %threading
   -Duseithreads \
 %endif
 %ifarch %{sparc}
@@ -335,36 +346,36 @@ rm -f perl
 make perl
 
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %makeinstall_std
 
-install -d %{buildroot}%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
+install -d $RPM_BUILD_ROOT%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
 
 # We prefer 0755 instead of 0555
-find %{buildroot} -name "*.so" | xargs chmod 0755
+find $RPM_BUILD_ROOT -name "*.so" | xargs chmod 0755
 
 cp -f utils/h2ph utils/h2ph_patched
 cat %{SOURCE2} | patch -p1
 
 # LD_PRELOAD doesn't work... why?
-LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d %{buildroot}%{perl_root}/%{version}/%{full_arch} `cat %{SOURCE1}` > /dev/null ||:
+LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d $RPM_BUILD_ROOT%{perl_root}/%{version}/%{full_arch} `cat %{SOURCE1}` > /dev/null ||:
 
 (
     # i don't like hardlinks, having symlinks instead:
-    cd %{buildroot}%{_bindir}
+    cd $RPM_BUILD_ROOT%{_bindir}
     ln -sf perl5 perl
     ln -s perl%{version} perl5
 )
 
-rm -f %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
+rm -f $RPM_BUILD_ROOT%{_bindir}/perlivp $RPM_BUILD_ROOT%{_mandir}/man1/perlivp.1
 
 %ifarch ppc
-perl -ni -e 'print if !/sub __syscall_nr/' %{buildroot}%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
+perl -ni -e 'print if !/sub __syscall_nr/' $RPM_BUILD_ROOT%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
 
 %ifarch ppc
-perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
+perl -ni -e 'print unless m/sub __syscall_nr/' $RPM_BUILD_ROOT/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
 
 # call spec-helper before creating the file list
@@ -600,23 +611,29 @@ EOF
 
    rel_perl_root=`echo %{perl_root} | sed "s,/,,"`
    rel_mandir=`echo %{_mandir} | sed "s,/,,"`
-   (cd %{buildroot} ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc-dupes.list
+   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc-dupes.list
    sort -u perl-doc-dupes.list -o perl-doc.list
-   (cd %{buildroot} ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
+   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
+   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
+   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
+   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
 
    perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
    perl -ni -e 'BEGIN { open F, "perl-devel.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
    perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
 )
 
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files -f perl.list
+%defattr(-,root,root)
 
 %files base -f perl-base.list
+%defattr(-,root,root)
 
 %files devel -f perl-devel.list
+%defattr(-,root,root)
 
 %files doc -f perl-doc.list
+%defattr(-,root,root)
