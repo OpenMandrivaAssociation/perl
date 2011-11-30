@@ -346,36 +346,36 @@ rm -f perl
 make perl
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %makeinstall_std
 
-install -d $RPM_BUILD_ROOT%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
+install -d %{buildroot}%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
 
 # We prefer 0755 instead of 0555
-find $RPM_BUILD_ROOT -name "*.so" | xargs chmod 0755
+find %{buildroot} -name "*.so" | xargs chmod 0755
 
 cp -f utils/h2ph utils/h2ph_patched
 cat %{SOURCE2} | patch -p1
 
 # LD_PRELOAD doesn't work... why?
-LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d $RPM_BUILD_ROOT%{perl_root}/%{version}/%{full_arch} `cat %{SOURCE1}` > /dev/null ||:
+LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d %{buildroot}%{perl_root}/%{version}/%{full_arch} `cat %{SOURCE1}` > /dev/null ||:
 
 (
     # i don't like hardlinks, having symlinks instead:
-    cd $RPM_BUILD_ROOT%{_bindir}
+    cd %{buildroot}%{_bindir}
     ln -sf perl5 perl
     ln -s perl%{version} perl5
 )
 
-rm -f $RPM_BUILD_ROOT%{_bindir}/perlivp $RPM_BUILD_ROOT%{_mandir}/man1/perlivp.1
+rm -f %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
 
 %ifarch ppc
-perl -ni -e 'print if !/sub __syscall_nr/' $RPM_BUILD_ROOT%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
+perl -ni -e 'print if !/sub __syscall_nr/' %{buildroot}%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
 
 %ifarch ppc
-perl -ni -e 'print unless m/sub __syscall_nr/' $RPM_BUILD_ROOT/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
+perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
 
 # call spec-helper before creating the file list
@@ -611,12 +611,12 @@ EOF
 
    rel_perl_root=`echo %{perl_root} | sed "s,/,,"`
    rel_mandir=`echo %{_mandir} | sed "s,/,,"`
-   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc-dupes.list
+   (cd %{buildroot} ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc-dupes.list
    sort -u perl-doc-dupes.list -o perl-doc.list
-   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
-   (cd $RPM_BUILD_ROOT ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
-   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
-   (cd $RPM_BUILD_ROOT ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
+   (cd %{buildroot} ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
+   (cd %{buildroot} ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
+   (cd %{buildroot} ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
+   (cd %{buildroot} ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
 
    perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
    perl -ni -e 'BEGIN { open F, "perl-devel.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
@@ -624,7 +624,7 @@ EOF
 )
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -f perl.list
 %defattr(-,root,root)
