@@ -300,9 +300,9 @@ sh Configure -des \
   -Darchname=%{arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
-  -Doptimize=-g -DDEBUGGING \
+  -Doptimize=-g -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING=-g \
+  -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
   -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
