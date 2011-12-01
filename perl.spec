@@ -306,6 +306,7 @@ sh Configure -des \
 %endif
   -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
   -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dcccdlflags="-Wl,--unresolved-symbols=ignore-all" \
   -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='' \
