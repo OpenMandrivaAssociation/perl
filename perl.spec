@@ -16,8 +16,7 @@
 
 Name:     perl
 Version:  5.12.3
-#Release:  %mkrel 0.RC4.2
-Release:  %mkrel 10
+Release:  11
 Epoch:    2
 
 %define rel %{nil}
@@ -305,7 +304,7 @@ sh Configure -des \
 %else
   -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING=-g \
 %endif
-  -Dccflags="%{optflags} -fno-strict-aliasing" \
+  -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
   -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
   -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
