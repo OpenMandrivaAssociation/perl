@@ -300,7 +300,7 @@ sh Configure -des \
   -Darchname=%{arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
-  -Doptimize=-g -DDEBUGGING="-g3 %{debugcflags}" \
+  -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
   -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING="%{debugcflags}" \
 %endif
