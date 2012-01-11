@@ -32,6 +32,7 @@ Url:      http://www.perl.org/
 Source0:  http://www.cpan.org/src/perl-%{version}%{rel}.tar.gz
 Source1:  perl-headers-wanted
 Source2:  perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
+Patch5:   perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
 Patch6:   perl-5.12.0-RC0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:  perl-5.12.0-RC0-install-files-using-chmod-644.patch
 Patch15:  perl-5.14.2-lib64.patch
@@ -208,6 +209,7 @@ It contains also the 'perldoc' program.
 
 %prep
 %setup -q -n %{name}-%{version}%{rel}
+%patch5 -p1 -b .flags~
 %patch6 -p0
 %patch14 -p0
 %patch15 -p1 -b .lib64~
@@ -312,6 +314,8 @@ sh Configure -des \
   -Dcf_by=Mandriva -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
   -Ud_csh \
   -Duseshrplib \
+  -Duselargefiles \
+  -Dpager='%_bindir/less -isr' \
 %if %threading
   -Duseithreads \
 %endif
