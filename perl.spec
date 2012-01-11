@@ -15,8 +15,8 @@
 %define perl_root %{_prefix}/lib/perl5
 
 Name:     perl
-Version:  5.12.3
-Release:  11
+Version:  5.14.2
+Release:  1
 Epoch:    2
 
 %define rel %{nil}
@@ -34,12 +34,12 @@ Source1:  perl-headers-wanted
 Source2:  perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
 Patch6:   perl-5.12.0-RC0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:  perl-5.12.0-RC0-install-files-using-chmod-644.patch
-Patch15:  perl-5.10.1-RC1-lib64.patch
+Patch15:  perl-5.14.2-lib64.patch
 Patch16:  perl-5.12.0-RC0-perldoc-use-nroff-compatibility-option.patch
 #(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
 Patch21:  perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:  perl-5.12.0-patchlevel.patch
-Patch29:  perl-5.12.0-RC0-rpmdebug.patch
+Patch29:  perl-5.14.2-rpmdebug.patch
 Patch32:  perl-5.10.0-incversionlist.patch
 Patch38:  perl-donot-defer-sig11.patch
 
@@ -47,22 +47,14 @@ Patch43:  perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
 Patch44:  perl-5.10.1-RC1-h2ph--handle-relative-include.patch
 
 # mdvbz#34505, get rid of this patch as soon as possible :-/
-Patch48:  perl-5.10.0-workaround-segfault-freeing-scalar-a-second-time.patch
+Patch48:  perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
-# mdv#60956 - fix h2ph
-Patch50:  perl-5.12.2-fix-h2ph.patch
-# (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=74088
-Patch51: 0001-perl-74088.patch
-# (oe) http://rt.perl.org/rt3/Public/Bug/Display.html?id=87336
-Patch52: perl-5.12.3-CVE-2011-1487.diff
 
 #
 # fixes taken from debian
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:  local_symtab.diff
-
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
 
 Requires: perl-base = %{epoch}:%{version}-%{release}
 
@@ -217,20 +209,17 @@ It contains also the 'perldoc' program.
 %setup -q -n %{name}-%{version}%{rel}
 %patch6 -p0
 %patch14 -p0
-%patch15 -p1
+%patch15 -p1 -b .lib64~
 %patch16 -p0
 %patch21 -p1 -b .peroyvind
 %patch23 -p0
-%patch29 -p0
+%patch29 -p1 -b .rpmdebug~
 %patch32 -p1
 %patch38 -p0
 %patch43 -p0
 %patch44 -p0
-%patch48 -p0
+%patch48 -p1 -b .doublefree~
 %patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
 
 %patch65 -p1
 
@@ -255,8 +244,10 @@ chmod u+w -R *
 remove_files cpan/Archive-Tar/
 remove_files_all utils/ptar.PL
 remove_files_all utils/ptardiff.PL
+remove_files_all utils/ptargrep.PL
 remove_util ptar
 remove_util ptardiff
+remove_util ptargrep
 # perl-Digest-SHA
 remove_files cpan/Digest-SHA/
 remove_files_all utils/shasum
@@ -296,7 +287,7 @@ remove_util perldoc
 %endif
 
 sh Configure -des \
-  -Dinc_version_list="5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
+  -Dinc_version_list="5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
   -Darchname=%{arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
@@ -337,6 +328,11 @@ sh Configure -des \
 # for test, unset RPM_BUILD_ROOT so that the MakeMaker trick is not triggered
 rm -f perl
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
+
+# This test relies on Digest::SHA being available
+rm t/porting/regen.t
+sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
+
 RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
 rm -f perl
 make perl
@@ -449,8 +445,6 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %dir %{perl_root}/%{version}/%{full_arch}/auto
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Cwd
 %{perl_root}/%{version}/%{full_arch}/auto/Cwd/Cwd.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/DynaLoader
-%{perl_root}/%{version}/%{full_arch}/auto/DynaLoader/dl_findfile.al
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Data
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Data/Dumper
 %{perl_root}/%{version}/%{full_arch}/auto/Data/Dumper/Dumper.so
@@ -471,11 +465,6 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %{perl_root}/%{version}/%{full_arch}/auto/Socket/Socket.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Storable
 %{perl_root}/%{version}/%{full_arch}/auto/Storable/Storable.so
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/autosplit.ix
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/store.al
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/_store.al
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/retrieve.al
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/_retrieve.al
 %dir %{perl_root}/%{version}/%{full_arch}/auto/re
 %{perl_root}/%{version}/%{full_arch}/auto/re/re.so
 %{perl_root}/%{version}/%{full_arch}/Config.pm
@@ -528,6 +517,7 @@ EOF
 %{_bindir}/pod2latex
 %{_bindir}/splain
 %{_bindir}/s2p
+%{_bindir}/json_pp
 EOF
 
    cat > perl-devel.list <<EOF
@@ -553,7 +543,6 @@ EOF
 %{perl_root}/%{version}/%{full_arch}/CORE/INTERN.h
 %{perl_root}/%{version}/%{full_arch}/CORE/XSUB.h
 %{perl_root}/%{version}/%{full_arch}/CORE/av.h
-%{perl_root}/%{version}/%{full_arch}/CORE/cc_runtime.h
 %{perl_root}/%{version}/%{full_arch}/CORE/cop.h
 %{perl_root}/%{version}/%{full_arch}/CORE/cv.h
 %{perl_root}/%{version}/%{full_arch}/CORE/dosish.h
