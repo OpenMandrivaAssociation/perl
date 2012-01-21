@@ -16,7 +16,7 @@
 
 Name:     perl
 Version:  5.14.2
-Release:  1
+Release:  1.1
 Epoch:    2
 
 %define rel %{nil}
@@ -173,6 +173,8 @@ Provides:   devel(libperl)
 Provides:   devel(libperl(64bit))
 %endif
 Requires: %{name} = %{epoch}:%{version}-%{release}
+# temporary dep due to the perl-5.14 bump
+Requires:  perl-List-MoreUtils >= 0.320.0-4
 
 %package doc
 Version:  %{version}
