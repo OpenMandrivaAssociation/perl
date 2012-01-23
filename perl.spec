@@ -135,13 +135,6 @@ Summary:  The Perl programming language (base)
 Provides: perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
 Group:    Development/Perl
 Url:      http://www.perl.org/
-# notice that theese are only kept for backwards compatibility, from now
-# on a perl(abi) = <version> will automatically be added by the dep generator
-# and packages will depend on perl(abi) >= <version>
-Provides: perlapi-5.12.0
-Provides: perlapi-5.12.1
-Provides: perlapi-5.12.2
-Provides: perlapi-5.12.3
 # explicit file provides
 Provides: /usr/bin/perl
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
