@@ -16,7 +16,7 @@
 
 Name:     perl
 Version:  5.14.2
-Release:  1.1
+Release:  2
 Epoch:    2
 
 %define rel %{nil}
@@ -142,7 +142,6 @@ Provides: perlapi-5.12.0
 Provides: perlapi-5.12.1
 Provides: perlapi-5.12.2
 Provides: perlapi-5.12.3
-Provides: perl(abi) = %version
 # explicit file provides
 Provides: /usr/bin/perl
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
