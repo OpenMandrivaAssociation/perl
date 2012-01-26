@@ -16,7 +16,7 @@
 
 Name:     perl
 Version:  5.14.2
-Release:  2
+Release:  3
 Epoch:    2
 
 %define rel %{nil}
@@ -293,9 +293,7 @@ sh Configure -des \
   -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
-  -Dccdlflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
-  -Dcccdlflags="-Wl,--unresolved-symbols=ignore-all" \
-  -Dldflags="%{ldflags} -Wl,-rpath=%{perl_root}/%{version}/%{full_arch}/CORE" \
+  -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='' \
   -Dprefix=%_prefix -Dvendorprefix=%_prefix \
