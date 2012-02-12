@@ -56,6 +56,7 @@ Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:  local_symtab.diff
+Patch66:  perl-5.14.2-USE_MM_LD_RUN_PATH.patch
 
 Requires: perl-base = %{epoch}:%{version}-%{release}
 
@@ -219,6 +220,7 @@ It contains also the 'perldoc' program.
 %patch49 -p1
 
 %patch65 -p1
+%patch66 -p1 -b .ldrunpath~
 
 remove_from_lists() {
     perl -ni -e "m!^\Q$1! or print" MANIFEST
