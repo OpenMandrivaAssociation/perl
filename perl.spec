@@ -16,7 +16,7 @@
 
 Name:     perl
 Version:  5.14.2
-Release:  3
+Release:  4
 Epoch:    2
 
 %define rel %{nil}
@@ -295,7 +295,7 @@ sh Configure -des \
   -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
   -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
-  -Dlibpth='' \
+  -Dlibpth='%{_prefix}/local/%{_lib} %{_libdir} /%{_lib}' \
   -Dprefix=%_prefix -Dvendorprefix=%_prefix \
   -Dsiteprefix=%_prefix -Dsitebin=%_prefix/local/bin \
   -Dsiteman1dir=%_prefix/local/share/man/man1 \
