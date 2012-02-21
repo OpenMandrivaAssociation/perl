@@ -52,7 +52,7 @@ Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch65:	local_symtab.diff
 Patch66:	perl-5.14.2-USE_MM_LD_RUN_PATH.patch
 
-Requires:	perl-base = %{epoch}:%{version}-%{release}
+Requires:	perl-base = %{EVRD}
 
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
@@ -146,7 +146,7 @@ Provides:	devel(libperl)
 %ifarch x86_64
 Provides:	devel(libperl(64bit))
 %endif
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{EVRD}
 # temporary dep due to the perl-5.14 bump
 Requires:	perl-List-MoreUtils >= 0.320.0-4
 
@@ -155,7 +155,7 @@ Summary:	The Perl programming language (documentation)
 Group:		Development/Perl
 Url:		http://www.perl.org/
 BuildArch:	noarch
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{EVRD}
 Requires:	groff-for-man
 Requires:	perl(Pod::Perldoc)
 
