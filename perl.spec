@@ -528,59 +528,7 @@ EOF
 %{_bindir}/prove
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
-%{perl_root}/%{version}/%{full_arch}/CORE/EXTERN.h
-%{perl_root}/%{version}/%{full_arch}/CORE/INTERN.h
-%{perl_root}/%{version}/%{full_arch}/CORE/XSUB.h
-%{perl_root}/%{version}/%{full_arch}/CORE/av.h
-%{perl_root}/%{version}/%{full_arch}/CORE/cop.h
-%{perl_root}/%{version}/%{full_arch}/CORE/cv.h
-%{perl_root}/%{version}/%{full_arch}/CORE/dosish.h
-%{perl_root}/%{version}/%{full_arch}/CORE/embed.h
-%{perl_root}/%{version}/%{full_arch}/CORE/embedvar.h
-%{perl_root}/%{version}/%{full_arch}/CORE/fakesdio.h
-%{perl_root}/%{version}/%{full_arch}/CORE/fakethr.h
-%{perl_root}/%{version}/%{full_arch}/CORE/form.h
-%{perl_root}/%{version}/%{full_arch}/CORE/gv.h
-%{perl_root}/%{version}/%{full_arch}/CORE/handy.h
-%{perl_root}/%{version}/%{full_arch}/CORE/hv.h
-%{perl_root}/%{version}/%{full_arch}/CORE/intrpvar.h
-%{perl_root}/%{version}/%{full_arch}/CORE/iperlsys.h
-%{perl_root}/%{version}/%{full_arch}/CORE/keywords.h
-%{perl_root}/%{version}/%{full_arch}/CORE/malloc_ctl.h
-%{perl_root}/%{version}/%{full_arch}/CORE/mg.h
-%{perl_root}/%{version}/%{full_arch}/CORE/nostdio.h
-%{perl_root}/%{version}/%{full_arch}/CORE/op.h
-%{perl_root}/%{version}/%{full_arch}/CORE/opcode.h
-%{perl_root}/%{version}/%{full_arch}/CORE/opnames.h
-%{perl_root}/%{version}/%{full_arch}/CORE/overload.h
-%{perl_root}/%{version}/%{full_arch}/CORE/pad.h
-%{perl_root}/%{version}/%{full_arch}/CORE/parser.h
-%{perl_root}/%{version}/%{full_arch}/CORE/patchlevel.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perlapi.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perlio.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perliol.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perlsdio.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perlsfio.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perlvars.h
-%{perl_root}/%{version}/%{full_arch}/CORE/perly.h
-%{perl_root}/%{version}/%{full_arch}/CORE/pp.h
-%{perl_root}/%{version}/%{full_arch}/CORE/pp_proto.h
-%{perl_root}/%{version}/%{full_arch}/CORE/proto.h
-%{perl_root}/%{version}/%{full_arch}/CORE/reentr.h
-%{perl_root}/%{version}/%{full_arch}/CORE/regcharclass.h
-%{perl_root}/%{version}/%{full_arch}/CORE/regcomp.h
-%{perl_root}/%{version}/%{full_arch}/CORE/regexp.h
-%{perl_root}/%{version}/%{full_arch}/CORE/regnodes.h
-%{perl_root}/%{version}/%{full_arch}/CORE/scope.h
-%{perl_root}/%{version}/%{full_arch}/CORE/sv.h
-%{perl_root}/%{version}/%{full_arch}/CORE/thread.h
-%{perl_root}/%{version}/%{full_arch}/CORE/uconfig.h
-%{perl_root}/%{version}/%{full_arch}/CORE/unixish.h
-%{perl_root}/%{version}/%{full_arch}/CORE/utf8.h
-%{perl_root}/%{version}/%{full_arch}/CORE/utfebcdic.h
-%{perl_root}/%{version}/%{full_arch}/CORE/util.h
-%{perl_root}/%{version}/%{full_arch}/CORE/uudmap.h
-%{perl_root}/%{version}/%{full_arch}/CORE/warnings.h
+%{perl_root}/%{version}/%{full_arch}/CORE/*.h
 EOF
 
    rel_perl_root=`echo %{perl_root} | sed "s,/,,"`
@@ -589,7 +537,7 @@ EOF
    sort -u perl-doc-dupes.list -o perl-doc.list
    (cd %{buildroot} ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
    (cd %{buildroot} ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_perl_root/%{version} ! -type d -printf "/%%p\n") >> perl.list
+   (cd %{buildroot} ; find $rel_perl_root/%{version} ! -type d ! -name \*.h -printf "/%%p\n") >> perl.list
    (cd %{buildroot} ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
 
    perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
