@@ -126,7 +126,7 @@ BuildRequires:	man
 
 %package	base
 Summary:	The Perl programming language (base)
-Provides:	perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
+Provides:	perl(base) perl(constant) perl(integer) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
 Group:		Development/Perl
 Url:		http://www.perl.org/
 # explicit file provides
