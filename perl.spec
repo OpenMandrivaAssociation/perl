@@ -283,7 +283,7 @@ sh Configure -des \
   -Dman3dir=%{_mandir}/man3pm \
   -Dvendorman3dir=%{_mandir}/man3 \
   -Dman3ext=3pm \
-  -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
+  -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
   -Ud_csh \
   -Duseshrplib \
   -Duselargefiles \
