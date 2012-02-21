@@ -16,7 +16,7 @@
 
 Name:     perl
 Version:  5.14.2
-Release:  4
+Release:  5
 Epoch:    2
 
 %define rel %{nil}
@@ -294,8 +294,10 @@ sh Configure -des \
 %else
   -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING="%{debugcflags}" \
 %endif
-  -Dccflags="%{optflags} -fno-strict-aliasing -fno-PIE" \
-  -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all" \
+  -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
+  -Dcccdlflags="-fPIC -fno-PIE" \
+  -Dldflags="%{ldflags}" \
+  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_prefix}/local/%{_lib} %{_libdir} /%{_lib}' \
   -Dprefix=%_prefix -Dvendorprefix=%_prefix \
@@ -318,7 +320,7 @@ sh Configure -des \
 %endif
   -Di_db \
   -Di_ndbm \
-  -Di_gdbm \
+  -Di_gdbm
 
 %make
 
