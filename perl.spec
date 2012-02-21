@@ -321,7 +321,7 @@ rm -f perl
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
 
 # This test relies on Digest::SHA being available
-rm t/porting/regen.t
+rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
 RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
