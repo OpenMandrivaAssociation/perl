@@ -342,12 +342,9 @@ cat %{SOURCE2} | patch -p1
 # LD_PRELOAD doesn't work... why?
 LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d %{buildroot}%{perl_root}/%{version}/%{full_arch} `cat %{SOURCE1}` > /dev/null ||:
 
-(
-    # i don't like hardlinks, having symlinks instead:
-    cd %{buildroot}%{_bindir}
-    ln -sf perl5 perl
-    ln -s perl%{version} perl5
-)
+# i don't like hardlinks, having symlinks instead:
+ln -sf perl5 %{buildroot}%{_bindir}/perl
+ln -s perl%{version} %{buildroot}%{_bindir}/perl5
 
 rm -f %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
 
@@ -365,8 +362,7 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %{?__spec_helper_post}
 %undefine dont_strip
 
-(
-   cat > perl-base.list <<EOF
+cat > perl-base.list <<EOF
 %{_bindir}/perl
 %{_bindir}/perl5
 %{_bindir}/perl%{version}
@@ -494,7 +490,7 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %{perl_root}/%{version}/%{full_arch}/syscall.ph
 EOF
 
-   cat > perl.list <<EOF
+cat > perl.list <<EOF
 %doc README
 %doc Artistic
 %{_bindir}/a2p
@@ -510,7 +506,7 @@ EOF
 %{_bindir}/json_pp
 EOF
 
-   cat > perl-devel.list <<EOF
+cat > perl-devel.list <<EOF
 %{_bindir}/cpan
 %{_bindir}/pstruct
 %{_bindir}/piconv
@@ -532,19 +528,16 @@ EOF
 %{perl_root}/%{version}/%{full_arch}/CORE/*.h
 EOF
 
-   rel_perl_root=`echo %{perl_root} | sed "s,/,,"`
-   rel_mandir=`echo %{_mandir} | sed "s,/,,"`
-   (cd %{buildroot} ; find $rel_perl_root/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc /%%p\n") >> perl-doc-dupes.list
-   sort -u perl-doc-dupes.list -o perl-doc.list
-   (cd %{buildroot} ; find $rel_mandir/man1 ! -name "perlivp.1*" ! -type d -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_mandir/man3pm ! -type d ! -name "Pod::Perldoc*" -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_perl_root/%{version} ! -type d ! -name \*.h -printf "/%%p\n") >> perl.list
-   (cd %{buildroot} ; find $rel_perl_root/%{version} -type d -printf "%%%%dir /%%p\n") >> perl.list
+find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc %%p\n" |sort -u > perl-doc.list
+find %{buildroot}%{_mandir}/man1 ! -name "perlivp.1*" ! -type d >> perl.list
+find %{buildroot}%{_mandir}/man3pm ! -type d ! -name "Pod::Perldoc*" >> perl.list
+find %{buildroot}%{perl_root}/%{version} ! -type d ! -name \*.h >> perl.list
+find %{buildroot}%{perl_root}/%{version} -type d -printf "%%%%dir %%p\n" >> perl.list
+sed -e 's#%{buildroot}##g' -i perl*.list
 
-   perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-   perl -ni -e 'BEGIN { open F, "perl-devel.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-   perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-)
+perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
+perl -ni -e 'BEGIN { open F, "perl-devel.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
+perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
 
 %files -f perl.list
 
