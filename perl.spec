@@ -1,183 +1,177 @@
 %define threading 1
 %define debugging 0
 
-#%%define _default_patch_fuzz 2
-
-%if %threading
+%if %{threading}
 %define thread_arch -thread-multi
-%else
-%define thread_arch %{nil}
 %endif
 
-%define arch %(echo %{_arch} | sed -e "s/amd64/x86_64/")
-%define full_arch %{arch}-%{_os}%{thread_arch}
+%define full_arch %{_arch}-%{_os}%{?thread_arch}
 # Don't change to %{_libdir} as perl is clean and has arch-dependent subdirs
 %define perl_root %{_prefix}/lib/perl5
 
-Name:     perl
-Version:  5.14.2
-Release:  5
-Epoch:    2
+Name:		perl
+Version:	5.14.2
+Release:	5
+Epoch:		2
 
-%define rel %{nil}
-#define rel -RC4
+#define	rel	-RC4
 
-Summary:  The Perl programming language
-License:  GPL+ or Artistic
-Group:    Development/Perl
-Url:      http://www.perl.org/
+Summary:	The Perl programming language
+License:	GPL+ or Artistic
+Group:		Development/Perl
+Url:		http://www.perl.org/
 
 # ftp://ftp.funet.fi/pub/languages/perl/snap/perl@17574.tbz
 #ftp://ftp.funet.fi/pub/languages/perl/CPAN/src/perl-%{version}.tar.bz2
-Source0:  http://www.cpan.org/src/perl-%{version}%{rel}.tar.gz
-Source1:  perl-headers-wanted
-Source2:  perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
-Patch5:   perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
-Patch6:   perl-5.12.0-RC0-fix-LD_RUN_PATH-for-MakeMaker.patch
-Patch14:  perl-5.12.0-RC0-install-files-using-chmod-644.patch
-Patch15:  perl-5.14.2-lib64.patch
-Patch16:  perl-5.12.0-RC0-perldoc-use-nroff-compatibility-option.patch
+Source0:	http://www.cpan.org/src/perl-%{version}%{?rel}.tar.gz
+Source1:	perl-headers-wanted
+Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
+Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
+Patch6:		perl-5.12.0-RC0-fix-LD_RUN_PATH-for-MakeMaker.patch
+Patch14:	perl-5.12.0-RC0-install-files-using-chmod-644.patch
+Patch15:	perl-5.14.2-lib64.patch
+Patch16:	perl-5.12.0-RC0-perldoc-use-nroff-compatibility-option.patch
 #(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
-Patch21:  perl-5.8.1-RC4-fpic-fPIC.patch
-Patch23:  perl-5.12.0-patchlevel.patch
-Patch29:  perl-5.14.2-rpmdebug.patch
-Patch32:  perl-5.10.0-incversionlist.patch
-Patch38:  perl-donot-defer-sig11.patch
+Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
+Patch23:	perl-5.12.0-patchlevel.patch
+Patch29:	perl-5.14.2-rpmdebug.patch
+Patch32:	perl-5.10.0-incversionlist.patch
+Patch38:	perl-donot-defer-sig11.patch
 
-Patch43:  perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
-Patch44:  perl-5.10.1-RC1-h2ph--handle-relative-include.patch
+Patch43:	perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
+Patch44:	perl-5.10.1-RC1-h2ph--handle-relative-include.patch
 
 # mdvbz#34505, get rid of this patch as soon as possible :-/
-Patch48:  perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
-Patch49:  perl-5.10.0-workaround-error-copying-freed-scalar.patch
+Patch48:	perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
+Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 
 #
 # fixes taken from debian
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
-Patch65:  local_symtab.diff
-Patch66:  perl-5.14.2-USE_MM_LD_RUN_PATH.patch
+Patch65:	local_symtab.diff
+Patch66:	perl-5.14.2-USE_MM_LD_RUN_PATH.patch
 
-Requires: perl-base = %{epoch}:%{version}-%{release}
+Requires:	perl-base = %{epoch}:%{version}-%{release}
 
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
 # that think that installing "perl" will have a full perl as shipped by
 # upstream. (cf tom christiansen and the lengthy thread:
 # http://www.nntp.perl.org/group/perl.perl5.porters/2009/08/msg149747.html)
-Suggests: perl-Archive-Extract
-Suggests: perl-Archive-Tar
-Suggests: perl-CGI
-Suggests: perl-CPANPLUS
-Suggests: perl-CPANPLUS-Dist-Build
-Suggests: perl-Digest-SHA
-Suggests: perl-Module-Build
-Suggests: perl-Module-CoreList
-Suggests: perl-Time-Piece
+Suggests:	perl-Archive-Extract
+Suggests:	perl-Archive-Tar
+Suggests:	perl-CGI
+Suggests:	perl-CPANPLUS
+Suggests:	perl-CPANPLUS-Dist-Build
+Suggests:	perl-Digest-SHA
+Suggests:	perl-Module-Build
+Suggests:	perl-Module-CoreList
+Suggests:	perl-Time-Piece
 
-Provides: perl(getopts.pl)
-Provides: perl(ctime.pl)
-Provides: perl(flush.pl)
-Provides: perl(find.pl)
+Provides:	perl(getopts.pl)
+Provides:	perl(ctime.pl)
+Provides:	perl(flush.pl)
+Provides:	perl(find.pl)
 
-Provides: perl(attributes)
-Provides: perl(fields)
-Provides: perl(if)
-Provides: perl(locale)
-Provides: perl(subs)
+Provides:	perl(attributes)
+Provides:	perl(fields)
+Provides:	perl(if)
+Provides:	perl(locale)
+Provides:	perl(subs)
 
-Provides:  perl-MIME-Base64 = 3.080.0
-Obsoletes: perl-MIME-Base64 < 3.080.0
-Provides:  perl-libnet
-Provides:  perl-Storable = 2.200.0
-Obsoletes: perl-Storable < 2.200.0
-Provides:  perl-Digest-MD5 = 2.390.0
-Obsoletes: perl-Digest-MD5 < 2.390.0
-Provides:  perl-Time-HiRes = 1:1.971.900
-Obsoletes: perl-Time-HiRes < 1:1.971.900
-Provides:  perl-Locale-Codes
-Provides:  perl-Test-Simple = 0.920.0
-Obsoletes: perl-Test-Simple < 0.920.0
-Provides:  perl-Test-Builder-Tester = 1.180.0
-Obsoletes: perl-Test-Builder-Tester < 1.180.0
+Provides:	perl-MIME-Base64 = 3.080.0
+Obsoletes:	perl-MIME-Base64 < 3.080.0
+Provides:	perl-libnet
+Provides:	perl-Storable = 2.200.0
+Obsoletes:	perl-Storable < 2.200.0
+Provides:	perl-Digest-MD5 = 2.390.0
+Obsoletes:	perl-Digest-MD5 < 2.390.0
+Provides:	perl-Time-HiRes = 1:1.971.900
+Obsoletes:	perl-Time-HiRes < 1:1.971.900
+Provides:	perl-Locale-Codes
+Provides:	perl-Test-Simple = 0.920.0
+Obsoletes:	perl-Test-Simple < 0.920.0
+Provides:	perl-Test-Builder-Tester = 1.180.0
+Obsoletes:	perl-Test-Builder-Tester < 1.180.0
 
-Provides:  perl(version) = 1:0.74
-Provides:  perl-version = 1:0.74
-Obsoletes: perl-version < 1:0.74
-Provides:  perl-File-Fetch = 0.14
-Obsoletes: perl-File-Fetch < 0.14
-Provides:  perl-CPAN = 1.9205
-Obsoletes: perl-CPAN < 1.9205
-Provides:  perl-IO-Zlib = 1.07
-Obsoletes: perl-IO-Zlib < 1.07
-Provides:  perl-Pod-Simple = 3.05
-Obsoletes: perl-Pod-Simple < 3.05
-Conflicts: perl-Parse-RecDescent < 1.80-6mdk
-Conflicts: perl-Filter < 1.28-6mdk
-Conflicts: apache-mod_perl <= 1.3.24_1.26-1mdk
+Provides:	perl(version) = 1:0.74
+Provides:	perl-version = 1:0.74
+Obsoletes:	perl-version < 1:0.74
+Provides:	perl-File-Fetch = 0.14
+Obsoletes:	perl-File-Fetch < 0.14
+Provides:	perl-CPAN = 1.9205
+Obsoletes:	perl-CPAN < 1.9205
+Provides:	perl-IO-Zlib = 1.07
+Obsoletes:	perl-IO-Zlib < 1.07
+Provides:	perl-Pod-Simple = 3.05
+Obsoletes:	perl-Pod-Simple < 3.05
+Conflicts:	perl-Parse-RecDescent < 1.80-6mdk
+Conflicts:	perl-Filter < 1.28-6mdk
+Conflicts:	apache-mod_perl <= 1.3.24_1.26-1mdk
 %define _requires_exceptions Mac\\|VMS\\|perl >=\\|perl(Errno)\\|perl(Fcntl)\\|perl(IO)\\|perl(IO::File)\\|perl(IO::Socket::INET)\\|perl(IO::Socket::UNIX)\\|perl(Tk)\\|perl(Tk::Pod)\\|perlapi-
 
 # for NDBM
-BuildRequires: db5-devel
-BuildRequires: gdbm-devel
+BuildRequires:	db5-devel
+BuildRequires:	gdbm-devel
 %if "%{_lib}" == "lib64"
-BuildRequires: devel(libgdbm_compat(64bit))
+BuildRequires:	devel(libgdbm_compat(64bit))
 %else
-BuildRequires: devel(libgdbm_compat)
+BuildRequires:	devel(libgdbm_compat)
 %endif
 # we need >= 1.129 to get perl(abi) deps
-BuildRequires: rpm-mandriva-setup-build >= 1.129
+BuildRequires:	rpm-mandriva-setup-build >= 1.129
 
-BuildRequires: man
+BuildRequires:	man
 
-%package base
-Version:  %{version}
-Summary:  The Perl programming language (base)
-Provides: perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
-Group:    Development/Perl
-Url:      http://www.perl.org/
+%package	base
+Version:	%{version}
+Summary:	The Perl programming language (base)
+Provides:	perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
+Group:		Development/Perl
+Url:		http://www.perl.org/
 # explicit file provides
-Provides: /usr/bin/perl
+Provides:	/usr/bin/perl
 # perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
-Conflicts: perl-URPM < 3.07-2
-Conflicts: perl-RPM4 < 0.23-4
-Conflicts: perl-Locale-gettext < 1.05-6
-Conflicts: perl-Digest-SHA1 < 2.11-4
-Conflicts: perl-Net-DBus < 0.33.5-2
-Conflicts: perl-XML-Parser < 2.35
-Conflicts: drakxtools-backend < 10.6.4
+Conflicts:	perl-URPM < 3.07-2
+Conflicts:	perl-RPM4 < 0.23-4
+Conflicts:	perl-Locale-gettext < 1.05-6
+Conflicts:	perl-Digest-SHA1 < 2.11-4
+Conflicts:	perl-Net-DBus < 0.33.5-2
+Conflicts:	perl-XML-Parser < 2.35
+Conflicts:	drakxtools-backend < 10.6.4
 # perl-suid is gone is perl 5.12
-Obsoletes: perl-suid
+Obsoletes:	perl-suid
 
-%package devel
-Version:  %{version}
-Summary:  The Perl programming language (devel)
-Group:    Development/Perl
-Url: http://www.perl.org/
+%package	devel
+Version:	%{version}
+Summary:	The Perl programming language (devel)
+Group:		Development/Perl
+Url:		http://www.perl.org/
 # for each package linked against libperl.so, rpm will
 # add an automatic dependency on devel(libperl) for
 # the corresponding devel package, but rpm will not
 # automatically provides it, as libperl.so is not in
 # standard library path
-%ifarch %ix86
-Provides:   devel(libperl)
+%ifarch %{ix86}
+Provides:	devel(libperl)
 %endif
 %ifarch x86_64
-Provides:   devel(libperl(64bit))
+Provides:	devel(libperl(64bit))
 %endif
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 # temporary dep due to the perl-5.14 bump
-Requires:  perl-List-MoreUtils >= 0.320.0-4
+Requires:	perl-List-MoreUtils >= 0.320.0-4
 
-%package doc
-Version:  %{version}
-Summary:  The Perl programming language (documentation)
-Group:    Development/Perl
-Url:      http://www.perl.org/
+%package	doc
+Version:	%{version}
+Summary:	The Perl programming language (documentation)
+Group:		Development/Perl
+Url:		http://www.perl.org/
 BuildArch:	noarch
-Requires: %{name} = %{epoch}:%{version}-%{release}
-Requires: groff-for-man
-Requires: perl(Pod::Perldoc)
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	groff-for-man
+Requires:	perl(Pod::Perldoc)
 
 %description
 Perl is a high-level programming language with roots in C, sed, awk
@@ -192,18 +186,18 @@ system can handle Perl scripts.
 
 You need perl-base to have a full perl.
 
-%description base
+%description	base
 This is the base package for %{name}.
 
-%description devel
+%description	devel
 This is the devel package for %{name}.
 
-%description doc
+%description	doc
 This is the documentation package for %{name}.
 It contains also the 'perldoc' program.
 
 %prep
-%setup -q -n %{name}-%{version}%{rel}
+%setup -q -n %{name}-%{version}%{?rel}
 %patch5 -p1 -b .flags~
 %patch6 -p0
 %patch14 -p0
@@ -288,7 +282,7 @@ sh Configure -des \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="$RPM_OPT_FLAGS" -DDEBUGGING="%{debugcflags}" \
+  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
   -Dcccdlflags="-fPIC -fno-PIE" \
@@ -296,18 +290,18 @@ sh Configure -des \
   -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_prefix}/local/%{_lib} %{_libdir} /%{_lib}' \
-  -Dprefix=%_prefix -Dvendorprefix=%_prefix \
-  -Dsiteprefix=%_prefix -Dsitebin=%_prefix/local/bin \
-  -Dsiteman1dir=%_prefix/local/share/man/man1 \
-  -Dsiteman3dir=%_prefix/local/share/man/man3 \
-  -Dman3dir=%_mandir/man3pm \
-  -Dvendorman3dir=%_mandir/man3 \
+  -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
+  -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
+  -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
+  -Dsiteman3dir=%{_prefix}/local/share/man/man3 \
+  -Dman3dir=%{_mandir}/man3pm \
+  -Dvendorman3dir=%{_mandir}/man3 \
   -Dman3ext=3pm \
   -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost  \
   -Ud_csh \
   -Duseshrplib \
   -Duselargefiles \
-  -Dpager='%_bindir/less -isr' \
+  -Dpager='%{_bindir}/less -isr' \
 %if %threading
   -Duseithreads \
 %endif
@@ -335,8 +329,6 @@ rm -f perl
 make perl
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std
 
 install -d %{buildroot}%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
@@ -605,17 +597,10 @@ EOF
    perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
 )
 
-%clean
-rm -rf %{buildroot}
-
 %files -f perl.list
-%defattr(-,root,root)
 
 %files base -f perl-base.list
-%defattr(-,root,root)
 
 %files devel -f perl-devel.list
-%defattr(-,root,root)
 
 %files doc -f perl-doc.list
-%defattr(-,root,root)
