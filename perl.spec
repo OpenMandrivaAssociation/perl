@@ -370,6 +370,7 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %{_bindir}/perl
 %{_bindir}/perl5
 %{_bindir}/perl%{version}
+%dir %{_mandir}/man3pm
 %dir %{perl_root}
 %dir %{perl_root}/%{version}
 %dir %{perl_root}/%{version}/File
@@ -478,7 +479,7 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 %ifarch x86_64
 %{perl_root}/%{version}/%{full_arch}/bits/wordsize.ph
 %endif
-%ifarch %ix86 x86_64
+%ifarch %{ix86} x86_64
 %{perl_root}/%{version}/%{full_arch}/asm/unistd_32.ph
 %{perl_root}/%{version}/%{full_arch}/asm/unistd_64.ph
 %endif
