@@ -452,7 +452,7 @@ cat > perl-base.list <<EOF
 %dir %{perl_root}/%{version}/%{full_arch}/bits
 %dir %{perl_root}/%{version}/%{full_arch}/sys
 %{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
-%ifarch %mips
+%ifarch %{mipsx}
 %{perl_root}/%{version}/%{full_arch}/asm/sgidefs.ph
 %endif
 %ifarch ia64
