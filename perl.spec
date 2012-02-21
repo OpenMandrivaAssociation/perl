@@ -69,17 +69,6 @@ Suggests:	perl-Module-Build
 Suggests:	perl-Module-CoreList
 Suggests:	perl-Time-Piece
 
-Provides:	perl(getopts.pl)
-Provides:	perl(ctime.pl)
-Provides:	perl(flush.pl)
-Provides:	perl(find.pl)
-
-Provides:	perl(attributes)
-Provides:	perl(fields)
-Provides:	perl(if)
-Provides:	perl(locale)
-Provides:	perl(subs)
-
 Provides:	perl-MIME-Base64 = 3.080.0
 Obsoletes:	perl-MIME-Base64 < 3.080.0
 Provides:	perl-libnet
