@@ -125,7 +125,6 @@ BuildRequires:	rpm-mandriva-setup-build >= 1.129
 BuildRequires:	man
 
 %package	base
-Version:	%{version}
 Summary:	The Perl programming language (base)
 Provides:	perl(v5.6.0) perl(base) perl(bytes) perl(constant) perl(integer) perl(lib) perl(overload) perl(strict) perl(utf8) perl(vars) perl(warnings) perl(Carp::Heavy)
 Group:		Development/Perl
@@ -144,7 +143,6 @@ Conflicts:	drakxtools-backend < 10.6.4
 Obsoletes:	perl-suid
 
 %package	devel
-Version:	%{version}
 Summary:	The Perl programming language (devel)
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -164,7 +162,6 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	perl-List-MoreUtils >= 0.320.0-4
 
 %package	doc
-Version:	%{version}
 Summary:	The Perl programming language (documentation)
 Group:		Development/Perl
 Url:		http://www.perl.org/
