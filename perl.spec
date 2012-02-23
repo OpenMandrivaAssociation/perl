@@ -263,7 +263,7 @@ remove_util perldoc
 %build
 sh Configure -des \
   -Dinc_version_list="5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
-  -Darchname=%{arch}-%{_os} \
+  -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
