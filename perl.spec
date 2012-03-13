@@ -45,7 +45,7 @@ Patch44:	perl-5.10.1-RC1-h2ph--handle-relative-include.patch
 Patch48:	perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch50:	perl-5.14.2-link-perl-extensions-against-libperl.patch
-
+Patch51:	perl-5.14.2-add-soname-to-libperl.patch
 #
 # fixes taken from debian
 #
@@ -200,6 +200,7 @@ It contains also the 'perldoc' program.
 %patch48 -p1 -b .doublefree~
 %patch49 -p1
 %patch50 -p1 -b .libperl~
+%patch51 -p1 -b .soname~
 
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
