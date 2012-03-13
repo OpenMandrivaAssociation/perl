@@ -11,7 +11,7 @@
 
 Name:		perl
 Version:	5.14.2
-Release:	5
+Release:	6
 Epoch:		2
 
 #define	rel	-RC4
@@ -44,6 +44,7 @@ Patch44:	perl-5.10.1-RC1-h2ph--handle-relative-include.patch
 # mdvbz#34505, get rid of this patch as soon as possible :-/
 Patch48:	perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
+Patch50:	perl-5.14.2-link-perl-extensions-against-libperl.patch
 
 #
 # fixes taken from debian
@@ -189,7 +190,7 @@ It contains also the 'perldoc' program.
 %patch14 -p0
 %patch15 -p1 -b .lib64~
 %patch16 -p0
-%patch21 -p1 -b .peroyvind
+%patch21 -p1 -b .peroyvind~
 %patch23 -p0
 %patch29 -p1 -b .rpmdebug~
 %patch32 -p1
@@ -198,6 +199,7 @@ It contains also the 'perldoc' program.
 %patch44 -p0
 %patch48 -p1 -b .doublefree~
 %patch49 -p1
+%patch50 -p1 -b .libperl~
 
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
@@ -260,6 +262,9 @@ remove_files dist/Pod-Perldoc/
 remove_files_all utils/perldoc.PL
 remove_util perldoc
 
+# fix linking against libperl during build
+ln -s $PWD lib/CORE
+
 %build
 sh Configure -des \
   -Dinc_version_list="5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
@@ -270,10 +275,10 @@ sh Configure -des \
 %else
   -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
-  -Dccdlflags="%{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
+  -Dccdlflags="%{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
   -Dcccdlflags="-fPIC -fno-PIE" \
   -Dldflags="%{ldflags}" \
-  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--unresolved-symbols=ignore-all -fno-PIE" \
+  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_prefix}/local/%{_lib} %{_libdir} /%{_lib}' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
