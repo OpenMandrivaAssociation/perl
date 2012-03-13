@@ -281,7 +281,7 @@ sh Configure -des \
   -Dldflags="%{ldflags}" \
   -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
-  -Dlibpth='%{_prefix}/local/%{_lib} %{_libdir} /%{_lib}' \
+  -Dlibpth='%{_libdir} /%{_lib}' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
   -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
   -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
