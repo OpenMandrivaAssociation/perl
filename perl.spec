@@ -99,7 +99,7 @@ Obsoletes:	perl-Pod-Simple < 3.05
 Conflicts:	perl-Parse-RecDescent < 1.80-6mdk
 Conflicts:	perl-Filter < 1.28-6mdk
 Conflicts:	apache-mod_perl <= 1.3.24_1.26-1mdk
-%define _requires_exceptions Mac\\|VMS\\|perl >=\\|perl(Errno)\\|perl(Fcntl)\\|perl(IO)\\|perl(IO::File)\\|perl(IO::Socket::INET)\\|perl(IO::Socket::UNIX)\\|perl(Tk)\\|perl(Tk::Pod)\\|perlapi-
+%define __noautoreq '(Mac|VMS|perl\\(Errno\\)|perl\\(Fcntl\\)|perl\\(IO\\)|perl\\(IO::File\\)|perl\\(IO::Socket::INET\\)|perl\\(IO::Socket::UNIX\\)|perl\\(Tk\\)|perl\\(Tk::Pod\\))'
 
 # for NDBM
 BuildRequires:	db5-devel
