@@ -52,6 +52,7 @@ Patch51:	perl-5.14.2-add-soname-to-libperl.patch
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:	local_symtab.diff
 Patch66:	perl-5.14.2-USE_MM_LD_RUN_PATH.patch
+Patch67:	perl-5.16.0-update-sha1sum-used-in-testsuite.patch
 
 Requires:	perl-base = %{EVRD}
 
@@ -204,6 +205,7 @@ It contains also the 'perldoc' program.
 
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
+%patch67 -p1 -b .sha1sum~
 
 # fix linking against libperl during build
 ln -s $PWD lib/CORE
