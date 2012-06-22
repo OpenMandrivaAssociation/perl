@@ -10,8 +10,8 @@
 %define perl_root %{_prefix}/lib/perl5
 
 Name:		perl
-Version:	5.14.2
-Release:	6
+Version:	5.16.0
+Release:	1
 Epoch:		2
 
 #define	rel	-RC4
@@ -27,10 +27,10 @@ Source0:	http://www.cpan.org/src/perl-%{version}%{?rel}.tar.gz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
 Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
-Patch6:		perl-5.12.0-RC0-fix-LD_RUN_PATH-for-MakeMaker.patch
+Patch6:		perl-5.16.0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:	perl-5.12.0-RC0-install-files-using-chmod-644.patch
-Patch15:	perl-5.14.2-lib64.patch
-Patch16:	perl-5.12.0-RC0-perldoc-use-nroff-compatibility-option.patch
+Patch15:	perl-5.16.0-lib64.patch
+Patch16:	perl-5.16.0-perldoc-use-nroff-compatibility-option.patch
 #(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
 Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:	perl-5.12.0-patchlevel.patch
@@ -39,10 +39,10 @@ Patch32:	perl-5.10.0-incversionlist.patch
 Patch38:	perl-donot-defer-sig11.patch
 
 Patch43:	perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
-Patch44:	perl-5.10.1-RC1-h2ph--handle-relative-include.patch
+Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
 
 # mdvbz#34505, get rid of this patch as soon as possible :-/
-Patch48:	perl-5.14.2-workaround-segfault-freeing-scalar-a-second-time.patch
+Patch48:	perl-5.16.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch50:	perl-5.14.2-link-perl-extensions-against-libperl.patch
 Patch51:	perl-5.14.2-add-soname-to-libperl.patch
@@ -196,8 +196,8 @@ It contains also the 'perldoc' program.
 %patch32 -p1
 %patch38 -p0
 %patch43 -p0
-%patch44 -p0
-%patch48 -p1 -b .doublefree~
+%patch44 -p1
+%patch48 -p0 -b .doublefree~
 %patch49 -p1
 %patch50 -p1 -b .libperl~
 %patch51 -p1 -b .soname~
@@ -205,70 +205,12 @@ It contains also the 'perldoc' program.
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
 
-remove_from_lists() {
-    perl -ni -e "m!^\Q$1! or print" MANIFEST
-    perl -ni -e "m!^\Q$1! or print" utils.lst
-}
-remove_files() {
-    rm -r $1
-    remove_from_lists $1
-}
-remove_files_all() {
-    rm -r $1*
-    remove_from_lists $1
-}
-remove_util() {
-    perl -pi -e "/^pl(extract)?\s/ and s/\s$1\b//" utils/Makefile.SH
-}
-
-chmod u+w -R *
-# perl-Archive-Tar
-remove_files cpan/Archive-Tar/
-remove_files_all utils/ptar.PL
-remove_files_all utils/ptardiff.PL
-remove_files_all utils/ptargrep.PL
-remove_util ptar
-remove_util ptardiff
-remove_util ptargrep
-# perl-Digest-SHA
-remove_files cpan/Digest-SHA/
-remove_files_all utils/shasum
-remove_util shasum
-# perl-CPANPLUS
-remove_files cpan/CPANPLUS/
-remove_files_all utils/cpan2dist.PL
-remove_files_all utils/cpanp-run-perl.PL
-remove_files_all utils/cpanp.PL
-remove_util cpan2dist
-remove_util cpanp-run-perl
-remove_util cpanp
-# perl-CPANPLUS-Dist-Build
-remove_files cpan/CPANPLUS-Dist-Build/
-# perl-Module-CoreList
-remove_files dist/Module-CoreList/
-remove_files_all utils/corelist.PL
-remove_util corelist
-# perl-Module-Build
-remove_files cpan/Module-Build/
-remove_files_all utils/config_data.PL
-remove_util config_data
-# perl-CGI
-remove_files cpan/CGI/
-# perl-Archive-Extract
-remove_files cpan/Archive-Extract/
-# perl-Time-Piece
-remove_files cpan/Time-Piece/
-# perl-Pod-Perldoc
-remove_files dist/Pod-Perldoc/
-remove_files_all utils/perldoc.PL
-remove_util perldoc
-
 # fix linking against libperl during build
 ln -s $PWD lib/CORE
 
 %build
 sh Configure -des \
-  -Dinc_version_list="5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
+  -Dinc_version_list="5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.2/%{full_arch} 5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
@@ -303,7 +245,8 @@ sh Configure -des \
   -Di_db \
   -Di_ndbm \
   -Di_gdbm
-
+# workaround for not using colorgcc that relies on perl
+PATH=${PATH#%{_datadir}/colorgcc:}
 %make
 
 %check
