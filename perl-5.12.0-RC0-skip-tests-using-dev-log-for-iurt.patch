@@ -1,0 +1,12 @@
+diff -p -up cpan/Sys-Syslog/t/syslog.t.pix cpan/Sys-Syslog/t/syslog.t
+--- cpan/Sys-Syslog/t/syslog.t.pix	2007-12-18 10:47:07.000000000 +0000
++++ cpan/Sys-Syslog/t/syslog.t	2008-01-14 09:51:31.000000000 +0000
+@@ -185,7 +185,7 @@ for my $sock_type (qw(native eventlog un
+ 
+ BEGIN { $tests += 10 }
+ SKIP: {
+-    skip "not testing setlogsock('stream') on Win32", 10 if $is_Win32;
++    skip "not testing setlogsock('stream')", 10;
+     skip "the 'unix' mechanism works, so the tests will likely fail with the 'stream' mechanism", 10 
+         if grep {/unix/} @passed;
+ 

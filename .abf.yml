@@ -1,0 +1,4 @@
+sources:
+  "perl-5.16.0.tar.gz:"	d21de2b409d99440047a4e67a61f0a781ea2f66b
+  "perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch:"	8d453b815297681800176ba2a8d4ec14e3a35037
+  "perl-headers-wanted:"	28b193539668bf02cc00cea9ee36be79ce1f7d1b

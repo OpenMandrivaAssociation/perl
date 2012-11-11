@@ -1,0 +1,16 @@
+diff -p -up perl-5.10.0/Configure.pix perl-5.10.0/Configure
+--- perl-5.10.0/Configure.pix	2007-12-21 10:05:09.000000000 +0100
++++ perl-5.10.0/Configure	2007-12-21 10:05:48.000000000 +0100
+@@ -6468,10 +6468,10 @@ else {
+ foreach $d (@candidates) {
+     if ($d->[1] lt $pversion) {
+ 	if ($d->[1] ge $aversion) {
+-	    unshift(@inc_version_list, grep { -d } $d->[0]."/$archname", $d->[0]);
++	    unshift(@inc_version_list, $d->[0]."/$archname", $d->[0]);
+ 	}
+ 	elsif ($d->[1] ge $vsn5005) {
+-	    unshift(@inc_version_list, grep { -d } $d->[0]);
++	    unshift(@inc_version_list, $d->[0]);
+ 	}
+     }
+     else {

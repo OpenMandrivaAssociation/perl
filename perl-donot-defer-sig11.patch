@@ -1,0 +1,11 @@
+--- mg.c	2010-09-07 01:30:32.000000000 +0200
++++ mg.c.oden	2010-11-19 13:38:22.688042454 +0100
+@@ -1323,7 +1323,7 @@ Perl_csighandler(int sig)
+ #ifdef SIGSEGV
+ 	   sig == SIGSEGV ||
+ #endif
+-	   (PL_signals & PERL_SIGNALS_UNSAFE_FLAG))
++	   (sig == SIGSEGV || (PL_signals & PERL_SIGNALS_UNSAFE_FLAG)))
+ 	/* Call the perl level handler now--
+ 	 * with risk we may be in malloc() or being destructed etc. */
+ #if defined(HAS_SIGACTION) && defined(SA_SIGINFO)

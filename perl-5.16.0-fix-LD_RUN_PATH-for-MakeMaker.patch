@@ -1,0 +1,10 @@
+--- cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm.orig	2012-04-25 02:18:31.000000000 +0200
++++ cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2012-05-22 12:19:17.332767478 +0200
+@@ -51,6 +51,7 @@
+     my ( @searchpath );    # from "-L/path" entries in $potential_libs
+     my ( @libpath ) = split " ", $Config{'libpth'};
+     my ( @ldloadlibs, @bsloadlibs, @extralibs, @ld_run_path, %ld_run_path_seen );
++    $ld_run_path_seen{$_} = 1 foreach qw(/usr/X11R6/lib /usr/lib /lib);
+     my ( @libs,       %libs_seen );
+     my ( $fullname,   @fullname );
+     my ( $pwd )   = cwd();    # from Cwd.pm
