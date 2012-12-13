@@ -10,7 +10,8 @@
 %define perl_root %{_prefix}/lib/perl5
 
 Name:		perl
-Version:	5.16.0
+%define	major	5.16
+Version:	%{major}.2
 Release:	1
 Epoch:		2
 
@@ -45,7 +46,7 @@ Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
 Patch48:	perl-5.16.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch50:	perl-5.14.2-link-perl-extensions-against-libperl.patch
-Patch51:	perl-5.14.2-add-soname-to-libperl.patch
+Patch51:	perl-5.16.2-add-soname-to-libperl.patch
 #
 # fixes taken from debian
 #
@@ -133,21 +134,18 @@ Conflicts:	drakxtools-backend < 10.6.4
 # perl-suid is gone is perl 5.12
 Obsoletes:	perl-suid
 
+%define	libname	%mklibname perl %{major}
+%package -n	%{libname}
+Summary:	Shared library for perl
+Group:		System/Libraries
+
+%description -n	%{libname}
+This package contains the shared library for perl.
+
 %package	devel
 Summary:	The Perl programming language (devel)
 Group:		Development/Perl
 Url:		http://www.perl.org/
-# for each package linked against libperl.so, rpm will
-# add an automatic dependency on devel(libperl) for
-# the corresponding devel package, but rpm will not
-# automatically provides it, as libperl.so is not in
-# standard library path
-%ifarch %{ix86}
-Provides:	devel(libperl)
-%endif
-%ifarch x86_64
-Provides:	devel(libperl(64bit))
-%endif
 Requires:	%{name} = %{EVRD}
 # temporary dep due to the perl-5.14 bump
 Requires:	perl-List-MoreUtils >= 0.320.0-4
@@ -212,7 +210,7 @@ ln -s $PWD lib/CORE
 
 %build
 sh Configure -des \
-  -Dinc_version_list="5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.2/%{full_arch} 5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
+  -Dinc_version_list="5.16.2 5.16.1 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.2/%{full_arch} 5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
@@ -252,9 +250,7 @@ PATH=${PATH#%{_datadir}/colorgcc:}
 %make
 
 %check
-# for test, building a perl with no rpath
 # for test, unset RPM_BUILD_ROOT so that the MakeMaker trick is not triggered
-rm -f perl
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
 
 # This test relies on Digest::SHA being available
@@ -262,8 +258,6 @@ rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
 RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
-rm -f perl
-make perl
 
 %install
 %makeinstall_std
@@ -381,9 +375,6 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/auto/IO/IO.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/POSIX
 %{perl_root}/%{version}/%{full_arch}/auto/POSIX/POSIX.so
-%{perl_root}/%{version}/%{full_arch}/auto/POSIX/autosplit.ix
-%{perl_root}/%{version}/%{full_arch}/auto/POSIX/load_imports.al
-%{perl_root}/%{version}/%{full_arch}/auto/POSIX/tmpfile.al
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Socket
 %{perl_root}/%{version}/%{full_arch}/auto/Socket/Socket.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Storable
@@ -398,7 +389,6 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/Storable.pm
 %{perl_root}/%{version}/%{full_arch}/re.pm
 %dir %{perl_root}/%{version}/%{full_arch}/CORE
-%{perl_root}/%{version}/%{full_arch}/CORE/libperl.so
 %dir %{perl_root}/%{version}/%{full_arch}/asm
 %dir %{perl_root}/%{version}/%{full_arch}/bits
 %dir %{perl_root}/%{version}/%{full_arch}/sys
@@ -438,17 +428,25 @@ cat > perl.list <<EOF
 %{_bindir}/pod2html
 %{_bindir}/pod2text
 %{_bindir}/pod2latex
+%{_bindir}/ptar
+%{_bindir}/ptardiff
+%{_bindir}/ptargrep
 %{_bindir}/splain
 %{_bindir}/s2p
 %{_bindir}/json_pp
+%{_bindir}/zipdetails
 EOF
 
 cat > perl-devel.list <<EOF
+%{_bindir}/c2ph
+%{_bindir}/config_data
+%{_bindir}/corelist
 %{_bindir}/cpan
+%{_bindir}/cpan2dist
+%{_bindir}/cpanp
+%{_bindir}/cpanp-run-perl
 %{_bindir}/pstruct
 %{_bindir}/piconv
-%{_bindir}/dprofpp
-%{_bindir}/c2ph
 %{_bindir}/h2xs
 %{_bindir}/enc2xs
 %{_bindir}/instmodsh
@@ -460,12 +458,19 @@ cat > perl-devel.list <<EOF
 %{_bindir}/pod2usage
 %{_bindir}/psed
 %{_bindir}/prove
+%{_bindir}/shasum
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
 %{perl_root}/%{version}/%{full_arch}/CORE/*.h
+%{_libdir}/libperl.so
 EOF
 
-find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc %%p\n" |sort -u > perl-doc.list
+cat > perl-doc.list <<EOF
+%{_bindir}/perldoc
+%{_mandir}/man3pm/Pod::Perldoc*
+EOF
+
+find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc %%p\n" |sort -u >> perl-doc.list
 find %{buildroot}%{_mandir}/man1 ! -name "perlivp.1*" ! -type d >> perl.list
 find %{buildroot}%{_mandir}/man3pm ! -type d ! -name "Pod::Perldoc*" >> perl.list
 find %{buildroot}%{perl_root}/%{version} ! -type d ! -name \*.h >> perl.list
@@ -484,8 +489,12 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %files doc -f perl-doc.list
 
+%files -n %{libname}
+%{_libdir}/libperl.so.%{major}
+
 %changelog
-* Thu Dec 13 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16-1
+* Thu Dec 13 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-1
+- make soname versioned and libify package (P51)
 - update sha1sum in manifest used by test suite (P67)
 - new version
 
