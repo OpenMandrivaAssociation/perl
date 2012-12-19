@@ -298,12 +298,68 @@ cat > perl-base.list <<EOF
 %dir %{perl_root}
 %dir %{perl_root}/%{version}
 %dir %{perl_root}/%{version}/File
+%{perl_root}/%{version}/autouse.pm
+%{perl_root}/%{version}/AnyDBM_File.pm
+%{perl_root}/%{version}/FindBin.pm
 %{perl_root}/%{version}/File/Basename.pm
 %{perl_root}/%{version}/File/Find.pm
 %{perl_root}/%{version}/File/Path.pm
+%{perl_root}/%{version}/File/Temp.pm
+%{perl_root}/%{version}/File/GlobMapper.pm
 %dir %{perl_root}/%{version}/Getopt
 %{perl_root}/%{version}/Getopt/Long.pm
 %{perl_root}/%{version}/Getopt/Std.pm
+%dir %{perl_root}/%{version}/Encode
+%{perl_root}/%{version}/Encode/ConfigLocal_PM.e2x
+%{perl_root}/%{version}/Encode/Makefile_PL.e2x
+%{perl_root}/%{version}/Encode/_PM.e2x
+%{perl_root}/%{version}/Encode/_T.e2x
+%dir %{perl_root}/%{version}/IO
+%dir %{perl_root}/%{version}/Compress
+%dir %{perl_root}/%{version}/IO/Compress
+%{perl_root}/%{version}/Compress/Zlib.pm
+%dir %{perl_root}/%{version}/IO/Compress/Adapter
+%{perl_root}/%{version}/IO/Compress/Adapter/Bzip2.pm
+%{perl_root}/%{version}/IO/Compress/Adapter/Deflate.pm
+%{perl_root}/%{version}/IO/Compress/Adapter/Identity.pm
+%dir %{perl_root}/%{version}/IO/Compress/Base
+%{perl_root}/%{version}/IO/Compress/Base.pm
+%{perl_root}/%{version}/IO/Compress/Base/Common.pm
+%{perl_root}/%{version}/IO/Compress/Bzip2.pm
+%{perl_root}/%{version}/IO/Compress/Deflate.pm
+%dir %{perl_root}/%{version}/IO/Compress/Gzip
+%{perl_root}/%{version}/IO/Compress/Gzip.pm
+%{perl_root}/%{version}/IO/Compress/Gzip/Constants.pm
+%{perl_root}/%{version}/IO/Compress/RawDeflate.pm
+%dir %{perl_root}/%{version}/IO/Compress/Zip
+%{perl_root}/%{version}/IO/Compress/Zip.pm
+%{perl_root}/%{version}/IO/Compress/Zip/Constants.pm
+%dir %{perl_root}/%{version}/IO/Compress/Zlib
+%{perl_root}/%{version}/IO/Compress/Zlib/Constants.pm
+%{perl_root}/%{version}/IO/Compress/Zlib/Extra.pm
+%dir %{perl_root}/%{version}/IO/Uncompress
+%dir %{perl_root}/%{version}/IO/Uncompress/Adapter
+%{perl_root}/%{version}/IO/Uncompress/Adapter/Bunzip2.pm
+%{perl_root}/%{version}/IO/Uncompress/Adapter/Identity.pm
+%{perl_root}/%{version}/IO/Uncompress/Adapter/Inflate.pm
+%{perl_root}/%{version}/IO/Uncompress/AnyInflate.pm
+%{perl_root}/%{version}/IO/Uncompress/AnyUncompress.pm
+%{perl_root}/%{version}/IO/Uncompress/Base.pm
+%{perl_root}/%{version}/IO/Uncompress/Bunzip2.pm
+%{perl_root}/%{version}/IO/Uncompress/Gunzip.pm
+%{perl_root}/%{version}/IO/Uncompress/Inflate.pm
+%{perl_root}/%{version}/IO/Uncompress/RawInflate.pm
+%{perl_root}/%{version}/IO/Uncompress/Unzip.pm
+%{perl_root}/%{version}/Net/Cmd.pm
+%{perl_root}/%{version}/Net/Config.pm
+%dir %{perl_root}/%{version}/Net/FTP
+%{perl_root}/%{version}/Net/FTP.pm
+%{perl_root}/%{version}/Net/FTP/A.pm
+%{perl_root}/%{version}/Net/FTP/E.pm
+%{perl_root}/%{version}/Net/FTP/I.pm
+%{perl_root}/%{version}/Net/FTP/L.pm
+%{perl_root}/%{version}/Net/FTP/dataconn.pm
+
 %dir %{perl_root}/%{version}/Time
 %{perl_root}/%{version}/Time/Local.pm
 %{perl_root}/%{version}/AutoLoader.pm
@@ -343,6 +399,8 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/warnings.pm
 %dir %{perl_root}/%{version}/%{full_arch}
 %{perl_root}/%{version}/%{full_arch}/lib.pm
+%{perl_root}/%{version}/%{full_arch}/B.pm
+%{perl_root}/%{version}/%{full_arch}/auto/B/B.so
 %{perl_root}/%{version}/%{full_arch}/Cwd.pm
 %dir %{perl_root}/%{version}/%{full_arch}/File
 %{perl_root}/%{version}/%{full_arch}/File/Spec.pm
@@ -356,6 +414,20 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/IO/Seekable.pm
 %{perl_root}/%{version}/%{full_arch}/IO/Select.pm
 %{perl_root}/%{version}/%{full_arch}/IO/Socket.pm
+%dir %{perl_root}/%{version}/%{full_arch}/IO/Socket
+%{perl_root}/%{version}/%{full_arch}/IO/Socket/INET.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Compress
+%dir %{perl_root}/%{version}/%{full_arch}/Compress/Raw
+%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Bzip2.pm
+%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Zlib.pm
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2
+%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2/Bzip2.so
+%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2/autosplit.ix
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib
+%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib/Zlib.so
+%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib/autosplit.ix
 %dir %{perl_root}/%{version}/%{full_arch}/auto
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Cwd
 %{perl_root}/%{version}/%{full_arch}/auto/Cwd/Cwd.so
@@ -368,8 +440,53 @@ cat > perl-base.list <<EOF
 %dir %{perl_root}/%{version}/%{full_arch}/auto/File/Glob
 %{perl_root}/%{version}/%{full_arch}/auto/File/Glob/Glob.so
 %{perl_root}/%{version}/%{full_arch}/File/Glob.pm
+%dir %{perl_root}/%{version}/%{full_arch}/auto/MIME
+%dir %{perl_root}/%{version}/%{full_arch}/auto/MIME/Base64
+%{perl_root}/%{version}/%{full_arch}/auto/MIME/Base64/Base64.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Digest
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Digest/MD5
+%{perl_root}/%{version}/%{full_arch}/auto/Digest/MD5/MD5.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/I18N
+%dir %{perl_root}/%{version}/%{full_arch}/auto/I18N/Langinfo/
+%{perl_root}/%{version}/%{full_arch}/auto/I18N/Langinfo/Langinfo.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/IO
 %{perl_root}/%{version}/%{full_arch}/auto/IO/IO.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode
+%{perl_root}/%{version}/%{full_arch}/Encode.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Alias.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Byte.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/CJKConstants.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Config.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/EBCDIC.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Encoder.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Encoding.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/GSM0338.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Guess.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Encode/MIME
+%dir %{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header
+%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header/ISO_2022_JP.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Name.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Symbol.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Encode/Unicode
+%{perl_root}/%{version}/%{full_arch}/Encode/Unicode.pm
+%{perl_root}/%{version}/%{full_arch}/Encode/Unicode/UTF7.pm
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Byte
+%{perl_root}/%{version}/%{full_arch}/auto/Encode/Byte/Byte.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/EBCDIC
+%{perl_root}/%{version}/%{full_arch}/auto/Encode/EBCDIC/EBCDIC.so
+%{perl_root}/%{version}/%{full_arch}/auto/Encode/Encode.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Symbol
+%{perl_root}/%{version}/%{full_arch}/auto/Encode/Symbol/Symbol.so
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Unicode
+%{perl_root}/%{version}/%{full_arch}/auto/Encode/Unicode/Unicode.so
+%dir %{perl_root}/%{version}/%{full_arch}/List
+%dir %{perl_root}/%{version}/%{full_arch}/List/Util
+%{perl_root}/%{version}/%{full_arch}/List/Util.pm
+%{perl_root}/%{version}/%{full_arch}/List/Util/XS.pm
+%dir %{perl_root}/%{version}/%{full_arch}/auto/List
+%dir %{perl_root}/%{version}/%{full_arch}/auto/List/Util
+%{perl_root}/%{version}/%{full_arch}/auto/List/Util/Util.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/POSIX
 %{perl_root}/%{version}/%{full_arch}/auto/POSIX/POSIX.so
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Socket
@@ -380,10 +497,21 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/auto/re/re.so
 %{perl_root}/%{version}/%{full_arch}/Config.pm
 %{perl_root}/%{version}/%{full_arch}/Config_heavy.pl
+%{perl_root}/%{version}/%{full_arch}/Digest/MD5.pm
 %{perl_root}/%{version}/%{full_arch}/DynaLoader.pm
+%{perl_root}/%{version}/%{full_arch}/I18N/Langinfo.pm
+%{perl_root}/%{version}/%{full_arch}/MIME/Base64.pm
+%{perl_root}/%{version}/%{full_arch}/MIME/QuotedPrint.pm
 %{perl_root}/%{version}/%{full_arch}/POSIX.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Scalar/
+%{perl_root}/%{version}/%{full_arch}/Scalar/Util.pm
 %{perl_root}/%{version}/%{full_arch}/Socket.pm
 %{perl_root}/%{version}/%{full_arch}/Storable.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Sys/
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Sys/
+%dir %{perl_root}/%{version}/%{full_arch}/auto/Sys/Hostname
+%{perl_root}/%{version}/%{full_arch}/Sys/Hostname.pm
+%{perl_root}/%{version}/%{full_arch}/auto/Sys/Hostname/Hostname.so
 %{perl_root}/%{version}/%{full_arch}/re.pm
 %dir %{perl_root}/%{version}/%{full_arch}/CORE
 %dir %{perl_root}/%{version}/%{full_arch}/asm
@@ -430,7 +558,6 @@ cat > perl.list <<EOF
 %{_bindir}/ptargrep
 %{_bindir}/splain
 %{_bindir}/s2p
-%{_bindir}/json_pp
 %{_bindir}/zipdetails
 EOF
 
@@ -442,19 +569,20 @@ cat > perl-devel.list <<EOF
 %{_bindir}/cpan2dist
 %{_bindir}/cpanp
 %{_bindir}/cpanp-run-perl
-%{_bindir}/pstruct
-%{_bindir}/piconv
-%{_bindir}/h2xs
 %{_bindir}/enc2xs
-%{_bindir}/instmodsh
-%{_bindir}/libnetcfg
 %{_bindir}/h2ph
+%{_bindir}/h2xs
+%{_bindir}/instmodsh
+%{_bindir}/json_pp
+%{_bindir}/libnetcfg
+%{_bindir}/piconv
 %{_bindir}/pl2pm
+%{_bindir}/pod2usage
 %{_bindir}/podchecker
 %{_bindir}/podselect
-%{_bindir}/pod2usage
-%{_bindir}/psed
 %{_bindir}/prove
+%{_bindir}/psed
+%{_bindir}/pstruct
 %{_bindir}/shasum
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
