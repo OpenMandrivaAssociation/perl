@@ -708,12 +708,12 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
     test for FastCGI, which the CPAN version has a dependency on, but is not in core
     from #p5p:
     17:08:16 @Nicholas> yes, and I forget why, but I think that it
-        became easier not to include it, as it would only skip in core.
+	became easier not to include it, as it would only skip in core.
     17:24:35 @Bram> It would not always skip in core. I believe that was
-        the problem... (If the system perl has CGI::Fast installed and if it is
-        the same version as the 'new' perl and the same INC path then the test
-        woul pick up the CGI::Fast from the system and attempt to run the test
-        (during make test that is))
+	the problem... (If the system perl has CGI::Fast installed and if it is
+	the same version as the 'new' perl and the same INC path then the test
+	woul pick up the CGI::Fast from the system and attempt to run the test
+	(during make test that is))
     ==> patch dropped
 - patch 29: perl-5.8.8-rpmdebug.patch
     module moved to cpan/ExtUtils-Manifest
@@ -939,16 +939,16 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
       (since it can be useful, and other distros have it enabled)
     - 5.10.0:
       o provide perlapi-5.10.0 so that binary modules can require it and ensure
-        correct upgrades in the future (a la debian)
+	correct upgrades in the future (a la debian)
       o conflict with important perl packages that would break
-        (we can't list them all)
+	(we can't list them all)
       o not including bundled modules already in existing packages and would conflict:
-        Archive::Tar, Digest::SHA, CPANPLUS, Module::CoreList, Module::Build
+	Archive::Tar, Digest::SHA, CPANPLUS, Module::CoreList, Module::Build
       o rediff patches: patch14, patch15 (lib64), patch32 (inversionlist), patch42
-        (allow override core modules)
+	(allow override core modules)
       o drop applied upstream patches: patch33, patch35 (Net::NNTP::body and
-        Net::NNTP::head would need the fix too?), patch36, patch37, patch39,
-        patch40, patch41, patch43
+	Net::NNTP::head would need the fix too?), patch36, patch37, patch39,
+	patch40, patch41, patch43
       o perlcc is no more
 
   + Olivier Blin <blino@mandriva.org>
