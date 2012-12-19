@@ -57,6 +57,18 @@ Patch67:	perl-5.16.0-update-sha1sum-used-in-testsuite.patch
 
 Requires:	perl-base = %{EVRD}
 
+# the following modules are dual-lifed modules, which are shipping
+# scripts in /usr/bin. to prevent conflict, dual-lifed modules rename
+# the scripts - but only after the listed version ;-)
+Conflicts:	perl-Archive-Tar <= 1.840.0-4
+Conflicts:	perl-CPANPLUS <= 0.910.500-5
+Conflicts:	perl-Digest-SHA <= 5.620.0-5
+Conflicts:	perl-JSON-PP <= 2.272.0-1
+Conflicts:	perl-Module-Build <= 1:0.380.0-4
+Conflicts:	perl-Module-CoreList <= 2.590.0-5
+Conflicts:	perl-Pod-Perldoc <= 3.150.0-6
+Conflicts:	perl-IO-Compress <= 2.49.0-1
+
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
 # that think that installing "perl" will have a full perl as shipped by
