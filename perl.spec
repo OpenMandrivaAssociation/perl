@@ -106,13 +106,6 @@ Conflicts:	apache-mod_perl <= 1.3.24_1.26-1mdk
 # for NDBM
 BuildRequires:	db5-devel
 BuildRequires:	gdbm-devel
-%if "%{_lib}" == "lib64"
-BuildRequires:	devel(libgdbm_compat(64bit))
-%else
-BuildRequires:	devel(libgdbm_compat)
-%endif
-# we need >= 1.129 to get perl(abi) deps
-BuildRequires:	rpm-mandriva-setup-build >= 1.129
 
 BuildRequires:	man
 
