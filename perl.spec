@@ -116,14 +116,6 @@ Group:		Development/Perl
 Url:		http://www.perl.org/
 # explicit file provides
 Provides:	/usr/bin/perl
-# perlapi-xxx didn't exist for 5.8.8, so we need to put the more important conflicts:
-Conflicts:	perl-URPM < 3.07-2
-Conflicts:	perl-RPM4 < 0.23-4
-Conflicts:	perl-Locale-gettext < 1.05-6
-Conflicts:	perl-Digest-SHA1 < 2.11-4
-Conflicts:	perl-Net-DBus < 0.33.5-2
-Conflicts:	perl-XML-Parser < 2.35
-Conflicts:	drakxtools-backend < 10.6.4
 # perl-suid is gone is perl 5.12
 Obsoletes:	perl-suid
 
