@@ -210,7 +210,7 @@ ln -s $PWD lib/CORE
 
 %build
 sh Configure -des \
-  -Dinc_version_list="5.16.2 5.16.1 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.2/%{full_arch} 5.12.3 5.12.3/%{full_arch} 5.12.2 5.12.2/%{full_arch} 5.12.1 5.12.1/%{full_arch} 5.12.0 5.12.0/%{full_arch} 5.10.1 5.10.0 5.8.8 5.8.7 5.8.6 5.8.5 5.8.4 5.8.3 5.8.2 5.8.1 5.8.0 5.6.1 5.6.0" \
+  -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
