@@ -241,7 +241,7 @@ sh Configure -des \
   -Di_ndbm \
   -Di_gdbm
 # workaround for not using colorgcc that relies on perl
-PATH=${PATH#%{_datadir}/colorgcc:}
+PATH="${PATH#%{_datadir}/colorgcc:}"
 %make
 
 %check
