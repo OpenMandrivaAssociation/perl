@@ -245,13 +245,11 @@ PATH="${PATH#%{_datadir}/colorgcc:}"
 %make
 
 %check
-%define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
-
 # This test relies on Digest::SHA being available
 rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
-TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
+TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAGS=
 
 %install
 %makeinstall_std
