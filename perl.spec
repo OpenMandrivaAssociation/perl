@@ -269,7 +269,7 @@ LD_LIBRARY_PATH=`pwd` ./perl -Ilib utils/h2ph_patched -a -d %{buildroot}%{perl_r
 ln -sf perl5 %{buildroot}%{_bindir}/perl
 ln -s perl%{version} %{buildroot}%{_bindir}/perl5
 
-rm -f %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
+rm %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
 
 %ifarch ppc
 perl -ni -e 'print if !/sub __syscall_nr/' %{buildroot}%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
