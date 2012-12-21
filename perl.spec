@@ -245,14 +245,13 @@ PATH=${PATH#%{_datadir}/colorgcc:}
 %make
 
 %check
-# for test, unset RPM_BUILD_ROOT so that the MakeMaker trick is not triggered
 %define nbprocs %(/usr/bin/getconf _NPROCESSORS_ONLN)
 
 # This test relies on Digest::SHA being available
 rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
-RPM_BUILD_ROOT="" TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
+TEST_JOBS=%{nbprocs} make test_harness_notty CCDLFLAGS=
 
 %install
 %makeinstall_std
