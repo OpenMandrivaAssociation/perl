@@ -15,8 +15,6 @@ Version:	%{major}.2
 Release:	1
 Epoch:		2
 
-#define	rel	-RC4
-
 Summary:	The Perl programming language
 License:	GPL+ or Artistic
 Group:		Development/Perl
@@ -24,7 +22,7 @@ Url:		http://www.perl.org/
 
 # ftp://ftp.funet.fi/pub/languages/perl/snap/perl@17574.tbz
 #ftp://ftp.funet.fi/pub/languages/perl/CPAN/src/perl-%{version}.tar.bz2
-Source0:	http://www.cpan.org/src/perl-%{version}%{?rel}.tar.gz
+Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.gz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
 Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
@@ -180,7 +178,7 @@ This is the documentation package for %{name}.
 It contains also the 'perldoc' program.
 
 %prep
-%setup -q -n %{name}-%{version}%{?rel}
+%setup -q
 %patch5 -p1 -b .flags~
 %patch6 -p0
 %patch14 -p0
