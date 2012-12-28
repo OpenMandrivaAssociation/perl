@@ -346,6 +346,7 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/IO/Uncompress/Inflate.pm
 %{perl_root}/%{version}/IO/Uncompress/RawInflate.pm
 %{perl_root}/%{version}/IO/Uncompress/Unzip.pm
+%dir %{perl_root}/%{version}/Net
 %{perl_root}/%{version}/Net/Cmd.pm
 %{perl_root}/%{version}/Net/Config.pm
 %dir %{perl_root}/%{version}/Net/FTP
@@ -396,6 +397,7 @@ cat > perl-base.list <<EOF
 %dir %{perl_root}/%{version}/%{full_arch}
 %{perl_root}/%{version}/%{full_arch}/lib.pm
 %{perl_root}/%{version}/%{full_arch}/B.pm
+%dir %{perl_root}/%{version}/%{full_arch}/auto/B
 %{perl_root}/%{version}/%{full_arch}/auto/B/B.so
 %{perl_root}/%{version}/%{full_arch}/Cwd.pm
 %dir %{perl_root}/%{version}/%{full_arch}/File
@@ -493,9 +495,13 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/auto/re/re.so
 %{perl_root}/%{version}/%{full_arch}/Config.pm
 %{perl_root}/%{version}/%{full_arch}/Config_heavy.pl
+%dir %{perl_root}/%{version}/%{full_arch}/Digest
 %{perl_root}/%{version}/%{full_arch}/Digest/MD5.pm
 %{perl_root}/%{version}/%{full_arch}/DynaLoader.pm
+%dir %{perl_root}/%{version}/%{full_arch}/Encode
+%dir %{perl_root}/%{version}/%{full_arch}/I18N
 %{perl_root}/%{version}/%{full_arch}/I18N/Langinfo.pm
+%dir %{perl_root}/%{version}/%{full_arch}/MIME
 %{perl_root}/%{version}/%{full_arch}/MIME/Base64.pm
 %{perl_root}/%{version}/%{full_arch}/MIME/QuotedPrint.pm
 %{perl_root}/%{version}/%{full_arch}/POSIX.pm
