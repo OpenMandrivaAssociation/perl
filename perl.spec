@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	2
+Release:	3
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -622,6 +622,10 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
+* Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-3
+- pass '-lpthread' rather than '-pthread' to linker, otherwise it'll always
+  link against libpthread, even when not needed
+
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-2
 - link with '-lnsl -ldl -lm -lcrypt -lutil -lc -pthread' for modules by default
 

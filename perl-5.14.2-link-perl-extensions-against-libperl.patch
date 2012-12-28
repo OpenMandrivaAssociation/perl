@@ -5,7 +5,7 @@
  
      push @m, sprintf <<'MAKE', $ld_run_path_shell, $ldrun, $ldfrom, $libs;
 -	%s$(LD) %s $(LDDLFLAGS) %s $(OTHERLDFLAGS) -o $@ $(MYEXTLIB)	\
-+	%s$(LD) %s $(LDDLFLAGS) %s $(OTHERLDFLAGS) -L$(PERL_ARCHLIB)/CORE -lperl -pthread -o $@ $(MYEXTLIB)	\
++	%s$(LD) %s $(LDDLFLAGS) %s $(OTHERLDFLAGS) -L$(PERL_ARCHLIB)/CORE -lperl -lpthread -o $@ $(MYEXTLIB)	\
  	  $(PERL_ARCHIVE) %s $(PERL_ARCHIVE_AFTER) $(EXPORT_LIST)	\
  	  $(INST_DYNAMIC_FIX)
  MAKE
