@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	1
+Release:	2
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -227,6 +227,7 @@ sh Configure -des \
   -Dvendorman3dir=%{_mandir}/man3 \
   -Dman3ext=3pm \
   -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
+  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -pthread'   \
   -Ud_csh \
   -Duseshrplib \
   -Duselargefiles \
@@ -613,6 +614,9 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
+* Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-2
+- link with '-lnsl -ldl -lm -lcrypt -lutil -lc -pthread' for modules by default
+
 * Thu Dec 13 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-1
 - make soname versioned and libify package (P51)
 - update sha1sum in manifest used by test suite (P67)
