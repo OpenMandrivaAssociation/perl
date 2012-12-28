@@ -58,7 +58,6 @@ Requires:	perl-base = %{EVRD}
 # the following modules are dual-lifed modules, which are shipping
 # scripts in /usr/bin. to prevent conflict, dual-lifed modules rename
 # the scripts - but only after the listed version ;-)
-Conflicts:	perl-CPANPLUS <= 0.910.500-5
 Conflicts:	perl-Digest-SHA <= 5.620.0-5
 Conflicts:	perl-JSON-PP <= 2.272.0-1
 Conflicts:	perl-Module-Build <= 1:0.380.0-4
@@ -280,11 +279,20 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 
 # Get rid of stuff from Archive::Tar - the standalone package is released
 # far more frequently
-rm -r	%{buildroot}%{_bindir}/ptar \
+rm -rf	%{buildroot}%{_bindir}/ptar \
 	%{buildroot}%{_bindir}/ptardiff \
 	%{buildroot}%{_bindir}/ptargrep \
 	%{buildroot}%{perl_root}/%{version}/Archive/Tar.pm \
 	%{buildroot}%{perl_root}/%{version}/Archive/Tar
+
+# idem
+rm -rf	%{buildroot}%{_bindir}/cpan2dist \
+	%{buildroot}%{_bindir}/cpanp \
+	%{buildroot}%{_bindir}/cpanp-run-perl \
+	%{buildroot}%{perl_root}/CPANPLUS/ \
+	%{buildroot}%{_mandir}/man1/cpan2dist.1* \
+	%{buildroot}%{_mandir}/man1/cpanp.1* \
+	%{buildroot}%{_mandir}/man3/CPANPLUS*
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
@@ -624,6 +632,7 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %changelog
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-4
+- don't ship bundled CPANPLUS
 - don't ship bundled Archive::Tar
 
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-3
