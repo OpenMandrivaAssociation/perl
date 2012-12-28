@@ -1,0 +1,38 @@
+--- perl-5.16.2/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm.libperl~	2012-12-28 21:31:54.324334190 +0100
++++ perl-5.16.2/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm	2012-12-28 21:31:54.373334815 +0100
+@@ -897,6 +897,7 @@ sub dynamic_lib {
+ 
+     return '' unless $self->has_link_code;
+ 
++    my($perllibs) = $Config{'perllibs'} || "";
+     my($otherldflags) = $attribs{OTHERLDFLAGS} || "";
+     my($inst_dynamic_dep) = $attribs{INST_DYNAMIC_DEP} || "";
+     my($armaybe) = $attribs{ARMAYBE} || $self->{ARMAYBE} || ":";
+@@ -908,6 +909,7 @@ sub dynamic_lib {
+     push(@m,'
+ # This section creates the dynamically loadable $(INST_DYNAMIC)
+ # from $(OBJECT) and possibly $(MYEXTLIB).
++PERLLIBS = '.$perllibs.'
+ ARMAYBE = '.$armaybe.'
+ OTHERLDFLAGS = '.$ld_opt.$otherldflags.'
+ INST_DYNAMIC_DEP = '.$inst_dynamic_dep.'
+@@ -954,7 +956,7 @@ $(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $
+     }
+ 
+     push @m, sprintf <<'MAKE', $ld_run_path_shell, $ldrun, $ldfrom, $libs;
+-	%s$(LD) %s $(LDDLFLAGS) %s $(OTHERLDFLAGS) -o $@ $(MYEXTLIB)	\
++	%s$(LD) %s $(LDDLFLAGS) %s $(OTHERLDFLAGS) $(PERLLIBS) -lperl -o $@ $(MYEXTLIB)	\
+ 	  $(PERL_ARCHIVE) %s $(PERL_ARCHIVE_AFTER) $(EXPORT_LIST)	\
+ 	  $(INST_DYNAMIC_FIX)
+ MAKE
+--- perl-5.16.2/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm.libperl~	2012-10-26 04:44:15.000000000 +0200
++++ perl-5.16.2/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2012-12-28 21:32:22.544693502 +0100
+@@ -298,6 +298,8 @@ sub _do_link {
+   
+   my @linker_flags = (
+     $self->split_like_shell($args{extra_linker_flags}),
++    $self->split_like_shell($self->{config}{perllibs}),
++    '-lperl',
+     $self->extra_link_args_after_prelink(
+        %args, dl_name => $args{module_name}, prelink_res => \@temp_files
+     )

@@ -43,7 +43,7 @@ Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
 # mdvbz#34505, get rid of this patch as soon as possible :-/
 Patch48:	perl-5.16.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
-Patch50:	perl-5.14.2-link-perl-extensions-against-libperl.patch
+Patch50:	perl-5.16.2-link-perl-extensions-against-libperl.patch
 Patch51:	perl-5.16.2-add-soname-to-libperl.patch
 #
 # fixes taken from debian
@@ -227,7 +227,7 @@ sh Configure -des \
   -Dvendorman3dir=%{_mandir}/man3 \
   -Dman3ext=3pm \
   -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
-  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -pthread'   \
+  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -lpthread'   \
   -Ud_csh \
   -Duseshrplib \
   -Duselargefiles \
@@ -623,6 +623,7 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %changelog
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-3
+- always link against perllibs flags (hopefully, perl blows, what else is new?)
 - pass '-lpthread' rather than '-pthread' to linker, otherwise it'll always
   link against libpthread, even when not needed
 
