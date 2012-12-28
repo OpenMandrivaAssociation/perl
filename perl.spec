@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	3
+Release:	4
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -58,7 +58,6 @@ Requires:	perl-base = %{EVRD}
 # the following modules are dual-lifed modules, which are shipping
 # scripts in /usr/bin. to prevent conflict, dual-lifed modules rename
 # the scripts - but only after the listed version ;-)
-Conflicts:	perl-Archive-Tar <= 1.840.0-4
 Conflicts:	perl-CPANPLUS <= 0.910.500-5
 Conflicts:	perl-Digest-SHA <= 5.620.0-5
 Conflicts:	perl-JSON-PP <= 2.272.0-1
@@ -281,11 +280,11 @@ perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{versi
 
 # Get rid of stuff from Archive::Tar - the standalone package is released
 # far more frequently
-rm -rf	%buildroot%_bindir/ptar \
-	%buildroot%_bindir/ptardiff \
-	%buildroot%_bindir/ptargrep \
-	%buildroot%perl_root/%version/Archive/Tar.pm \
-	%buildroot%perl_root/%version/Archive/Tar
+rm -r	%{buildroot}%{_bindir}/ptar \
+	%{buildroot}%{_bindir}/ptardiff \
+	%{buildroot}%{_bindir}/ptargrep \
+	%{buildroot}%{perl_root}/%{version}/Archive/Tar.pm \
+	%{buildroot}%{perl_root}/%{version}/Archive/Tar
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
@@ -624,6 +623,9 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
+* Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-4
+- don't ship bundled Archive::Tar
+
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-3
 - always link against perllibs flags (hopefully, perl blows, what else is new?)
 - pass '-lpthread' rather than '-pthread' to linker, otherwise it'll always
