@@ -250,6 +250,8 @@ PATH="${PATH#%{_datadir}/colorgcc:}"
 rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
+# FIXME: should pick up library path automatically in patch..
+export LIBRARY_PATH="$PWD"
 TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAGS=
 
 %install
