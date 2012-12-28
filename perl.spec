@@ -255,7 +255,7 @@ TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAG
 %install
 %makeinstall_std
 
-install -d %{buildroot}%{perl_root}/vendor_perl/%{version}/%{full_arch}/auto
+install -d %{buildroot}%{perl_root}/
 
 # We prefer 0755 instead of 0555
 find %{buildroot} -name "*.so" | xargs chmod 0755
@@ -274,11 +274,16 @@ rm %{buildroot}%{_bindir}/perlivp %{buildroot}%{_mandir}/man1/perlivp.1
 
 %ifarch ppc
 perl -ni -e 'print if !/sub __syscall_nr/' %{buildroot}%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
-%endif
-
-%ifarch ppc
 perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
+
+# Get rid of stuff from Archive::Tar - the standalone package is released
+# far more frequently
+rm -rf	%buildroot%_bindir/ptar \
+	%buildroot%_bindir/ptardiff \
+	%buildroot%_bindir/ptargrep \
+	%buildroot%perl_root/%version/Archive/Tar.pm \
+	%buildroot%perl_root/%version/Archive/Tar
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
@@ -555,9 +560,6 @@ cat > perl.list <<EOF
 %{_bindir}/pod2html
 %{_bindir}/pod2text
 %{_bindir}/pod2latex
-%{_bindir}/ptar
-%{_bindir}/ptardiff
-%{_bindir}/ptargrep
 %{_bindir}/splain
 %{_bindir}/s2p
 %{_bindir}/zipdetails
