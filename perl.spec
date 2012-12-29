@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	3
+Release:	4
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -285,7 +285,8 @@ rm -rf	%buildroot%_bindir/ptar \
 	%buildroot%_bindir/ptardiff \
 	%buildroot%_bindir/ptargrep \
 	%buildroot%perl_root/%version/Archive/Tar.pm \
-	%buildroot%perl_root/%version/Archive/Tar
+	%buildroot%perl_root/%version/Archive/Tar \
+	%buildroot%_mandir/man1/ptar*.1*
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
