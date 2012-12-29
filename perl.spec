@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	5
+Release:	6
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -75,6 +75,7 @@ Suggests:	perl(Module::Build)
 Suggests:	perl(Module::CoreList)
 Suggests:	perl(Pod::Perldoc)
 Suggests:	perl(Time::Piece)
+Suggests:	perl(CPAN::Meta::YAML)
 
 
 Provides:	perl-MIME-Base64 = 3.080.0
@@ -379,6 +380,10 @@ rm -r	%{buildroot}%{_bindir}/corelist \
 	%{buildroot}%{_mandir}/man1/corelist* \
 	%{buildroot}%{_mandir}/man3pm/Module::CoreList*
 
+# CPAN::Meta::YAML
+rm -r	%{buildroot}%{perl_root}/%{version}/CPAN/Meta/YAML.pm \
+	%{buildroot}%{_mandir}/man3pm/CPAN::Meta::YAML.3pm*
+
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
 %define dont_strip 1
@@ -659,6 +664,9 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
+* Sat Dec 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-6
+- drop bundled CPAN::Meta::YAML
+
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-5
 - drop bundled CPANPLUS::Dist::Build, Compress::Raw::Bzip2,
   Compress::Raw::Zlib, CGI, IO::Compress, Archive::Extract, JSON::PP,
