@@ -140,6 +140,8 @@ Url:		http://www.perl.org/
 Requires:	%{name} = %{EVRD}
 # temporary dep due to the perl-5.14 bump
 Requires:	perl-List-MoreUtils >= 0.320.0-4
+Requires:	perl(JSON::PP)
+Requires:	perl(CPAN::Meta::YAML)
 
 %package	doc
 Summary:	The Perl programming language (documentation)
@@ -665,6 +667,7 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %changelog
 * Sat Dec 29 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-6
+- add dependencies on perl(JSON::PP) & perl(CPAN::Meta::YAML) for devel package
 - drop bundled CPAN::Meta::YAML
 
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-5
