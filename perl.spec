@@ -55,30 +55,27 @@ Patch67:	perl-5.16.0-update-sha1sum-used-in-testsuite.patch
 
 Requires:	perl-base = %{EVRD}
 
-# the following modules are dual-lifed modules, which are shipping
-# scripts in /usr/bin. to prevent conflict, dual-lifed modules rename
-# the scripts - but only after the listed version ;-)
-Conflicts:	perl-Digest-SHA <= 5.620.0-5
-Conflicts:	perl-JSON-PP <= 2.272.0-1
-Conflicts:	perl-Module-Build <= 1:0.380.0-4
-Conflicts:	perl-Module-CoreList <= 2.590.0-5
-Conflicts:	perl-Pod-Perldoc <= 3.150.0-6
-Conflicts:	perl-IO-Compress <= 2.49.0-1
-
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
 # that think that installing "perl" will have a full perl as shipped by
 # upstream. (cf tom christiansen and the lengthy thread:
 # http://www.nntp.perl.org/group/perl.perl5.porters/2009/08/msg149747.html)
-Suggests:	perl-Archive-Extract
-Suggests:	perl-Archive-Tar
-Suggests:	perl-CGI
-Suggests:	perl-CPANPLUS
-Suggests:	perl-CPANPLUS-Dist-Build
-Suggests:	perl-Digest-SHA
-Suggests:	perl-Module-Build
-Suggests:	perl-Module-CoreList
-Suggests:	perl-Time-Piece
+Suggests:	perl(Archive::Extract)
+Suggests:	perl(Archive::Tar)
+Suggests:	perl(CGI)
+Suggests:	perl(Compress::Raw::Bzip2)
+Suggests:	perl(Compress::Raw::Zlib)
+Suggests:	perl(Compress::Zlib)
+Suggests:	perl(CPANPLUS)
+Suggests:	perl(CPANPLUS::Dist::Build)
+Suggests:	perl(Digest::SHA)
+Suggests:	perl(IO::Compress::Bzip2)
+Suggests:	perl(JSON::PP)
+Suggests:	perl(Module::Build)
+Suggests:	perl(Module::CoreList)
+Suggests:	perl(Pod::Perldoc)
+Suggests:	perl(Time::Piece)
+
 
 Provides:	perl-MIME-Base64 = 3.080.0
 Obsoletes:	perl-MIME-Base64 < 3.080.0
@@ -239,6 +236,8 @@ sh Configure -des \
   -Di_db \
   -Di_ndbm \
   -Di_gdbm
+#  -Dnoextensions='Archive/Extract Archive/Tar CGI Compress/Raw/Bzip2 Compress/Raw/Zlib CPANPLUS/Dist/Build CPANPLUS Digest/SHA IO/Compress JSON/PP Pod/Perldoc Module/Build Module/CoreList Pod/Perldoc Term/UI Time/Piece'
+
 # workaround for not using colorgcc that relies on perl
 PATH="${PATH#%{_datadir}/colorgcc:}"
 %make
@@ -277,22 +276,108 @@ perl -ni -e 'print if !/sub __syscall_nr/' %{buildroot}%{perl_root}/%{version}/%
 perl -ni -e 'print unless m/sub __syscall_nr/' %{buildroot}/%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
 %endif
 
+# work in progress..
+chmod u+w -R %{buildroot}
 # Get rid of stuff from Archive::Tar - the standalone package is released
 # far more frequently
-rm -rf	%{buildroot}%{_bindir}/ptar \
+rm -r	%{buildroot}%{_bindir}/ptar \
 	%{buildroot}%{_bindir}/ptardiff \
 	%{buildroot}%{_bindir}/ptargrep \
 	%{buildroot}%{perl_root}/%{version}/Archive/Tar.pm \
-	%{buildroot}%{perl_root}/%{version}/Archive/Tar
+	%{buildroot}%{perl_root}/%{version}/Archive/Tar \
+	%{buildroot}%{_mandir}/man1/ptar.1 \
+	%{buildroot}%{_mandir}/man1/ptardiff.1 \
+	%{buildroot}%{_mandir}/man1/ptargrep.1 \
+	%{buildroot}%{_mandir}/man3pm/Archive::Tar* 
 
-# idem
-rm -rf	%{buildroot}%{_bindir}/cpan2dist \
+# Archive::Extract
+rm -r	%{buildroot}%{perl_root}/%{version}/Archive/Extract.pm \
+	%{buildroot}%{_mandir}/man3pm/Archive::Extract.3*
+
+# idem CPANPLUS
+rm -r	%{buildroot}%{_bindir}/cpan2dist \
 	%{buildroot}%{_bindir}/cpanp \
 	%{buildroot}%{_bindir}/cpanp-run-perl \
-	%{buildroot}%{perl_root}/CPANPLUS/ \
+	%{buildroot}%{perl_root}/%{version}/CPANPLUS/ \
 	%{buildroot}%{_mandir}/man1/cpan2dist.1* \
 	%{buildroot}%{_mandir}/man1/cpanp.1* \
-	%{buildroot}%{_mandir}/man3/CPANPLUS*
+	%{buildroot}%{_mandir}/man3pm/CPANPLUS*
+
+# idem Digest::SHA
+rm -r	%{buildroot}%{_bindir}/shasum \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Digest/SHA.pm \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/auto/Digest/SHA \
+	%{buildroot}%{_mandir}/man1/shasum.1 \
+	%{buildroot}%{_mandir}/man3pm/Digest::SHA.3* \
+
+# Pod::Perldoc
+rm -r	%{buildroot}%{_bindir}/perldoc \
+	%{buildroot}%{perl_root}/%{version}/pod/perldoc.pod \
+	%{buildroot}%{perl_root}/%{version}/Pod/Perldoc.pm \
+	%{buildroot}%{perl_root}/%{version}/Pod/Perldoc/ \
+	%{buildroot}%{_mandir}/man1/perldoc.1* \
+	%{buildroot}%{_mandir}/man3pm/Pod::Perldoc*
+
+# Term::UI
+rm -r	%{buildroot}%{perl_root}/%{version}/Term/UI.pm \
+	%{buildroot}%{perl_root}/%{version}/Term/UI/ \
+	%{buildroot}%{_mandir}/man3pm/Term::UI*
+
+# Time::Piece
+rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Time/Piece.pm \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Time/Seconds.pm \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/auto/Time/Piece/ \
+	%{buildroot}%{_mandir}/man3pm/Time::Piece.3* \
+	%{buildroot}%{_mandir}/man3pm/Time::Seconds.3*
+
+# CGI
+rm -r	%{buildroot}%{perl_root}/%{version}/CGI \
+	%{buildroot}%{perl_root}/%{version}/CGI.pm \
+	%{buildroot}%{_mandir}/man3pm/CGI.3* \
+	%{buildroot}%{_mandir}/man3pm/CGI::*.3*
+
+# Compress::Raw::Bzip2
+rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Bzip2.pm \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2 \
+	%{buildroot}%{_mandir}/man3pm/Compress::Raw::Bzip2*
+
+# Compress::Raw::Zlib
+rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Zlib.pm \
+	%{buildroot}%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib \
+	%{buildroot}%{_mandir}/man3pm/Compress::Raw::Zlib*
+
+# IO::Compress
+rm -r	%{buildroot}%{_bindir}/zipdetails \
+	%{buildroot}%{_mandir}/man1/zipdetails.* \
+	%{buildroot}%{perl_root}/%{version}/File/GlobMapper.pm \
+	%{buildroot}%{_mandir}/man3pm/File::GlobMapper.* \
+	%{buildroot}%{perl_root}/%{version}/IO/Compress \
+	%{buildroot}%{perl_root}/%{version}/IO/Uncompress \
+	%{buildroot}%{_mandir}/man3pm/IO::Compress* \
+	%{buildroot}%{_mandir}/man3pm/IO::Uncompress*
+
+# JSON::PP
+rm  -r	%{buildroot}%{_bindir}/json_pp \
+	%{buildroot}%{perl_root}/%{version}/JSON/PP \
+	%{buildroot}%{perl_root}/%{version}/JSON/PP.pm \
+	%{buildroot}%{_mandir}/man1/json_pp.1* \
+	%{buildroot}%{_mandir}/man3pm/JSON::PP.3* \
+	%{buildroot}%{_mandir}/man3pm/JSON::PP::Boolean.3pm*
+
+# Module::Build
+rm  -r	%{buildroot}%{_bindir}/config_data \
+	%{buildroot}%{perl_root}/%{version}/inc/ \
+	%{buildroot}%{perl_root}/%{version}/Module/Build/ \
+	%{buildroot}%{perl_root}/%{version}/Module/Build.pm \
+	%{buildroot}%{_mandir}/man1/config_data.1* \
+	%{buildroot}%{_mandir}/man3pm/Module::Build* \
+	%{buildroot}%{_mandir}/man3pm/inc::latest.3*
+
+# Module::CoreList
+rm -r	%{buildroot}%{_bindir}/corelist \
+	%{buildroot}%{perl_root}/%{version}/Module/CoreList.pm \
+	%{buildroot}%{_mandir}/man1/corelist* \
+	%{buildroot}%{_mandir}/man3pm/Module::CoreList*
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
@@ -315,7 +400,6 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/File/Find.pm
 %{perl_root}/%{version}/File/Path.pm
 %{perl_root}/%{version}/File/Temp.pm
-%{perl_root}/%{version}/File/GlobMapper.pm
 %dir %{perl_root}/%{version}/Getopt
 %{perl_root}/%{version}/Getopt/Long.pm
 %{perl_root}/%{version}/Getopt/Std.pm
@@ -324,42 +408,6 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/Encode/Makefile_PL.e2x
 %{perl_root}/%{version}/Encode/_PM.e2x
 %{perl_root}/%{version}/Encode/_T.e2x
-%dir %{perl_root}/%{version}/IO
-%dir %{perl_root}/%{version}/Compress
-%dir %{perl_root}/%{version}/IO/Compress
-%{perl_root}/%{version}/Compress/Zlib.pm
-%dir %{perl_root}/%{version}/IO/Compress/Adapter
-%{perl_root}/%{version}/IO/Compress/Adapter/Bzip2.pm
-%{perl_root}/%{version}/IO/Compress/Adapter/Deflate.pm
-%{perl_root}/%{version}/IO/Compress/Adapter/Identity.pm
-%dir %{perl_root}/%{version}/IO/Compress/Base
-%{perl_root}/%{version}/IO/Compress/Base.pm
-%{perl_root}/%{version}/IO/Compress/Base/Common.pm
-%{perl_root}/%{version}/IO/Compress/Bzip2.pm
-%{perl_root}/%{version}/IO/Compress/Deflate.pm
-%dir %{perl_root}/%{version}/IO/Compress/Gzip
-%{perl_root}/%{version}/IO/Compress/Gzip.pm
-%{perl_root}/%{version}/IO/Compress/Gzip/Constants.pm
-%{perl_root}/%{version}/IO/Compress/RawDeflate.pm
-%dir %{perl_root}/%{version}/IO/Compress/Zip
-%{perl_root}/%{version}/IO/Compress/Zip.pm
-%{perl_root}/%{version}/IO/Compress/Zip/Constants.pm
-%dir %{perl_root}/%{version}/IO/Compress/Zlib
-%{perl_root}/%{version}/IO/Compress/Zlib/Constants.pm
-%{perl_root}/%{version}/IO/Compress/Zlib/Extra.pm
-%dir %{perl_root}/%{version}/IO/Uncompress
-%dir %{perl_root}/%{version}/IO/Uncompress/Adapter
-%{perl_root}/%{version}/IO/Uncompress/Adapter/Bunzip2.pm
-%{perl_root}/%{version}/IO/Uncompress/Adapter/Identity.pm
-%{perl_root}/%{version}/IO/Uncompress/Adapter/Inflate.pm
-%{perl_root}/%{version}/IO/Uncompress/AnyInflate.pm
-%{perl_root}/%{version}/IO/Uncompress/AnyUncompress.pm
-%{perl_root}/%{version}/IO/Uncompress/Base.pm
-%{perl_root}/%{version}/IO/Uncompress/Bunzip2.pm
-%{perl_root}/%{version}/IO/Uncompress/Gunzip.pm
-%{perl_root}/%{version}/IO/Uncompress/Inflate.pm
-%{perl_root}/%{version}/IO/Uncompress/RawInflate.pm
-%{perl_root}/%{version}/IO/Uncompress/Unzip.pm
 %dir %{perl_root}/%{version}/Net
 %{perl_root}/%{version}/Net/Cmd.pm
 %{perl_root}/%{version}/Net/Config.pm
@@ -428,18 +476,6 @@ cat > perl-base.list <<EOF
 %{perl_root}/%{version}/%{full_arch}/IO/Socket.pm
 %dir %{perl_root}/%{version}/%{full_arch}/IO/Socket
 %{perl_root}/%{version}/%{full_arch}/IO/Socket/INET.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Compress
-%dir %{perl_root}/%{version}/%{full_arch}/Compress/Raw
-%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Bzip2.pm
-%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Zlib.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2
-%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2/Bzip2.so
-%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2/autosplit.ix
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib
-%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib/Zlib.so
-%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Zlib/autosplit.ix
 %dir %{perl_root}/%{version}/%{full_arch}/auto
 %dir %{perl_root}/%{version}/%{full_arch}/auto/Cwd
 %{perl_root}/%{version}/%{full_arch}/auto/Cwd/Cwd.so
@@ -571,22 +607,15 @@ cat > perl.list <<EOF
 %{_bindir}/pod2latex
 %{_bindir}/splain
 %{_bindir}/s2p
-%{_bindir}/zipdetails
 EOF
 
 cat > perl-devel.list <<EOF
 %{_bindir}/c2ph
-%{_bindir}/config_data
-%{_bindir}/corelist
 %{_bindir}/cpan
-%{_bindir}/cpan2dist
-%{_bindir}/cpanp
-%{_bindir}/cpanp-run-perl
 %{_bindir}/enc2xs
 %{_bindir}/h2ph
 %{_bindir}/h2xs
 %{_bindir}/instmodsh
-%{_bindir}/json_pp
 %{_bindir}/libnetcfg
 %{_bindir}/piconv
 %{_bindir}/pl2pm
@@ -596,7 +625,6 @@ cat > perl-devel.list <<EOF
 %{_bindir}/prove
 %{_bindir}/psed
 %{_bindir}/pstruct
-%{_bindir}/shasum
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
 %{perl_root}/%{version}/%{full_arch}/CORE/*.h
@@ -604,8 +632,8 @@ cat > perl-devel.list <<EOF
 EOF
 
 cat > perl-doc.list <<EOF
-%{_bindir}/perldoc
-%{_mandir}/man3pm/Pod::Perldoc*
+#%{_bindir}/perldoc
+#%{_mandir}/man3pm/Pod::Perldoc*
 EOF
 
 find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc %%p\n" |sort -u >> perl-doc.list
@@ -632,6 +660,9 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %changelog
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-4
+- drop bundled CPANPLUS::Dist::Build, Compress::Raw::Bzip2,
+  Compress::Raw::Zlib, CGI, IO::Compress, Archive::Extract, JSON::PP,
+  Module::Build, Module::CoreList, Term::UI & Time::Piece
 - don't ship bundled CPANPLUS
 - don't ship bundled Archive::Tar
 
