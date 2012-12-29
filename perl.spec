@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	5
+Release:	7
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -76,7 +76,9 @@ Suggests:	perl(Module::CoreList)
 Suggests:	perl(Pod::Perldoc)
 Suggests:	perl(Time::Piece)
 
-
+# Used to be maintained separately, bundled now
+Provides:	perl-CPAN-Meta-YAML = 0.007
+Obsoletes:	perl-CPAN-Meta-YAML < 0.007
 Provides:	perl-MIME-Base64 = 3.080.0
 Obsoletes:	perl-MIME-Base64 < 3.080.0
 Provides:	perl-libnet
