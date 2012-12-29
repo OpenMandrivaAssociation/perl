@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	4
+Release:	5
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -659,7 +659,7 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
-* Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-4
+* Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-5
 - drop bundled CPANPLUS::Dist::Build, Compress::Raw::Bzip2,
   Compress::Raw::Zlib, CGI, IO::Compress, Archive::Extract, JSON::PP,
   Module::Build, Module::CoreList, Term::UI & Time::Piece
