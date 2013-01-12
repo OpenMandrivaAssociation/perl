@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	8
+Release:	9
 Epoch:		2
 
 Summary:	The Perl programming language
