@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.2
-Release:	7
+Release:	8
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -141,6 +141,7 @@ Url:		http://www.perl.org/
 Requires:	%{name} = %{EVRD}
 # temporary dep due to the perl-5.14 bump
 Requires:	perl-List-MoreUtils >= 0.320.0-4
+Requires:	perl(JSON::PP)
 
 %package	doc
 Summary:	The Perl programming language (documentation)
@@ -661,6 +662,9 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
+* Sat Jan 12 2012 Per Øyvind Karlsen <peoryvind@mandriva.org> 5.16.2-8
+- add dependencies on perl(JSON::PP) for devel package
+
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-5
 - drop bundled CPANPLUS::Dist::Build, Compress::Raw::Bzip2,
   Compress::Raw::Zlib, CGI, IO::Compress, Archive::Extract, JSON::PP,
