@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   perl-5.16.2.tar.gz: 9e20e38e3460ebbac895341fd70a02189d03a490
+sources:
+  perl-5.16.3.tar.gz: 83678adf56d3dc51f47a90444a891f4fe16868da
