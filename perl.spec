@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.3
-Release:	1
+Release:	2
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -350,6 +350,8 @@ rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Zlib.pm \
 # IO::Compress
 rm -r	%{buildroot}%{_bindir}/zipdetails \
 	%{buildroot}%{_mandir}/man1/zipdetails.* \
+	%{buildroot}%{perl_root}/%{version}/Compress/Zlib.pm \
+	%{buildroot}%{_mandir}/man3pm/Compress::Zlib* \
 	%{buildroot}%{perl_root}/%{version}/File/GlobMapper.pm \
 	%{buildroot}%{_mandir}/man3pm/File::GlobMapper.* \
 	%{buildroot}%{perl_root}/%{version}/IO/Compress \
