@@ -662,10 +662,10 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 %{_libdir}/libperl.so.%{major}
 
 %changelog
-* Sat Jan 12 2012 Per Øyvind Karlsen <peoryvind@mandriva.org> 5.16.2-9
+* Sat Jan 12 2013 Per Øyvind Karlsen <peoryvind@mandriva.org> 5.16.2-9
 - remove dependency on perl-List-MoreUtils in perl-devel package
 
-* Sat Jan 12 2012 Per Øyvind Karlsen <peoryvind@mandriva.org> 5.16.2-8
+* Sat Jan 12 2013 Per Øyvind Karlsen <peoryvind@mandriva.org> 5.16.2-8
 - add dependencies on perl(JSON::PP) for devel package
 
 * Fri Dec 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 5.16.2-5
