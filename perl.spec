@@ -200,58 +200,19 @@ It contains also the 'perldoc' program.
 ln -s $PWD lib/CORE
 
 %build
-#sh Configure -des \
-#  -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
-#  -Darchname=%{_arch}-%{_os} \
-#  -Dcc='%{__cc}' \
-#%if %debugging
-#  -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
-#%else
-#  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
-#%endif
-#  -Dccdlflags="%{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
-#  -Dcccdlflags="-fPIC -fno-PIE" \
-#  -Dldflags="%{ldflags}" \
-#  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
-#  -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
-#  -Dlibpth='%{_libdir} /%{_lib}' \
-#  -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
-#  -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
-#  -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
-#  -Dsiteman3dir=%{_prefix}/local/share/man/man3 \
-#  -Dman3dir=%{_mandir}/man3pm \
-#  -Dvendorman3dir=%{_mandir}/man3 \
-#  -Dman3ext=3pm \
-#  -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
-#  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -lpthread'   \
-#  -Ud_csh \
-#  -Duseshrplib \
-#  -Duselargefiles \
-#  -Dpager='%{_bindir}/less -isr' \
-#%if %threading
-#  -Duseithreads \
-#%endif
-#%ifarch %{sparc}
-#  -Ud_longdbl \
-#%endif
-#  -Di_db \
-#  -Di_ndbm \
-#  -Di_gdbm
-##  -Dnoextensions='Archive/Extract Archive/Tar CGI Compress/Raw/Bzip2 Compress/Raw/Zlib CPANPLUS/Dist/Build CPANPLUS Digest/SHA IO/Compress JSON/PP Pod/Perldoc Module/Build Module/CoreList Pod/Perldoc Term/UI Time/Piece'
-
 sh Configure -des \
   -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
+  -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="-O2 -Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4  -fomit-frame-pointer -mtune=generic -fasynchronous-unwind-tables" \
-  -DDEBUGGING="-Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2" \
+  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
-  -Dccdlflags="-Wl,--no-undefined  -Wl,--warn-unresolved-symbols -fno-PIE" \
+  -Dccdlflags="%{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
   -Dcccdlflags="-fPIC -fno-PIE" \
-  -Dldflags="-Wl,--no-undefined" \
-  -Dlddlflags="-shared -O2 -Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4  -fomit-frame-pointer -mtune=generic -fasynchronous-unwind-tables  -Wl,--no-undefined  -Wl,--warn-unresolved-symbols -fno-PIE" \
+  -Dldflags="%{ldflags}" \
+  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_libdir} /%{_lib}' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
@@ -276,6 +237,46 @@ sh Configure -des \
   -Di_db \
   -Di_ndbm \
   -Di_gdbm
+#  -Dnoextensions='Archive/Extract Archive/Tar CGI Compress/Raw/Bzip2 Compress/Raw/Zlib CPANPLUS/Dist/Build CPANPLUS Digest/SHA IO/Compress JSON/PP Pod/Perldoc Module/Build Module/CoreList Pod/Perldoc Term/UI Time/Piece'
+
+# arisel 20130529 tidy up later, when perl builds again fine on abf
+#sh Configure -des \
+#  -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
+#  -Dcc='%{__cc}' \
+#%if %debugging
+#  -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
+#%else
+#  -Doptimize="-O2 -Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4  -fomit-frame-pointer -mtune=generic -fasynchronous-unwind-tables" \
+#  -DDEBUGGING="-Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2" \
+#%endif
+#  -Dccdlflags="-Wl,--no-undefined  -Wl,--warn-unresolved-symbols -fno-PIE" \
+#  -Dcccdlflags="-fPIC -fno-PIE" \
+#  -Dldflags="-Wl,--no-undefined" \
+#  -Dlddlflags="-shared -O2 -Wa,--compress-debug-sections -gdwarf-4 -fvar-tracking-assignments -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4  -fomit-frame-pointer -mtune=generic -fasynchronous-unwind-tables  -Wl,--no-undefined  -Wl,--warn-unresolved-symbols -fno-PIE" \
+#  -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
+#  -Dlibpth='%{_libdir} /%{_lib}' \
+#  -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
+#  -Dsiteprefix=%{_prefix} -Dsitebin=%{_prefix}/local/bin \
+#  -Dsiteman1dir=%{_prefix}/local/share/man/man1 \
+#  -Dsiteman3dir=%{_prefix}/local/share/man/man3 \
+#  -Dman3dir=%{_mandir}/man3pm \
+#  -Dvendorman3dir=%{_mandir}/man3 \
+#  -Dman3ext=3pm \
+#  -Dcf_by=%{vendor} -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
+#  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -lpthread'   \
+#  -Ud_csh \
+#  -Duseshrplib \
+#  -Duselargefiles \
+#  -Dpager='%{_bindir}/less -isr' \
+#%if %threading
+#  -Duseithreads \
+#%endif
+#%ifarch %{sparc}
+#  -Ud_longdbl \
+#%endif
+#  -Di_db \
+#  -Di_ndbm \
+#  -Di_gdbm
 
 # workaround for not using colorgcc that relies on perl
 PATH="${PATH#%{_datadir}/colorgcc:}"
