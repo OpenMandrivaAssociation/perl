@@ -12,7 +12,7 @@
 Name:		perl
 %define	major	5.16
 Version:	%{major}.3
-Release:	2
+Release:	3
 Epoch:		2
 
 Summary:	The Perl programming language
@@ -202,7 +202,6 @@ ln -s $PWD lib/CORE
 %build
 sh Configure -des \
   -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
-  -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
