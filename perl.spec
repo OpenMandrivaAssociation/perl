@@ -9,6 +9,8 @@
 # Don't change to %{_libdir} as perl is clean and has arch-dependent subdirs
 %define perl_root %{_prefix}/lib/perl5
 
+%define	libname	%mklibname perl %{major}
+
 Name:		perl
 %define	major	5.16
 Version:	%{major}.3
@@ -125,8 +127,8 @@ Url:		http://www.perl.org/
 Provides:	/usr/bin/perl
 # perl-suid is gone is perl 5.12
 Obsoletes:	perl-suid
+Requires:	%{libname} = %EVRD
 
-%define	libname	%mklibname perl %{major}
 %package -n	%{libname}
 Summary:	Shared library for perl
 Group:		System/Libraries
