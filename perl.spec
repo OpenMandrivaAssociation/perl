@@ -232,6 +232,7 @@ sh Configure -des \
   -Dpager='%{_bindir}/less -isr' \
 %if %threading
   -Duseithreads \
+  -Dusethreads \
 %endif
 %ifarch %{sparc}
   -Ud_longdbl \
