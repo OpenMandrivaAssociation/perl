@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	6
+Release:	7
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
