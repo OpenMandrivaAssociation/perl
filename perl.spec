@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	7
+Release:	8
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -197,10 +197,10 @@ sh Configure -des \
 %else
   -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
-  -Dccdlflags="%{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
-  -Dcccdlflags="-fPIC -fno-PIE" \
+  -Dccdlflags="-fno-PIE %{ldflags} -Wl,--warn-unresolved-symbols" \
+  -Dcccdlflags="-fno-PIE -fPIC" \
   -Dldflags="%{ldflags}" \
-  -Dlddlflags="-shared %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols -fno-PIE" \
+  -Dlddlflags="-shared -fno-PIE %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_libdir} /%{_lib}' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
