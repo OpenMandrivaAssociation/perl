@@ -6,9 +6,9 @@ diff -p -up perl-5.10.0/Configure.pix perl-5.10.0/Configure
  fi
  
 +: determine libdir name
-+: Should be */lib64 on x86-64, sparc64, ppc64
++: Should be */lib64 on x86-64, sparc64, ppc64, aarch64
 +case `arch` in
-+  x86_64|ppc64) lib='lib64';;
++  x86_64|ppc64|aarch64) lib='lib64';;
 +  *) lib='lib';;
 +esac
 +
