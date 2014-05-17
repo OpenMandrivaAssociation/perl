@@ -195,7 +195,9 @@ sh Configure -des \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="%{optflags} -fno-lto" -DDEBUGGING="%{debugcflags}" \
+# (tpg) https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=746890
+# -fwrapv added to fix gcc 4.9 issues
+  -Doptimize="%{optflags} -fwrapv" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="-fno-PIE %{ldflags} -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
