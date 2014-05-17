@@ -4,7 +4,7 @@
  #  endif
  static const char * const local_patches[] = {
  	NULL
-+    ,"Mandriva Linux patches"
++    ,"OpenMandriva Linux patches"
  #ifdef PERL_GIT_UNCOMMITTED_CHANGES
  	,"uncommitted-changes"
  #endif

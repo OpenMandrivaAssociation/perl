@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	8
+Release:	9
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -52,6 +52,10 @@ Patch51:	perl-5.16.2-add-soname-to-libperl.patch
 Patch65:	local_symtab.diff
 Patch66:	perl-5.14.2-USE_MM_LD_RUN_PATH.patch
 Patch67:	perl-5.16.0-update-sha1sum-used-in-testsuite.patch
+# (tpg)https://rt.perl.org/Public/Bug/Display.html?id=121505
+# gcc 4.9 by default does some optimizations that break perl
+# add -fwrapv to ccflags
+Patch68:	0001-perl-121505-add-fwrapv-to-ccflags-for-gcc-4.9-and-la.patch
 
 # for NDBM
 BuildRequires:	db5-devel
@@ -163,6 +167,7 @@ It contains also the 'perldoc' program.
 
 %prep
 %setup -q
+
 %patch5 -p1 -b .flags~
 %patch6 -p0
 %patch14 -p0
@@ -183,6 +188,7 @@ It contains also the 'perldoc' program.
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
 %patch67 -p1 -b .sha1sum~
+%patch68 -p1 -b .fwrapv~
 
 # fix linking against libperl during build
 ln -s $PWD lib/CORE
@@ -195,9 +201,7 @@ sh Configure -des \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-# (tpg) https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=746890
-# -fwrapv added to fix gcc 4.9 issues
-  -Doptimize="%{optflags} -fwrapv" -DDEBUGGING="%{debugcflags}" \
+  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="-fno-PIE %{ldflags} -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
