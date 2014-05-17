@@ -195,7 +195,7 @@ sh Configure -des \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
+  -Doptimize="%{optflags} -fno-lto" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="-fno-PIE %{ldflags} -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
