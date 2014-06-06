@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	9
+Release:	10
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -78,7 +78,7 @@ Suggests:	perl(CPANPLUS)
 Suggests:	perl(CPANPLUS::Dist::Build)
 Suggests:	perl(Digest::SHA)
 Suggests:	perl(IO::Compress::Bzip2)
-Suggests:	perl(JSON::PP)
+Requires:	perl(JSON::PP)
 Suggests:	perl(Module::Build)
 Suggests:	perl(Module::CoreList)
 Suggests:	perl(Pod::Perldoc)
