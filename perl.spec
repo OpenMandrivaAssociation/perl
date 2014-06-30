@@ -195,7 +195,7 @@ ln -s $PWD lib/CORE
 
 %build
 %ifarch aarch64
-export LDFLAGS="-Wl,--hash-style=both"
+export AFLAGS="-Wl,--hash-style=both"
 %endif
 sh Configure -des \
   -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
@@ -206,10 +206,10 @@ sh Configure -des \
 %else
   -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
 %endif
-  -Dccdlflags="-fno-PIE %{ldflags} -Wl,--warn-unresolved-symbols" \
+  -Dccdlflags="-fno-PIE %{ldflags} $AFLAGS -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
-  -Dldflags="%{ldflags}" \
-  -Dlddlflags="-shared -fno-PIE %{optflags} %{ldflags} -Wl,--warn-unresolved-symbols" \
+  -Dldflags="%{ldflags} $AFLAGS" \
+  -Dlddlflags="-shared -fno-PIE %{optflags} %{ldflags} $AFLAGS -Wl,--warn-unresolved-symbols" \
   -Dcppflags="-D_REENTRANT -D_GNU_SOURCE" \
   -Dlibpth='%{_libdir} /%{_lib}' \
   -Dprefix=%{_prefix} -Dvendorprefix=%{_prefix} \
