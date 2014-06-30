@@ -194,6 +194,9 @@ It contains also the 'perldoc' program.
 ln -s $PWD lib/CORE
 
 %build
+%ifarch aarch64
+export LDFLAGS="-Wl,--hash-style=both"
+%endif
 sh Configure -des \
   -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
   -Darchname=%{_arch}-%{_os} \
