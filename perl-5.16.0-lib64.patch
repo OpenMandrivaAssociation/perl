@@ -32,19 +32,19 @@ diff -p -up perl-5.10.0/Configure.pix perl-5.10.0/Configure
  test -f /usr/shlib/libc.so && glibpth="/usr/shlib $glibpth"
  test -f /shlib/libc.so     && glibpth="/shlib $glibpth"
  test -d /usr/lib64         && glibpth="$glibpth /lib64 /usr/lib64 /usr/local/lib64"
-@@ -10970,9 +10977,9 @@ else
- 		else
- 			for net in net socket
- 			do
--				if test -f /usr/lib/lib$net$_a; then
--					( ($nm $nm_opt /usr/lib/lib$net$_a | eval $nm_extract) ||  \
--					$ar t /usr/lib/lib$net$_a) 2>/dev/null >> libc.list
-+				if test -f /usr/$lib/lib$net$_a; then
-+					( ($nm $nm_opt /usr/$lib/lib$net$_a | eval $nm_extract) ||  \
-+					$ar t /usr/$lib/lib$net$_a) 2>/dev/null >> libc.list
- 					if $contains socket libc.list >/dev/null 2>&1; then
- 						d_socket="$define"
- 						socketlib="-l$net"
+@@ -11553,9 +11553,9 @@
+ 	else
+ 	    for net in net socket
+ 	    do
+-		if test -f $sysroot/usr/lib/lib$net$_a; then
+-		    ( ($nm $nm_opt $sysroot/usr/lib/lib$net$_a | eval $nm_extract) ||  \
+-		    $ar t $sysroot/usr/lib/lib$net$_a) 2>/dev/null >> libc.list
++		if test -f $sysroot/usr/$lib/lib$net$_a; then
++		    ( ($nm $nm_opt $sysroot/usr/$lib/lib$net$_a | eval $nm_extract) ||  \
++		    $ar t $sysroot/usr/$lib/lib$net$_a) 2>/dev/null >> libc.list
+ 		    if $contains socket libc.list >/dev/null 2>&1; then
+ 			d_socket="$define"
+ 			socketlib="-l$net"
 @@ -22223,6 +22230,7 @@ ldflags='$ldflags'
  ldflags_uselargefiles='$ldflags_uselargefiles'
  ldlibpthname='$ldlibpthname'

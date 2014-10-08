@@ -9,14 +9,14 @@
 # Don't change to %{_libdir} as perl is clean and has arch-dependent subdirs
 %define perl_root %{_prefix}/lib/perl5
 
-%define	major	5.16
-%define	libname	%mklibname perl %{major}
+%define	major 5.20
+%define libname %mklibname perl %{major}
 
 Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
-Version:	%{major}.3
-Release:	12
+Version:	%{major}.0
+Release:	1
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -27,7 +27,6 @@ Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
 Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
 Patch6:		perl-5.16.0-fix-LD_RUN_PATH-for-MakeMaker.patch
-Patch14:	perl-5.12.0-RC0-install-files-using-chmod-644.patch
 Patch15:	perl-5.16.0-lib64.patch
 Patch16:	perl-5.16.0-perldoc-use-nroff-compatibility-option.patch
 #(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
@@ -35,7 +34,6 @@ Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:	perl-5.12.0-patchlevel.patch
 Patch29:	perl-5.14.2-rpmdebug.patch
 Patch32:	perl-5.10.0-incversionlist.patch
-Patch38:	perl-donot-defer-sig11.patch
 
 Patch43:	perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
 Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
@@ -44,14 +42,13 @@ Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
 Patch48:	perl-5.16.0-workaround-segfault-freeing-scalar-a-second-time.patch
 Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
 Patch50:	perl-5.16.2-link-perl-extensions-against-libperl.patch
-Patch51:	perl-5.16.2-add-soname-to-libperl.patch
+Patch51:	perl-5.20.0-add-soname-to-libperl.patch
 #
 # fixes taken from debian
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:	local_symtab.diff
-Patch66:	perl-5.14.2-USE_MM_LD_RUN_PATH.patch
-Patch67:	perl-5.16.0-update-sha1sum-used-in-testsuite.patch
+Patch66:	perl-5.20.0-USE_MM_LD_RUN_PATH.patch
 # (tpg)https://rt.perl.org/Public/Bug/Display.html?id=121505
 # gcc 4.9 by default does some optimizations that break perl
 # add -fwrapv to ccflags
@@ -61,7 +58,10 @@ Patch68:	0001-perl-121505-add-fwrapv-to-ccflags-for-gcc-4.9-and-la.patch
 BuildRequires:	db5-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	man
+BuildRequires:	bzip2-devel
+BuildRequires:	pkgconfig(zlib)
 Requires:	perl-base = %{EVRD}
+Conflicts:	perl-devel < 5.20.0
 
 # the following modules are part of perl normally, but are shipped in
 # separated rpm packages. let's require them in order to please people
@@ -101,7 +101,7 @@ Provides:	perl-File-Fetch = 0.14
 Provides:	perl-CPAN = 1.9205
 Provides:	perl-IO-Zlib = 1.07
 Provides:	perl-Pod-Simple = 3.05
-%define __noautoreq '(Mac|VMS|perl\\(Errno\\)|perl\\(Fcntl\\)|perl\\(IO\\)|perl\\(IO::File\\)|perl\\(IO::Socket::INET\\)|perl\\(IO::Socket::UNIX\\)|perl\\(Tk\\)|perl\\(Tk::Pod\\))'
+%define __noautoreq '(Mac|VMS|perl\\(Errno\\)|perl\\(Fcntl\\)|perl\\(IO\\)|perl\\(IO::File\\)|perl\\(IO::Socket::INET\\)|perl\\(IO::Socket::UNIX\\)|perl\\(Tk\\)|perl\\(Tk::Pod\\)|perl\\(abi\\))|perl\\(Locale::Codes::LangFam_Codes\\)|perl\\(Locale::Codes::LangFam_Retired\\)|perl\\(Locale::Codes::LangVar_Codes\\)|perl\\(Locale::Codes::LangVar_Retired\\)|perl\\(Locale::Codes::Language_Codes\\)|perl\\(Locale::Codes::Language_Retired\\)|perl\\(Locale::Codes::Script_Codes\\)|perl\\(Locale::Codes::Script_Retired\\)|perl\\(Locale::Codes::Country_Retired\\)|perl\\(Locale::Codes::Country_Codes\\)|perl\\(Locale::Codes::Currency_Codes\\)|perl\\(Locale::Codes::Currency_Retired\\)|perl\\(Locale::Codes::LangExt_Codes\\)|perl\\(Locale::Codes::LangExt_Retired\\)'
 
 %description
 Perl is a high-level programming language with roots in C, sed, awk
@@ -119,6 +119,7 @@ You need perl-base to have a full perl.
 %package	base
 Summary:	The Perl programming language (base)
 Group:		Development/Perl
+Provides:	perl(abi)
 Provides:	perl(base)
 Provides:	perl(Carp::Heavy)
 Provides:	perl(constant)
@@ -170,14 +171,12 @@ It contains also the 'perldoc' program.
 
 %patch5 -p1 -b .flags~
 %patch6 -p0
-%patch14 -p0
 %patch15 -p1 -b .lib64~
 %patch16 -p0
 %patch21 -p1 -b .peroyvind~
 %patch23 -p0
 %patch29 -p1 -b .rpmdebug~
 %patch32 -p1
-%patch38 -p0
 %patch43 -p0
 %patch44 -p1
 %patch48 -p0 -b .doublefree~
@@ -187,24 +186,33 @@ It contains also the 'perldoc' program.
 
 %patch65 -p1
 %patch66 -p1 -b .ldrunpath~
-%patch67 -p1 -b .sha1sum~
-%patch68 -p1 -b .fwrapv~
 
 # fix linking against libperl during build
 ln -s $PWD lib/CORE
+
+# Configure Compress::Zlib to use system zlib
+sed -i 's|BUILD_ZLIB      = True|BUILD_ZLIB      = False|
+    s|INCLUDE         = ./zlib-src|INCLUDE         = %{_includedir}|
+    s|LIB             = ./zlib-src|LIB             = %{_libdir}|' \
+    cpan/Compress-Raw-Zlib/config.in
+
+# Ensure that we never accidentally bundle zlib or bzip2
+rm -rf cpan/Compress-Raw-Zlib/zlib-src
+rm -rf cpan/Compress-Raw-Bzip2/bzip2-src
+sed -i '/\(bzip2\|zlib\)-src/d' MANIFEST
 
 %build
 %ifarch aarch64
 export AFLAGS="-Wl,--hash-style=both"
 %endif
 sh Configure -des \
-  -Dinc_version_list="5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
+  -Dinc_version_list="5.20.0 5.20.0/%{full_arch} 5.16.3 5.16.3/%{full_arch} 5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
+  -Doptimize="%{optflags} -O0" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="-fno-PIE %{ldflags} $AFLAGS -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
@@ -239,6 +247,12 @@ sh Configure -des \
 
 # workaround for not using colorgcc that relies on perl
 PATH="${PATH#%{_datadir}/colorgcc:}"
+
+# (tpg) do not build bzip
+BUILD_BZIP2=0
+BZIP2_LIB=%{_libdir}
+export BUILD_BZIP2 BZIP2_LIB
+
 %make
 
 %check
@@ -248,7 +262,7 @@ sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 
 # FIXME: should pick up library path automatically in patch..
 export LIBRARY_PATH="$PWD"
-TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAGS=
+RPM_BUILD_ROOT="" TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAGS=
 
 %install
 %makeinstall_std
@@ -289,19 +303,6 @@ rm -r	%{buildroot}%{_bindir}/ptar \
 	%{buildroot}%{_mandir}/man1/ptargrep.1 \
 	%{buildroot}%{_mandir}/man3pm/Archive::Tar* 
 
-# Archive::Extract
-rm -r	%{buildroot}%{perl_root}/%{version}/Archive/Extract.pm \
-	%{buildroot}%{_mandir}/man3pm/Archive::Extract.3*
-
-# idem CPANPLUS
-rm -r	%{buildroot}%{_bindir}/cpan2dist \
-	%{buildroot}%{_bindir}/cpanp \
-	%{buildroot}%{_bindir}/cpanp-run-perl \
-	%{buildroot}%{perl_root}/%{version}/CPANPLUS/ \
-	%{buildroot}%{_mandir}/man1/cpan2dist.1* \
-	%{buildroot}%{_mandir}/man1/cpanp.1* \
-	%{buildroot}%{_mandir}/man3pm/CPANPLUS*
-
 # idem Digest::SHA
 rm -r	%{buildroot}%{_bindir}/shasum \
 	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Digest/SHA.pm \
@@ -316,11 +317,6 @@ rm -r	%{buildroot}%{_bindir}/perldoc \
 	%{buildroot}%{perl_root}/%{version}/Pod/Perldoc/ \
 	%{buildroot}%{_mandir}/man1/perldoc.1* \
 	%{buildroot}%{_mandir}/man3pm/Pod::Perldoc*
-
-# Term::UI
-rm -r	%{buildroot}%{perl_root}/%{version}/Term/UI.pm \
-	%{buildroot}%{perl_root}/%{version}/Term/UI/ \
-	%{buildroot}%{_mandir}/man3pm/Term::UI*
 
 # Time::Piece
 rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Time/Piece.pm \
@@ -374,11 +370,13 @@ rm  -r	%{buildroot}%{_bindir}/config_data \
 	%{buildroot}%{_mandir}/man3pm/Module::Build* \
 	%{buildroot}%{_mandir}/man3pm/inc::latest.3*
 
-# Module::CoreList
-rm -r	%{buildroot}%{_bindir}/corelist \
-	%{buildroot}%{perl_root}/%{version}/Module/CoreList.pm \
-	%{buildroot}%{_mandir}/man1/corelist* \
-	%{buildroot}%{_mandir}/man3pm/Module::CoreList*
+# perl-Module-CoreList - seems like
+rm -rf %{buildroot}%{_bindir}/corelist \
+	%{buildroot}%{perl_root}/%{version}/CoreList \
+	%{buildroot}%{perl_root}/%{version}/CoreList.pm \
+	%{buildroot}%{perl_root}/%{version}/CoreList.pod \
+	%{buildroot}%{perl_root}/%{version}/CoreList.pm \
+	%{buildroot}%{_mandir}/man1/corelist.1*
 
 # call spec-helper before creating the file list
 # (spec-helper removes some files, and compress some others)
@@ -390,6 +388,7 @@ cat > perl-base.list <<EOF
 %{_bindir}/perl
 %{_bindir}/perl5
 %{_bindir}/perl%{version}
+%{_bindir}/prove
 %dir %{_mandir}/man3pm
 %dir %{perl_root}
 %dir %{perl_root}/%{version}
@@ -605,12 +604,12 @@ cat > perl.list <<EOF
 %{_bindir}/pod2man
 %{_bindir}/pod2html
 %{_bindir}/pod2text
-%{_bindir}/pod2latex
 %{_bindir}/splain
 %{_bindir}/s2p
 EOF
 
 cat > perl-devel.list <<EOF
+#%{_bindir}/corelist
 %{_bindir}/c2ph
 %{_bindir}/cpan
 %{_bindir}/enc2xs
@@ -623,7 +622,6 @@ cat > perl-devel.list <<EOF
 %{_bindir}/pod2usage
 %{_bindir}/podchecker
 %{_bindir}/podselect
-%{_bindir}/prove
 %{_bindir}/psed
 %{_bindir}/pstruct
 %{_bindir}/xsubpp
@@ -658,4 +656,3 @@ perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>
 
 %files -n %{libname}
 %{_libdir}/libperl.so.%{major}
-
