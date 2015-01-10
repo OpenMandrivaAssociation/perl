@@ -35,6 +35,7 @@ Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:	perl-5.12.0-patchlevel.patch
 Patch29:	perl-5.14.2-rpmdebug.patch
 Patch32:	perl-5.10.0-incversionlist.patch
+Patch38:	perl-donot-defer-sig11.patch
 
 Patch43:	perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
 Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
@@ -179,6 +180,7 @@ It contains also the 'perldoc' program.
 %patch23 -p0
 %patch29 -p1 -b .rpmdebug~
 %patch32 -p1
+%patch38 -p0
 %patch43 -p0
 %patch44 -p1
 %patch48 -p0 -b .doublefree~
