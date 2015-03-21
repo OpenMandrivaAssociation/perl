@@ -1,6 +1,6 @@
-diff -Naur perl-5.20.0/Configure perl-5.20.0.tpg/Configure
---- perl-5.20.0/Configure	2014-07-23 16:36:28.000000000 +0000
-+++ perl-5.20.0.tpg/Configure	2014-07-23 16:40:39.909620906 +0000
+diff -Naur perl-5.20.2/Configure perl-5.20.2.tpg/Configure
+--- perl-5.20.2/Configure	2015-03-21 10:35:32.000000000 +0000
++++ perl-5.20.2.tpg/Configure	2015-03-21 10:46:03.613818313 +0000
 @@ -8459,7 +8459,7 @@
  			# XXX How handle the --version stuff for MAB?
  			;;
@@ -13,15 +13,15 @@ diff -Naur perl-5.20.0/Configure perl-5.20.0.tpg/Configure
 @@ -8550,7 +8550,7 @@
  		xxx="-Wl,-R$shrpdir"
  		;;
- 	bsdos|linux|irix*|dec_osf|gnu*)
+ 	bsdos|linux|irix*|dec_osf|gnu*|haiku)
 -		xxx="-Wl,-rpath,$shrpdir"
 +		xxx=""
  		;;
  	next)
  		# next doesn't like the default...
-diff -Naur perl-5.20.0/Makefile.SH perl-5.20.0.tpg/Makefile.SH
---- perl-5.20.0/Makefile.SH	2014-05-26 13:34:18.000000000 +0000
-+++ perl-5.20.0.tpg/Makefile.SH	2014-07-23 16:43:21.579098837 +0000
+diff -Naur perl-5.20.2/Makefile.SH perl-5.20.2.tpg/Makefile.SH
+--- perl-5.20.2/Makefile.SH	2014-12-27 11:49:22.000000000 +0000
++++ perl-5.20.2.tpg/Makefile.SH	2015-03-21 10:48:40.827023988 +0000
 @@ -838,7 +838,8 @@
  	true)
  		$spitshell >>$Makefile <<'!NO!SUBS!'
@@ -32,18 +32,18 @@ diff -Naur perl-5.20.0/Makefile.SH perl-5.20.0.tpg/Makefile.SH
  !NO!SUBS!
  		case "$osname" in
  		aix)
-diff -Naur perl-5.20.0/installperl perl-5.20.0.tpg/installperl
---- perl-5.20.0/installperl	2014-05-26 13:34:20.000000000 +0000
-+++ perl-5.20.0.tpg/installperl	2014-07-23 16:42:35.743829318 +0000
-@@ -372,7 +372,7 @@
-     )
- } else {
-     # [als] hard-coded 'libperl' name... not good!
+diff -Naur perl-5.20.2/installperl perl-5.20.2.tpg/installperl
+--- perl-5.20.2/installperl	2015-01-10 12:06:37.000000000 +0000
++++ perl-5.20.2.tpg/installperl	2015-03-21 10:47:42.967472538 +0000
+@@ -351,7 +351,7 @@
+     map { s|^$coredir/||i; } @corefiles = <$coredir/*.*>;
+ }
+ elsif ($Is_Cygwin) { # On Cygwin symlink it to CORE to make Makefile happy
 -    @corefiles = <*.h libperl*.* perl*$Config{lib_ext}>;
 +    @corefiles = <*.h perl*$Config{lib_ext}>;
- 
-     # AIX needs perl.exp installed as well.
-     push(@corefiles,'perl.exp') if $^O eq 'aix';
+     my $coredll = "$installarchlib/CORE/$libperl";
+     my $instcoredll = "$Config{installarchlib}/CORE/$libperl";
+     safe_unlink($coredll);
 @@ -390,6 +390,13 @@
      }
  }
