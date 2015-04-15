@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.2
-Release:	1
+Release:	2
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -57,7 +57,7 @@ Patch66:	perl-5.20.0-USE_MM_LD_RUN_PATH.patch
 Patch68:	0001-perl-121505-add-fwrapv-to-ccflags-for-gcc-4.9-and-la.patch
 
 # for NDBM
-BuildRequires:	db5-devel
+BuildRequires:	db6-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	man
 BuildRequires:	bzip2-devel
