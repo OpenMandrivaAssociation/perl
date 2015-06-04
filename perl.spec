@@ -9,14 +9,14 @@
 # Don't change to %{_libdir} as perl is clean and has arch-dependent subdirs
 %define perl_root %{_prefix}/lib/perl5
 
-%define	major 5.20
+%define	major 5.22
 %define libname %mklibname perl %{major}
 
 Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
-Version:	%{major}.2
-Release:	2
+Version:	%{major}.0
+Release:	1
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
