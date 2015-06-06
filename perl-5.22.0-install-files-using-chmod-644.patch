@@ -1,0 +1,33 @@
+diff -Naur perl-5.22.0/cpan/ExtUtils-Install/lib/ExtUtils/Install.pm perl-5.22.0.tpg/cpan/ExtUtils-Install/lib/ExtUtils/Install.pm
+--- perl-5.22.0/cpan/ExtUtils-Install/lib/ExtUtils/Install.pm	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-Install/lib/ExtUtils/Install.pm	2015-06-06 11:31:51.585682020 +0000
+@@ -809,7 +809,7 @@
+                 utime($atime,$mtime + $Is_VMS,$targetfile) unless $dry_run>1;
+ 
+ 
+-                $mode = 0444 | ( $mode & 0111 ? 0111 : 0 );
++                $mode = 0644 | ( $mode & 0111 ? 0111 : 0 );
+                 $mode = $mode | 0222
+                     if $realtarget ne $targetfile;
+                 _chmod( $mode, $targetfile, $verbose );
+@@ -1214,7 +1214,7 @@
+         }
+         my($mode,$atime,$mtime) = (stat $from)[2,8,9];
+         utime($atime,$mtime+$Is_VMS,$to);
+-        _chmod(0444 | ( $mode & 0111 ? 0111 : 0 ),$to);
++        _chmod(0644 | ( $mode & 0111 ? 0111 : 0 ),$to);
+         next unless $from =~ /\.pm$/;
+         _autosplit($to,$autodir);
+     }
+diff -Naur perl-5.22.0/cpan/ExtUtils-Install/t/Install.t perl-5.22.0.tpg/cpan/ExtUtils-Install/t/Install.t
+--- perl-5.22.0/cpan/ExtUtils-Install/t/Install.t	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-Install/t/Install.t	2015-06-06 11:33:06.935695864 +0000
+@@ -240,7 +240,7 @@
+                          },
+     ]);
+ 
+-    ok( !writeable("$bigdir/DummyHard.pm"), 'DummyHard.pm not writeable' );
++    ok( writeable("$bigdir/DummyHard.pm"), 'DummyHard.pm writeable' );
+ 
+     use File::Compare;
+     ok(compare("$bigdir/Dummy.pm", "$bigdir/DummyHard.pm"),

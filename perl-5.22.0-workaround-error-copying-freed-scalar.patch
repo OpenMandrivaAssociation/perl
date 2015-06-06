@@ -1,0 +1,21 @@
+diff -Naur perl-5.22.0/sv.c perl-5.22.0.tpg/sv.c
+--- perl-5.22.0/sv.c	2015-05-18 21:39:15.000000000 +0000
++++ perl-5.22.0.tpg/sv.c	2015-06-06 11:55:09.146033465 +0000
+@@ -4291,17 +4291,9 @@
+     if (UNLIKELY( sstr == dstr ))
+ 	return;
+ 
+-    if (SvIS_FREED(dstr)) {
+-	Perl_croak(aTHX_ "panic: attempt to copy value %" SVf
+-		   " to a freed scalar %p", SVfARG(sstr), (void *)dstr);
+-    }
+     SV_CHECK_THINKFIRST_COW_DROP(dstr);
+     if (UNLIKELY( !sstr ))
+ 	sstr = &PL_sv_undef;
+-    if (SvIS_FREED(sstr)) {
+-	Perl_croak(aTHX_ "panic: attempt to copy freed scalar %p to %p",
+-		   (void*)sstr, (void*)dstr);
+-    }
+     stype = SvTYPE(sstr);
+     dtype = SvTYPE(dstr);
+ 

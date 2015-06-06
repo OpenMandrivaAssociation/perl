@@ -1,0 +1,11 @@
+diff -Naur perl-5.22.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
+--- perl-5.22.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2015-05-16 12:23:24.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2015-06-06 11:42:01.072974106 +0000
+@@ -51,6 +51,7 @@
+     my ( @searchpath );    # from "-L/path" entries in $potential_libs
+     my ( @libpath ) = split " ", $Config{'libpth'} || '';
+     my ( @ldloadlibs, @bsloadlibs, @extralibs, @ld_run_path, %ld_run_path_seen );
++    $ld_run_path_seen{$_} = 1 foreach qw(/usr/X11R6/lib /usr/lib /lib);
+     my ( @libs,       %libs_seen );
+     my ( $fullname,   @fullname );
+     my ( $pwd )   = cwd();    # from Cwd.pm

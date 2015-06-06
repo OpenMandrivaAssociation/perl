@@ -1,0 +1,45 @@
+diff -Naur perl-5.22.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
+--- perl-5.22.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm	2015-05-16 12:23:24.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm	2015-06-06 11:20:40.653745494 +0000
+@@ -265,7 +265,11 @@
+ 	$cflags{$_} =~ s/^\s+//;
+ 	$cflags{$_} =~ s/\s+/ /g;
+ 	$cflags{$_} =~ s/\s+$//;
+-	$self->{uc $_} ||= $cflags{$_};
++	if (/ccflags/ && $self->{uc $_}) {
++               $self->{uc $_} = "$cflags{$_} " . $self->{uc $_};
++        } else {
++               $self->{uc $_} ||= $cflags{$_};
++        }
+     }
+ 
+     if ($self->{POLLUTE}) {
+diff -Naur perl-5.22.0/cpan/ExtUtils-MakeMaker/t/MM_Unix.t perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/t/MM_Unix.t
+--- perl-5.22.0/cpan/ExtUtils-MakeMaker/t/MM_Unix.t	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-MakeMaker/t/MM_Unix.t	2015-06-06 11:22:41.569986034 +0000
+@@ -12,7 +12,7 @@
+         plan skip_all => 'Non-Unix platform';
+     }
+     else {
+-        plan tests => 110;
++        plan tests => 112;
+     }
+ }
+ 
+@@ -20,6 +20,7 @@
+ 
+ use strict;
+ use File::Spec;
++use Config;
+ 
+ my $class = 'ExtUtils::MM_Unix';
+ 
+@@ -221,5 +222,8 @@
+ 
+     # Brief bug where CCFLAGS was being blown away
+     like( $t->{CCFLAGS}, qr/\-DMY_THING/,    'cflags retains CCFLAGS' );
++
++    like( $t->{CCFLAGS}, "/\Q$Config{ccflags}\E/",    'cflags does not override $Config{ccflags} with CCFLAGS' );
++    like( $t->{CCFLAGS}, '/ -DMY_THING$/',    'cflags appends CCFLAGS to $Config{ccflags}' );
+ }
+ 

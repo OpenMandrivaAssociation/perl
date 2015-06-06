@@ -25,32 +25,32 @@ Url:		http://www.perl.org/
 Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.gz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
-Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
-Patch6:		perl-5.16.0-fix-LD_RUN_PATH-for-MakeMaker.patch
-Patch14:	perl-5.20.1-install-files-using-chmod-644.patch
+Patch5:		perl-5.22.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch # NEED FIX
+Patch6:		perl-5.22.0-fix-LD_RUN_PATH-for-MakeMaker.patch
+Patch14:	perl-5.22.0-install-files-using-chmod-644.patch
 Patch15:	perl-5.16.0-lib64.patch
 Patch16:	perl-5.16.0-perldoc-use-nroff-compatibility-option.patch
 #(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
 Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:	perl-5.12.0-patchlevel.patch
-Patch29:	perl-5.14.2-rpmdebug.patch
+Patch29:	perl-5.22.0-rpmdebug.patch
 Patch32:	perl-5.10.0-incversionlist.patch
 Patch38:	perl-donot-defer-sig11.patch
 
-Patch43:	perl-5.12.0-RC0-skip-tests-using-dev-log-for-iurt.patch
+Patch43:	perl-5.22.0-skip-tests-using-dev-log-for-iurt.patch
 Patch44:	perl-5.16.0-h2ph-handle-relative-include.patch
 
 # mdvbz#34505, get rid of this patch as soon as possible :-/
 Patch48:	perl-5.16.0-workaround-segfault-freeing-scalar-a-second-time.patch
-Patch49:	perl-5.10.0-workaround-error-copying-freed-scalar.patch
+Patch49:	perl-5.22.0-workaround-error-copying-freed-scalar.patch
 Patch50:	perl-5.16.2-link-perl-extensions-against-libperl.patch
-Patch51:	perl-5.20.2-add-soname-to-libperl.patch
+Patch51:	perl-5.22.0-add-soname-to-libperl.patch
 #
 # fixes taken from debian
 #
 # Fix a segmentation fault occurring in the mod_perl2 test suite (debian #475498, perl #33807)
 Patch65:	local_symtab.diff
-Patch66:	perl-5.20.0-USE_MM_LD_RUN_PATH.patch
+Patch66:	perl-5.22.0-USE_MM_LD_RUN_PATH.patch
 # (tpg)https://rt.perl.org/Public/Bug/Display.html?id=121505
 # gcc 4.9 by default does some optimizations that break perl
 # add -fwrapv to ccflags
@@ -172,7 +172,7 @@ It contains also the 'perldoc' program.
 %setup -q
 
 %patch5 -p1 -b .flags~
-%patch6 -p0
+%patch6 -p1
 %patch14 -p1 -b .644~
 %patch15 -p1 -b .lib64~
 %patch16 -p0
@@ -181,7 +181,7 @@ It contains also the 'perldoc' program.
 %patch29 -p1 -b .rpmdebug~
 %patch32 -p1
 %patch38 -p0
-%patch43 -p0
+%patch43 -p1
 %patch44 -p1
 %patch48 -p0 -b .doublefree~
 %patch49 -p1

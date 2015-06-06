@@ -1,0 +1,11 @@
+diff -Naur perl-5.22.0/cpan/ExtUtils-Manifest/lib/ExtUtils/MANIFEST.SKIP perl-5.22.0.tpg/cpan/ExtUtils-Manifest/lib/ExtUtils/MANIFEST.SKIP
+--- perl-5.22.0/cpan/ExtUtils-Manifest/lib/ExtUtils/MANIFEST.SKIP	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/cpan/ExtUtils-Manifest/lib/ExtUtils/MANIFEST.SKIP	2015-06-06 11:38:12.877874939 +0000
+@@ -61,3 +61,7 @@
+ 
+ # Avoid MYMETA files
+ ^MYMETA\.
++
++# Avoid RPM debug helper files
++^debugfiles.list$
++^debugsources.list$

@@ -1,0 +1,60 @@
+diff -Naur perl-5.22.0/Configure perl-5.22.0.tpg/Configure
+--- perl-5.22.0/Configure	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/Configure	2015-06-06 11:59:33.292069945 +0000
+@@ -8648,7 +8648,7 @@
+ 		# rely on figuring it out from the naming of libc.
+ 		case "${osname}${osvers}" in
+ 		*linux*|gnu*)  # ld won't link with a bare -lperl otherwise.
+-			dflt=libperl.$so
++			dflt=libperl.$so.$revision.$patchlevel
+ 			;;
+ 		cygwin*) # ld links now against the dll directly
+ 			majmin="cygperl5_${patchlevel}_${subversion}.${so}"
+@@ -8739,7 +8739,7 @@
+ 		xxx="-Wl,-R$shrpdir"
+ 		;;
+ 	bsdos|linux|irix*|dec_osf|gnu*|haiku)
+-		xxx="-Wl,-rpath,$shrpdir"
++		xxx=""
+ 		;;
+ 	hpux*)
+ 		# hpux doesn't like the default, either.
+diff -Naur perl-5.22.0/Makefile.SH perl-5.22.0.tpg/Makefile.SH
+--- perl-5.22.0/Makefile.SH	2015-05-13 20:19:28.000000000 +0000
++++ perl-5.22.0.tpg/Makefile.SH	2015-06-06 12:00:23.257392805 +0000
+@@ -829,7 +829,8 @@
+ 	true)
+ 		$spitshell >>$Makefile <<'!NO!SUBS!'
+ 	rm -f $@
+-	$(LD) -o $@ $(SHRPLDFLAGS) $(obj) $(DYNALOADER) $(libs)
++	$(LD) -o $@ $(SHRPLDFLAGS) -Wl,--soname=$(LIBPERL) $(obj) $(DYNALOADER) $(libs)
++	[ "$(LIBPERL)" != "libperl.so" ] && ln -s $(LIBPERL) libperl.so
+ !NO!SUBS!
+ 		case "$osname" in
+ 		aix)
+diff -Naur perl-5.22.0/installperl perl-5.22.0.tpg/installperl
+--- perl-5.22.0/installperl	2015-05-13 20:19:29.000000000 +0000
++++ perl-5.22.0.tpg/installperl	2015-06-06 12:01:27.894106007 +0000
+@@ -346,7 +346,7 @@
+     map { s|^$coredir/||i; } @corefiles = <$coredir/*.*>;
+ }
+ elsif ($Is_Cygwin) { # On Cygwin symlink it to CORE to make Makefile happy
+-    @corefiles = <*.h libperl*.* perl*$Config{lib_ext}>;
++    @corefiles = <*.h perl*$Config{lib_ext}>;
+     my $coredll = "$installarchlib/CORE/$libperl";
+     my $instcoredll = "$Config{installarchlib}/CORE/$libperl";
+     safe_unlink($coredll);
+@@ -385,6 +385,13 @@
+     }
+ }
+ 
++mkpath("$opts{destdir}$Config{installprefix}/$Config{lib}", $opts{verbose}, 0777);
++copy_if_diff($libperl, "$opts{destdir}$Config{installprefix}/$Config{lib}");
++chmod(0755, "$opts{destdir}$Config{installprefix}/$Config{lib}/$libperl");
++if ($libperl ne "libperl.so") {
++    symlink($libperl, "$opts{destdir}$Config{installprefix}/$Config{lib}/libperl.so");
++}
++
+ # Install main perl executables
+ # Make links to ordinary names if installbin directory isn't current directory.
+ 
