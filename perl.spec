@@ -328,12 +328,6 @@ rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Time/Piece.pm \
 	%{buildroot}%{_mandir}/man3pm/Time::Piece.3* \
 	%{buildroot}%{_mandir}/man3pm/Time::Seconds.3*
 
-# CGI
-rm -r	%{buildroot}%{perl_root}/%{version}/CGI \
-	%{buildroot}%{perl_root}/%{version}/CGI.pm \
-	%{buildroot}%{_mandir}/man3pm/CGI.3* \
-	%{buildroot}%{_mandir}/man3pm/CGI::*.3*
-
 # Compress::Raw::Bzip2
 rm -r	%{buildroot}%{perl_root}/%{version}/%{full_arch}/Compress/Raw/Bzip2.pm \
 	%{buildroot}%{perl_root}/%{version}/%{full_arch}/auto/Compress/Raw/Bzip2 \
