@@ -358,15 +358,6 @@ rm  -r	%{buildroot}%{_bindir}/json_pp \
 	%{buildroot}%{_mandir}/man3pm/JSON::PP.3* \
 	%{buildroot}%{_mandir}/man3pm/JSON::PP::Boolean.3pm*
 
-# Module::Build
-rm  -r	%{buildroot}%{_bindir}/config_data \
-	%{buildroot}%{perl_root}/%{version}/inc/ \
-	%{buildroot}%{perl_root}/%{version}/Module/Build/ \
-	%{buildroot}%{perl_root}/%{version}/Module/Build.pm \
-	%{buildroot}%{_mandir}/man1/config_data.1* \
-	%{buildroot}%{_mandir}/man3pm/Module::Build* \
-	%{buildroot}%{_mandir}/man3pm/inc::latest.3*
-
 # perl-Module-CoreList - seems like
 rm -rf %{buildroot}%{_bindir}/corelist \
 	%{buildroot}%{perl_root}/%{version}/CoreList \
