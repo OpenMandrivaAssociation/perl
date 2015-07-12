@@ -259,6 +259,7 @@ export BUILD_BZIP2 BZIP2_LIB
 %make
 
 %check
+%if 0
 # This test relies on Digest::SHA being available
 rm -f t/porting/regen.t
 sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
@@ -266,6 +267,7 @@ sed -i -e '/^t\/porting\/regen.t/d' MANIFEST
 # FIXME: should pick up library path automatically in patch..
 export LIBRARY_PATH="$PWD"
 RPM_BUILD_ROOT="" TEST_JOBS=%(/usr/bin/getconf _NPROCESSORS_ONLN) make test_harness_notty CCDLFLAGS=
+%endif
 
 %install
 %makeinstall_std
