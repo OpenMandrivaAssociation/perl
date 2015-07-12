@@ -379,6 +379,7 @@ cat > perl-base.list <<EOF
 %{_bindir}/perl5
 %{_bindir}/perl%{version}
 %{_bindir}/prove
+%{_bindir}/encguess
 %dir %{_mandir}/man3pm
 %dir %{perl_root}
 %dir %{perl_root}/%{version}
