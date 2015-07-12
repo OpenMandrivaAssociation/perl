@@ -588,15 +588,12 @@ EOF
 cat > perl.list <<EOF
 %doc README
 %doc Artistic
-%{_bindir}/a2p
 %{_bindir}/perlbug
 %{_bindir}/perlthanks
-%{_bindir}/find2perl
 %{_bindir}/pod2man
 %{_bindir}/pod2html
 %{_bindir}/pod2text
 %{_bindir}/splain
-%{_bindir}/s2p
 EOF
 
 cat > perl-devel.list <<EOF
@@ -613,7 +610,6 @@ cat > perl-devel.list <<EOF
 %{_bindir}/pod2usage
 %{_bindir}/podchecker
 %{_bindir}/podselect
-%{_bindir}/psed
 %{_bindir}/pstruct
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
