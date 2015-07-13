@@ -209,7 +209,7 @@ sed -i '/\(bzip2\|zlib\)-src/d' MANIFEST
 export AFLAGS="-Wl,--hash-style=both"
 %endif
 sh Configure -des \
-  -Dinc_version_list="5.20.2 5.20.2/%{full_arch} 5.20.1 5.20.1/%{full_arch} 5.20.0 5.20.0/%{full_arch} 5.16.3 5.16.3/%{full_arch} 5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
+  -Dinc_version_list="5.22.0 5.22.0/%{full_arch} 5.20.2 5.20.2/%{full_arch} 5.20.1 5.20.1/%{full_arch} 5.20.0 5.20.0/%{full_arch} 5.16.3 5.16.3/%{full_arch} 5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
@@ -379,7 +379,6 @@ cat > perl-base.list <<EOF
 %{_bindir}/perl5
 %{_bindir}/perl%{version}
 %{_bindir}/prove
-%{_bindir}/encguess
 %dir %{_mandir}/man3pm
 %dir %{perl_root}
 %dir %{perl_root}/%{version}
@@ -588,6 +587,7 @@ EOF
 cat > perl.list <<EOF
 %doc README
 %doc Artistic
+%{_bindir}/encguess
 %{_bindir}/perlbug
 %{_bindir}/perlthanks
 %{_bindir}/pod2man
