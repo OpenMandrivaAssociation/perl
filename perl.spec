@@ -1,5 +1,5 @@
 %define threading 1
-%define debugging 0
+%define debugging 1
 
 %if %{threading}
 %define thread_arch -thread-multi
@@ -215,7 +215,7 @@ sh Configure -des \
 %if %debugging
   -Doptimize="-O0" -DDEBUGGING="-g3 %{debugcflags}" \
 %else
-  -Doptimize="%{optflags}" -DDEBUGGING="%{debugcflags}" \
+  -Doptimize="%(echo %optflags %ldflags -pthread|sed -e 's/-Wl,--no-undefined//')" -DDEBUGGING="%{debugcflags}" \
 %endif
   -Dccdlflags="-fno-PIE %{ldflags} $AFLAGS -Wl,--warn-unresolved-symbols" \
   -Dcccdlflags="-fno-PIE -fPIC" \
