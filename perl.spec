@@ -25,6 +25,7 @@ Url:		http://www.perl.org/
 Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.gz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
+Source3:	perl.rpmlintrc
 Patch5:		perl-5.22.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch # NEED FIX
 Patch6:		perl-5.22.0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:	perl-5.22.0-install-files-using-chmod-644.patch
