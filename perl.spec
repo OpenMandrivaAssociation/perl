@@ -10,21 +10,22 @@
 %define perl_root %{_prefix}/lib/perl5
 
 %define	major 5.20
-%define libname %mklibname perl %{major}
 
 Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	1
+Release:	1.1
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
-# ftp://ftp.funet.fi/pub/languages/perl/snap/perl@17574.tbz
-#ftp://ftp.funet.fi/pub/languages/perl/CPAN/src/perl-%{version}.tar.bz2
 Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.gz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
+# macros
+Source3:	perlbuild.macros
+Source4:	libbuild.macros
+#  make a package out of a perl pair of perl module, manpage and lib
 Patch5:		perl-5.14.0-fix_eumm_append_to_config_cflags_instead_of_overriding.patch
 Patch6:		perl-5.16.0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:	perl-5.20.1-install-files-using-chmod-644.patch
@@ -57,53 +58,19 @@ Patch66:	perl-5.20.0-USE_MM_LD_RUN_PATH.patch
 Patch68:	0001-perl-121505-add-fwrapv-to-ccflags-for-gcc-4.9-and-la.patch
 
 # for NDBM
-BuildRequires:	db6-devel
-BuildRequires:	gdbm-devel
 BuildRequires:	man
 BuildRequires:	bzip2-devel
+BuildRequires:	db5-devel
+BuildRequires:	gdbm-devel
 BuildRequires:	pkgconfig(zlib)
+
 Requires:	perl-base = %{EVRD}
-Conflicts:	perl-devel < 5.20.0
+Conflicts:	perl-devel < 2:5.20.0
 
-# the following modules are part of perl normally, but are shipped in
-# separated rpm packages. let's require them in order to please people
-# that think that installing "perl" will have a full perl as shipped by
-# upstream. (cf tom christiansen and the lengthy thread:
-# http://www.nntp.perl.org/group/perl.perl5.porters/2009/08/msg149747.html)
-Suggests:	perl(Archive::Extract)
-Suggests:	perl(Archive::Tar)
-Suggests:	perl(CGI)
-Suggests:	perl(Compress::Raw::Bzip2)
-Suggests:	perl(Compress::Raw::Zlib)
-Suggests:	perl(Compress::Zlib)
-Suggests:	perl(CPANPLUS)
-Suggests:	perl(CPANPLUS::Dist::Build)
-Suggests:	perl(Digest::SHA)
-Suggests:	perl(IO::Compress::Bzip2)
-Requires:	perl(JSON::PP)
-Suggests:	perl(Module::Build)
-Suggests:	perl(Module::CoreList)
-Suggests:	perl(Pod::Perldoc)
-Suggests:	perl(Time::Piece)
+%define __noautoreq 'VMS'
 
-# Used to be maintained separately, bundled now
-Provides:	perl-CPAN-Meta-YAML = 0.007
-Obsoletes:	perl-CPAN-Meta-YAML < 0.007
-Provides:	perl-MIME-Base64 = 3.080.0
-Provides:	perl-libnet
-Provides:	perl-Storable = 2.200.0
-Provides:	perl-Digest-MD5 = 2.390.0
-Provides:	perl-Time-HiRes = 1:1.971.900
-Provides:	perl-Locale-Codes
-Provides:	perl-Test-Simple = 0.920.0
-Provides:	perl-Test-Builder-Tester = 1.180.0
-Provides:	perl(version) = 1:0.74
-Provides:	perl-version = 1:0.74
-Provides:	perl-File-Fetch = 0.14
-Provides:	perl-CPAN = 1.9205
-Provides:	perl-IO-Zlib = 1.07
-Provides:	perl-Pod-Simple = 3.05
-%define __noautoreq '(Mac|VMS|perl\\(Errno\\)|perl\\(Fcntl\\)|perl\\(IO\\)|perl\\(IO::File\\)|perl\\(IO::Socket::INET\\)|perl\\(IO::Socket::UNIX\\)|perl\\(Tk\\)|perl\\(Tk::Pod\\)|perl\\(abi\\))|perl\\(Locale::Codes::LangFam_Codes\\)|perl\\(Locale::Codes::LangFam_Retired\\)|perl\\(Locale::Codes::LangVar_Codes\\)|perl\\(Locale::Codes::LangVar_Retired\\)|perl\\(Locale::Codes::Language_Codes\\)|perl\\(Locale::Codes::Language_Retired\\)|perl\\(Locale::Codes::Script_Codes\\)|perl\\(Locale::Codes::Script_Retired\\)|perl\\(Locale::Codes::Country_Retired\\)|perl\\(Locale::Codes::Country_Codes\\)|perl\\(Locale::Codes::Currency_Codes\\)|perl\\(Locale::Codes::Currency_Retired\\)|perl\\(Locale::Codes::LangExt_Codes\\)|perl\\(Locale::Codes::LangExt_Retired\\)'
+%{expand:%%{load:%{SOURCE3}}}
+%{expand:%%{load:%{SOURCE4}}}
 
 %description
 Perl is a high-level programming language with roots in C, sed, awk
@@ -116,36 +83,20 @@ A large proportion of the CGI scripts on the web are written in Perl.
 You need the perl package installed on your system so that your
 system can handle Perl scripts.
 
-You need perl-base to have a full perl.
-
 %package	base
 Summary:	The Perl programming language (base)
 Group:		Development/Perl
 Provides:	perl(abi)
 Provides:	perl(base)
-Provides:	perl(Carp::Heavy)
-Provides:	perl(constant)
-Provides:	perl(integer)
-Provides:	perl(overload)
-Provides:	perl(strict)
-Provides:	perl(utf8)
-Provides:	perl(vars)
-Provides:	perl(warnings)
 # explicit file provides
 Provides:	/usr/bin/perl
-# perl-suid is gone is perl 5.12
-Obsoletes:	perl-suid
-Requires:	%{libname} = %{EVRD}
+Conflicts:	perl < 2:5.20.3-1.1
 
 %description	base
 This is the base package for %{name}.
 
-%package -n	%{libname}
-Summary:	Shared library for perl
-Group:		System/Libraries
 
-%description -n	%{libname}
-This package contains the shared library for perl.
+%{libpkg %{name} %{major}}
 
 %package	devel
 Summary:	The Perl programming language (devel)
@@ -387,232 +338,133 @@ rm -rf %{buildroot}%{_bindir}/corelist \
 %{?__spec_helper_post}
 %undefine dont_strip
 
-cat > perl-base.list <<EOF
-%{_bindir}/perl
-%{_bindir}/perl5
-%{_bindir}/perl%{version}
-%{_bindir}/prove
-%dir %{_mandir}/man3pm
+rm -fr perl.list perl-doc.list perl-base.list perl-devel.list
+
+find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name "*.e2x" -printf "%%%%doc %%p\n" |sort -u >> perl-doc.list
+find %{buildroot}%{_mandir}/man1 ! -name \perlivp.1* ! -type d >> perl.list
+find %{buildroot}%{perl_root}/%{version} -name \*.ph -a ! \( -name \unistd*.ph -o -name \syscall.ph -o -name \wordsize.ph -o -name \_h2ph_pre.ph \) >> perl.list
+find %{buildroot}%{perl_root}/%{version} -name \*.e2x >> perl-devel.list
+sed -e 's#%{buildroot}##g' -i perl*.list
+
+#MD file listed twice
+for i in $(ls perl*.list); do cat $i | sort -u > tmp.list; mv -f tmp.list $i; done
+rm -f %{buildroot}%{perl_root}/%{version}/%{full_arch}/CORE/libperl.so*
+
+%files base
 %dir %{perl_root}
-%dir %{perl_root}/%{version}
-%dir %{perl_root}/%{version}/File
-%{perl_root}/%{version}/autouse.pm
-%{perl_root}/%{version}/AnyDBM_File.pm
-%{perl_root}/%{version}/FindBin.pm
-%{perl_root}/%{version}/File/Basename.pm
-%{perl_root}/%{version}/File/Find.pm
-%{perl_root}/%{version}/File/Path.pm
-%{perl_root}/%{version}/File/Temp.pm
-%dir %{perl_root}/%{version}/Getopt
-%{perl_root}/%{version}/Getopt/Long.pm
-%{perl_root}/%{version}/Getopt/Std.pm
-%dir %{perl_root}/%{version}/Encode
-%{perl_root}/%{version}/Encode/ConfigLocal_PM.e2x
-%{perl_root}/%{version}/Encode/Makefile_PL.e2x
-%{perl_root}/%{version}/Encode/_PM.e2x
-%{perl_root}/%{version}/Encode/_T.e2x
-%dir %{perl_root}/%{version}/Net
-%{perl_root}/%{version}/Net/Cmd.pm
-%{perl_root}/%{version}/Net/Config.pm
-%dir %{perl_root}/%{version}/Net/FTP
-%{perl_root}/%{version}/Net/FTP.pm
-%{perl_root}/%{version}/Net/FTP/A.pm
-%{perl_root}/%{version}/Net/FTP/E.pm
-%{perl_root}/%{version}/Net/FTP/I.pm
-%{perl_root}/%{version}/Net/FTP/L.pm
-%{perl_root}/%{version}/Net/FTP/dataconn.pm
+%{perldir -dl}
+%{perldir -dn}
+%{perldir -d}
+%{perldir -dl arybase}
+%{perldir -dl attributes}
+%{perldir -dl mro}
+%{perldir -dl re}
+%{perldir -dl sdbm}
+%{perldir -dl threads}
+%{perldir -dl threads-shared}
+%{perldir -d CORE}
+%{perldir -d asm}
+%{perldir -d bits}
+%{perldir -d sys}
+%{perldir -d threads}
+%{perldir -dn autodie}
+%{perldir -dn encoding}
+%{perldir -dn overload}
+%{perldir -dn unicore}
+%{perldir -dn version}
+%{perldir -dn warnings}
+%{_bindir}/perl
+%{_bindir}/perl%{version}
+%{_bindir}/perl5
+%{perldir}/_h2ph_pre.ph
+%{perldir}/asm/unistd*.ph
+%{perldir}/bits/syscall.ph
+%{perldir}/bits/wordsize.ph
+%{perldir}/sys/syscall.ph
+%{perldir}/syscall.ph
+%{perldir -n}/unicore/To/Fold.pl
+%{perldir -n}/unicore/To/Lower.pl
+%{perldir -n}/unicore/To/Upper.pl
+#noprovides
+%{perlpairs -n autodie}
+%{perlpairs -n autodie-exception}
+%{perlpairs -n autodie-exception-system}
+%{perlpairs -n autodie-hints}
+%{perlpairs -n autodie-skip}
+%{perlpairs -n autouse}
+%{perlpairs -n base}
+%{perlpairs -n bigint}
+%{perlpairs -n bignum}
+%{perlpairs -n bigrat}
+%{perlpairs -n blib}
+%{perlpairs -n bytes}
+%{perldir -n}/bytes_heavy.pl
+%{perlpairs -n charnames}
+%{perldir -n _charnames}
+%{perlpairs -n constant}
+%{perlpairs -n deprecate}
+%{perlpairs -n diagnostics}
+%{perlpairs -n encoding-warnings}
+%{perlpairs -n experimental}
+%{perlpairs -n feature}
+%{perlpairs -n fields}
+%{perlpairs -n filetest}
+%{perlpairs -n if}
+%{perlpairs -n integer}
+%{perlpairs -n less}
+%{perlpairs -n locale}
+%{perlpairs -n open}
+%{perlpairs -n overload}
+%{perldir -n overload-numbers}
+%{perlpairs -n overloading}
+%{perlpairs -n parent}
+%{perlpairs -n sigtrap}
+%{perlpairs -n sort}
+%{perlpairs -n strict}
+%{perlpairs -n subs}
+%{perlpairs -n utf8}
+%{perldir -n}/utf8_heavy.pl
+%{perlpairs -n vars}
+%{perlpairs -n version}
+%{perldir -n version-regex}
+%{perldir -n version-vpp}
+%{mandir3pm version-Internals}
+%{perlpairs -n vmsish}
+%{perlpairs -n warnings}
+%{perlpairs -n warnings-register}
+%{perlpairs  encoding}
+%{perlpairs  lib}
+%{perlpairs  ops}
+%{perlpairs -l arybase}
+%{perlpairs -l attributes}
+%{perlpairs -l mro}
+%{perlpairs -l re}
+%{perlpairs -l threads}
+%{perlpairs -l threads-shared}
 
-%dir %{perl_root}/%{version}/Time
-%{perl_root}/%{version}/Time/Local.pm
-%{perl_root}/%{version}/AutoLoader.pm
-%dir %{perl_root}/%{version}/Carp
-%{perl_root}/%{version}/Carp.pm
-%{perl_root}/%{version}/Carp/Heavy.pm
-%{perl_root}/%{version}/DirHandle.pm
-%{perl_root}/%{version}/%{full_arch}/Errno.pm
-%dir %{perl_root}/%{version}/Exporter
-%{perl_root}/%{version}/Exporter/Heavy.pm
-%{perl_root}/%{version}/Exporter.pm
-%{perl_root}/%{version}/FileHandle.pm
-%{perl_root}/%{version}/PerlIO.pm
-%{perl_root}/%{version}/SelectSaver.pm
-%{perl_root}/%{version}/Symbol.pm
-%dir %{perl_root}/%{version}/Tie
-%{perl_root}/%{version}/Tie/Hash.pm
-%{perl_root}/%{version}/XSLoader.pm
-%{perl_root}/%{version}/base.pm
-%{perl_root}/%{version}/bytes.pm
-%{perl_root}/%{version}/bytes_heavy.pl
-%{perl_root}/%{version}/constant.pm
-%{perl_root}/%{version}/feature.pm
-%{perl_root}/%{version}/integer.pm
-%{perl_root}/%{version}/overload.pm
-%{perl_root}/%{version}/strict.pm
-%{perl_root}/%{version}/utf8.pm
-%{perl_root}/%{version}/utf8_heavy.pl
-%dir %{perl_root}/%{version}/unicore
-%dir %{perl_root}/%{version}/unicore/To
-%{perl_root}/%{version}/unicore/To/Lower.pl
-%{perl_root}/%{version}/unicore/To/Fold.pl
-%{perl_root}/%{version}/unicore/To/Upper.pl
-%{perl_root}/%{version}/vars.pm
-%dir %{perl_root}/%{version}/warnings
-%{perl_root}/%{version}/warnings/register.pm
-%{perl_root}/%{version}/warnings.pm
-%dir %{perl_root}/%{version}/%{full_arch}
-%{perl_root}/%{version}/%{full_arch}/lib.pm
-%{perl_root}/%{version}/%{full_arch}/B.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto/B
-%{perl_root}/%{version}/%{full_arch}/auto/B/B.so
-%{perl_root}/%{version}/%{full_arch}/Cwd.pm
-%dir %{perl_root}/%{version}/%{full_arch}/File
-%{perl_root}/%{version}/%{full_arch}/File/Spec.pm
-%{perl_root}/%{version}/%{full_arch}/File/Spec/Unix.pm
-%dir %{perl_root}/%{version}/%{full_arch}/File/Spec
-%{perl_root}/%{version}/%{full_arch}/Fcntl.pm
-%{perl_root}/%{version}/%{full_arch}/IO.pm
-%dir %{perl_root}/%{version}/%{full_arch}/IO
-%{perl_root}/%{version}/%{full_arch}/IO/File.pm
-%{perl_root}/%{version}/%{full_arch}/IO/Handle.pm
-%{perl_root}/%{version}/%{full_arch}/IO/Seekable.pm
-%{perl_root}/%{version}/%{full_arch}/IO/Select.pm
-%{perl_root}/%{version}/%{full_arch}/IO/Socket.pm
-%dir %{perl_root}/%{version}/%{full_arch}/IO/Socket
-%{perl_root}/%{version}/%{full_arch}/IO/Socket/INET.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Cwd
-%{perl_root}/%{version}/%{full_arch}/auto/Cwd/Cwd.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Data
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Data/Dumper
-%{perl_root}/%{version}/%{full_arch}/auto/Data/Dumper/Dumper.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Fcntl
-%{perl_root}/%{version}/%{full_arch}/auto/Fcntl/Fcntl.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/File
-%dir %{perl_root}/%{version}/%{full_arch}/auto/File/Glob
-%{perl_root}/%{version}/%{full_arch}/auto/File/Glob/Glob.so
-%{perl_root}/%{version}/%{full_arch}/File/Glob.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto/MIME
-%dir %{perl_root}/%{version}/%{full_arch}/auto/MIME/Base64
-%{perl_root}/%{version}/%{full_arch}/auto/MIME/Base64/Base64.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Digest
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Digest/MD5
-%{perl_root}/%{version}/%{full_arch}/auto/Digest/MD5/MD5.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/I18N
-%dir %{perl_root}/%{version}/%{full_arch}/auto/I18N/Langinfo/
-%{perl_root}/%{version}/%{full_arch}/auto/I18N/Langinfo/Langinfo.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/IO
-%{perl_root}/%{version}/%{full_arch}/auto/IO/IO.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode
-%{perl_root}/%{version}/%{full_arch}/Encode.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Alias.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Byte.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/CJKConstants.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Config.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/EBCDIC.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Encoder.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Encoding.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/GSM0338.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Guess.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Encode/MIME
-%dir %{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header
-%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Header/ISO_2022_JP.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/MIME/Name.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Symbol.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Encode/Unicode
-%{perl_root}/%{version}/%{full_arch}/Encode/Unicode.pm
-%{perl_root}/%{version}/%{full_arch}/Encode/Unicode/UTF7.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Byte
-%{perl_root}/%{version}/%{full_arch}/auto/Encode/Byte/Byte.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/EBCDIC
-%{perl_root}/%{version}/%{full_arch}/auto/Encode/EBCDIC/EBCDIC.so
-%{perl_root}/%{version}/%{full_arch}/auto/Encode/Encode.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Symbol
-%{perl_root}/%{version}/%{full_arch}/auto/Encode/Symbol/Symbol.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Encode/Unicode
-%{perl_root}/%{version}/%{full_arch}/auto/Encode/Unicode/Unicode.so
-%dir %{perl_root}/%{version}/%{full_arch}/List
-%dir %{perl_root}/%{version}/%{full_arch}/List/Util
-%{perl_root}/%{version}/%{full_arch}/List/Util.pm
-%{perl_root}/%{version}/%{full_arch}/List/Util/XS.pm
-%dir %{perl_root}/%{version}/%{full_arch}/auto/List
-%dir %{perl_root}/%{version}/%{full_arch}/auto/List/Util
-%{perl_root}/%{version}/%{full_arch}/auto/List/Util/Util.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/POSIX
-%{perl_root}/%{version}/%{full_arch}/auto/POSIX/POSIX.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Socket
-%{perl_root}/%{version}/%{full_arch}/auto/Socket/Socket.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Storable
-%{perl_root}/%{version}/%{full_arch}/auto/Storable/Storable.so
-%dir %{perl_root}/%{version}/%{full_arch}/auto/re
-%{perl_root}/%{version}/%{full_arch}/auto/re/re.so
-%{perl_root}/%{version}/%{full_arch}/Config.pm
-%{perl_root}/%{version}/%{full_arch}/Config_heavy.pl
-%dir %{perl_root}/%{version}/%{full_arch}/Digest
-%{perl_root}/%{version}/%{full_arch}/Digest/MD5.pm
-%{perl_root}/%{version}/%{full_arch}/DynaLoader.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Encode
-%dir %{perl_root}/%{version}/%{full_arch}/I18N
-%{perl_root}/%{version}/%{full_arch}/I18N/Langinfo.pm
-%dir %{perl_root}/%{version}/%{full_arch}/MIME
-%{perl_root}/%{version}/%{full_arch}/MIME/Base64.pm
-%{perl_root}/%{version}/%{full_arch}/MIME/QuotedPrint.pm
-%{perl_root}/%{version}/%{full_arch}/POSIX.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Scalar/
-%{perl_root}/%{version}/%{full_arch}/Scalar/Util.pm
-%{perl_root}/%{version}/%{full_arch}/Socket.pm
-%{perl_root}/%{version}/%{full_arch}/Storable.pm
-%dir %{perl_root}/%{version}/%{full_arch}/Sys/
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Sys/
-%dir %{perl_root}/%{version}/%{full_arch}/auto/Sys/Hostname
-%{perl_root}/%{version}/%{full_arch}/Sys/Hostname.pm
-%{perl_root}/%{version}/%{full_arch}/auto/Sys/Hostname/Hostname.so
-%{perl_root}/%{version}/%{full_arch}/re.pm
-%dir %{perl_root}/%{version}/%{full_arch}/CORE
-%dir %{perl_root}/%{version}/%{full_arch}/asm
-%dir %{perl_root}/%{version}/%{full_arch}/bits
-%dir %{perl_root}/%{version}/%{full_arch}/sys
-%{perl_root}/%{version}/%{full_arch}/asm/unistd.ph
-%ifarch %{mipsx}
-%{perl_root}/%{version}/%{full_arch}/asm/sgidefs.ph
-%endif
-%ifarch ia64
-%{perl_root}/%{version}/%{full_arch}/asm/break.ph
-%endif
-%ifarch x86_64
-%{perl_root}/%{version}/%{full_arch}/bits/wordsize.ph
-%endif
-%ifarch %{ix86} x86_64
-%{perl_root}/%{version}/%{full_arch}/asm/unistd_32.ph
-%{perl_root}/%{version}/%{full_arch}/asm/unistd_64.ph
-%endif
-%ifarch ppc64
-%{perl_root}/%{version}/%{full_arch}/asm-ppc/unistd.ph
-%{perl_root}/%{version}/%{full_arch}/asm-ppc64/unistd.ph
-%{perl_root}/%{version}/%{full_arch}/bits/wordsize.ph
-%endif
-%{perl_root}/%{version}/%{full_arch}/bits/syscall.ph
-%{perl_root}/%{version}/%{full_arch}/sys/syscall.ph
-%{perl_root}/%{version}/%{full_arch}/_h2ph_pre.ph
-%{perl_root}/%{version}/%{full_arch}/syscall.ph
-EOF
-
-cat > perl.list <<EOF
+%files -f perl.list
 %doc README
-%doc Artistic
 %{_bindir}/a2p
+%{_bindir}/find2perl
 %{_bindir}/perlbug
 %{_bindir}/perlthanks
-%{_bindir}/find2perl
-%{_bindir}/pod2man
 %{_bindir}/pod2html
+%{_bindir}/pod2man
 %{_bindir}/pod2text
-%{_bindir}/splain
+%{_bindir}/prove
 %{_bindir}/s2p
-EOF
+%{_bindir}/splain
+%{perldir -l}/sdbm/extralibs.ld
+%{perldir -n Pod-Functions}
+%{perldir -n}/dumpvar.pl
+%{perldir -n}/perl5db.pl
+%{perldir -n perlfaq}
+%{perldir -n}/unicore/*
+%exclude %{perldir -n}/unicore/To/Fold.pl
+%exclude %{perldir -n}/unicore/To/Lower.pl
+%exclude %{perldir -n}/unicore/To/Upper.pl
 
-cat > perl-devel.list <<EOF
-#%{_bindir}/corelist
+%files devel -f perl-devel.list
 %{_bindir}/c2ph
 %{_bindir}/cpan
 %{_bindir}/enc2xs
@@ -629,33 +481,405 @@ cat > perl-devel.list <<EOF
 %{_bindir}/pstruct
 %{_bindir}/xsubpp
 %{perl_root}/%{version}/Encode/encode.h
+%{perl_root}/%{version}/ExtUtils/xsubpp
 %{perl_root}/%{version}/%{full_arch}/CORE/*.h
 %{_libdir}/libperl.so
-EOF
-
-cat > perl-doc.list <<EOF
-#%{_bindir}/perldoc
-#%{_mandir}/man3pm/Pod::Perldoc*
-EOF
-
-find %{buildroot}%{perl_root}/%{version} "(" -name "*.pod" -o -iname "Changes*" -o -iname "ChangeLog*" -o -iname "README*" ")" -a -not -name perldiag.pod -printf "%%%%doc %%p\n" |sort -u >> perl-doc.list
-find %{buildroot}%{_mandir}/man1 ! -name "perlivp.1*" ! -type d >> perl.list
-find %{buildroot}%{_mandir}/man3pm ! -type d ! -name "Pod::Perldoc*" >> perl.list
-find %{buildroot}%{perl_root}/%{version} ! -type d ! -name \*.h >> perl.list
-find %{buildroot}%{perl_root}/%{version} -type d -printf "%%%%dir %%p\n" >> perl.list
-sed -e 's#%{buildroot}##g' -i perl*.list
-
-perl -ni -e 'BEGIN { open F, "perl-base.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-perl -ni -e 'BEGIN { open F, "perl-devel.list"; $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-perl -ni -e 'BEGIN { open F, "perl-doc.list"; s/^.doc //, $s{$_} = 1 foreach <F>; } print unless $s{$_}' perl.list
-
-%files -f perl.list
-
-%files base -f perl-base.list
-
-%files devel -f perl-devel.list
 
 %files doc -f perl-doc.list
+%{mandir3pm CORE}
+%{mandir3pm ExtUtils-XSSymSet}
+%{mandir3pm Encode-PerlIO}
+%{mandir3pm Encode-Supported}
 
-%files -n %{libname}
-%{_libdir}/libperl.so.%{major}
+#MD split perl pkgs
+%{perlpkg -n AnyDBM_File}
+%{perlpkg -n App-Cpan}
+%{perlpkg -n App-Prove}
+
+%{perlpkg -n App-Prove-State}
+%{perlpairs -n App-Prove-State-Result}
+%{perlpairs -n App-Prove-State-Result-Test}
+
+%{perlpkg -n Attribute-Handlers}
+%{perlpkg -n AutoLoader}
+%{perlpkg -n AutoSplit}
+%{perlpkg -n Benchmark}
+
+%{perlpkg -ng CPAN}
+%{perldir -n CPAN-Exception-RecursiveDependency}
+%{perldir -n CPAN-Exception-blocked_urllist}
+%{perldir -n CPAN-Exception-yaml_not_installed}
+%{perldir -n CPAN-Exception-yaml_process_error}
+%{perldir -n CPAN-FTP-netrc}
+%{perldir -n CPAN-HTTP-Client}
+%{perldir -n CPAN-HTTP-Credentials}
+%{perldir -n}/CPAN/Kwalify/distroprefs.dd
+%{perldir -n}/CPAN/Kwalify/distroprefs.yml
+%{perldir -n CPAN-LWP-UserAgent}
+%exclude %{perldir -n}/CPAN/Meta*
+%exclude %{mandir3pm CPAN-Meta*}
+
+%{perlpkg -ng CPAN-Meta}
+%{perlpkg -ng Carp}
+%{perlpkg -n Class-Struct}
+%{perlpkg -n Config-Extensions}
+%{perlpkg -n Config-Perl-V}
+%{perlpkg -n DB}
+%{perlpkg -ng DBM_Filter}
+%{perlpkg -n Devel-SelfStubber}
+
+%{perlpkg -n Digest}
+%{perlpairs -n Digest-base}
+%{perlpairs -n Digest-file}
+
+%{perlpkg -n DirHandle}
+%{perlpkg -n Dumpvalue}
+%{perlpkg -n English}
+%{perlpkg -n Env}
+%{perlpkg -ng Exporter}
+
+%{perlpkg -n ExtUtils-CBuilder}
+%{perldir -dn ExtUtils-CBuilder}
+%{perldir -n ExtUtils-CBuilder-Base}
+
+%{perlglob -n ExtUtils-CBuilder-Platform}
+%{perldir -dn ExtUtils-CBuilder-Platform-Windows}
+%{perldir -n ExtUtils-CBuilder-Platform-Windows-*}
+
+%{perlpkg -n ExtUtils-Command}
+%{perlpkg -n ExtUtils-Command-MM}
+
+%{perlpkg -n ExtUtils-Constant}
+%{perldir -dn ExtUtils-Constant}
+%{perldir -n ExtUtils-Constant-ProxySubs}
+
+%{perlpkg -n ExtUtils-Constant-Base}
+%{perlpkg -n ExtUtils-Constant-Utils}
+%{perlpkg -n ExtUtils-Constant-XS}
+%{perlpkg -n ExtUtils-Embed}
+%{perlpkg -n ExtUtils-Install}
+%{perlpkg -n ExtUtils-Installed}
+%{perlpkg -ng ExtUtils-Liblist}
+%{perlpkg -ng ExtUtils-MakeMaker}
+%{perlpkg -n ExtUtils-MM}
+%{perlpkg -n ExtUtils-MM_AIX}
+%{perlpkg -n ExtUtils-MM_Any}
+%{perlpkg -n ExtUtils-MM_BeOS}
+%{perlpkg -n ExtUtils-MM_Cygwin}
+%{perlpkg -n ExtUtils-MM_DOS}
+%{perlpkg -n ExtUtils-MM_Darwin}
+%{perlpkg -n ExtUtils-MM_MacOS}
+%{perlpkg -n ExtUtils-MM_NW5}
+%{perlpkg -n ExtUtils-MM_OS2}
+%{perlpkg -n ExtUtils-MM_QNX}
+%{perlpkg -n ExtUtils-MM_UWIN}
+%{perlpkg -n ExtUtils-MM_Unix}
+%{perlpkg -n ExtUtils-MM_VMS}
+%{perlpkg -n ExtUtils-MM_VOS}
+%{perlpkg -n ExtUtils-MM_Win32}
+%{perlpkg -n ExtUtils-MM_Win95}
+%{perlpkg -n ExtUtils-MY}
+%{perlpkg -n Fatal}
+
+%{perlpkg -n ExtUtils-Manifest}
+%{perldir -n}/ExtUtils/MANIFEST.SKIP
+
+%{perlpkg -n ExtUtils-Miniperl}
+%{perlpkg -n ExtUtils-Mkbootstrap}
+%{perlpkg -n ExtUtils-Mksymlists}
+%{perlpkg -n ExtUtils-Packlist}
+%{perlpkg -ng ExtUtils-ParseXS}
+
+%{perlpkg -ng ExtUtils-Typemaps}
+%{perldir -n}/ExtUtils/typemap
+
+%{perlpkg -n ExtUtils-testlib}
+%{perlpkg -n File-Compare}
+%{perlpkg -n File-Copy}
+%{perlpkg -n File-Fetch}
+%{perlpkg -n File-stat}
+%{perlpkg -n File-Basename}
+%{perlpkg -n File-Find}
+%{perlpkg -n File-Path}
+%{perlpkg -n File-Temp}
+%{perlpkg -n FileCache}
+%{perlpkg -n Filter-Simple}
+%{perlpkg -n FileHandle}
+%{perlpkg -n FindBin}
+%{perlpkg -n Getopt-Long}
+%{perlpkg -n Getopt-Std}
+%{perlpkg -n HTTP-Tiny}
+%{perlpkg -n I18N-LangTags}
+%{perlpkg -n I18N-LangTags-Detect}
+%{perlpkg -n I18N-LangTags-List}
+%{perlpkg -n I18N-Collate}
+%{perlpkg -n IO-Zlib}
+%{perlpkg -n IPC-Cmd}
+%{perlpkg -n IPC-Open2}
+%{perlpkg -n IPC-Open3}
+%{perlpkg -ng Locale-Codes}
+%{perlpkg -n Locale-Country}
+%{perlpkg -n Locale-Currency}
+%{perlpkg -n Locale-Language}
+%{perlpkg -n Locale-Script}
+%{perlpkg -ng Locale-Maketext}
+%{perlpkg -ng Math-BigFloat}
+
+%{perlpkg -n Math-BigInt}
+%{perldir -dn Math-BigInt}
+%{perldir -n Math-BigInt-Trace}
+
+%{perlpkg -n Math-BigInt-Calc}
+%{perlpkg -n Math-BigInt-CalcEmu}
+%{perlpkg -n Math-BigRat}
+%{perlpkg -n Math-Complex}
+%{perlpkg -n Math-Trig}
+%{perlpkg -ng Memoize}
+
+%{perlpkg -n Module-CoreList}
+%{perldir -dn Module-CoreList}
+%{perldir -n Module-CoreList-TieHashDelta}
+
+%{perlpkg -n Module-CoreList-Utils}
+%{perlpkg -ng Module-Load}
+%{perlpkg -n Module-Loaded}
+%{perlpkg -n Module-Metadata}
+%{perlpkg -n Net-Cmd}
+
+%{perlpkg -n Net-Config}
+%{mandir3pm Net-libnetFAQ}
+%{perlpairs -n Net-hostent}
+%{perlpairs -n Net-netent}
+%{perlpairs -n Net-protoent}
+%{perlpairs -n Net-servent}
+
+%{perlpkg -n Net-Domain}
+%{perlpkg -ng Net-FTP}
+%{perlpkg -n Net-NNTP}
+%{perlpkg -n Net-Netrc}
+%{perlpkg -n Net-POP3}
+%{perlpkg -n Net-Ping}
+%{perlpkg -n Net-SMTP}
+%{perlpkg -n Net-Time}
+%{perlpkg -n NEXT}
+%{perlpkg -n Package-Constants}
+%{perlpkg -n Params-Check}
+%{perlpkg -n Parse-CPAN-Meta}
+%{perlpkg -n Perl-OSType}
+
+%{perlpkg -n PerlIO}
+%{perlpairs -n PerlIO-via-QuotedPrint}
+
+%{perlpkg -n Pod-Checker}
+%{perlpkg -n Pod-Escapes}
+%{perlpkg -n Pod-Find}
+%{perlpkg -n Pod-Html}
+%{perlpkg -n Pod-InputObjects}
+%{perlpkg -n Pod-Man}
+%{perlpkg -n Pod-ParseLink}
+%{perlpkg -n Pod-ParseUtils}
+%{perlpkg -n Pod-Parser}
+%{perlpkg -n Pod-PlainText}
+%{perlpkg -n Pod-Select}
+%{perlpkg -n Pod-Usage}
+
+%{perlpkg -ng Pod-Simple}
+%{perlpkg -ng Pod-Text}
+%{perlpkg -n Safe}
+%{perlpkg -n Search-Dict}
+%{perlpkg -n SelectSaver}
+%{perlpkg -n SelfLoader}
+%{perlpkg -n Symbol}
+
+%{perlpkg -n TAP-Parser}
+%{perlpairs -n TAP-Parser-Aggregator}
+%{perlpairs -ns TAP-Parser-Grammar}
+%{perlpairs -ns TAP-Parser-Iterator}
+%{perlpairs -ns TAP-Parser-IteratorFactory}
+%{perlpairs -n TAP-Parser-Iterator-Array}
+%{perlpairs -ns TAP-Parser-Iterator-Process}
+%{perlpairs -ns TAP-Parser-Iterator-Stream}
+%{perlpairs -ns TAP-Parser-Multiplexer}
+%{perlpairs -ns TAP-Parser-Result}
+%{perlpairs -ns TAP-Parser-ResultFactory}
+%{perlpairs -n TAP-Parser-Result-Bailout}
+%{perlpairs -ns TAP-Parser-Result-Comment}
+%{perlpairs -ns TAP-Parser-Result-Plan}
+%{perlpairs -ns TAP-Parser-Result-Pragma}
+%{perlpairs -ns TAP-Parser-Result-Test}
+%{perlpairs -ns TAP-Parser-Result-Unknown}
+%{perlpairs -ns TAP-Parser-Result-Version}
+%{perlpairs -ns TAP-Parser-Result-YAML}
+%{perlpairs -ns TAP-Parser-Scheduler}
+%{perlpairs -n TAP-Parser-Scheduler-Job}
+%{perlpairs -ns TAP-Parser-Scheduler-Spinner}
+%{perlpairs -ns TAP-Parser-Source}
+%{perlpairs -ns TAP-Parser-SourceHandler}
+%{perlpairs -n TAP-Parser-SourceHandler-Executable}
+%{perlpairs -ns TAP-Parser-SourceHandler-File}
+%{perlpairs -ns TAP-Parser-SourceHandler-Handle}
+%{perlpairs -ns TAP-Parser-SourceHandler-Perl}
+%{perlpairs -ns TAP-Parser-SourceHandler-RawTAP}
+%{perlpairs -n TAP-Parser-YAMLish-Reader}
+%{perlpairs -ns TAP-Parser-YAMLish-Writer}
+
+%{perlpkg -n TAP-Base}
+
+%{perlglob -n TAP-Formatter}
+%{perldir -dn TAP-Formatter-Console}
+%{perldir -dn TAP-Formatter-File}
+%{perldir -n TAP-Formatter-Console-ParallelSession}
+%{perldir -n TAP-Formatter-Console-Session}
+%{perldir -n TAP-Formatter-File-Session}
+
+%{perlpkg -n TAP-Harness}
+%{perlpairs -n TAP-Harness-Env}
+%{mandir3pm TAP-Harness-Beyond}
+
+%{perlpkg -n TAP-Object}
+
+%{perlpkg -n Test}
+%{perlpairs -n Test-Builder}
+%{perlpairs -n Test-Builder-Module}
+%{perlpairs -ns Test-Builder-Tester}
+%{perlpairs -n Test-Builder-Tester-Color}
+%{perlpairs -n Test-Harness}
+%{perlpairs -n Test-More}
+%{perlpairs -n Test-Simple}
+%{mandir3pm Test-Tutorial}
+
+%{perlpkg -n Term-ANSIColor}
+%{perlpkg -n Term-Cap}
+%{perlpkg -n Term-Complete}
+%{perlpkg -n Term-ReadLine}
+%{perlpkg -n Text-Abbrev}
+%{perlpkg -n Text-Balanced}
+%{perlpkg -n Text-ParseWords}
+%{perlpkg -n Text-Tabs}
+%{perlpkg -n Text-Wrap}
+%{perlpkg -ng Thread}
+%{perlpkg -n Tie-Array}
+%{perlpkg -n Tie-File}
+%{perlpkg -n Tie-Handle}
+%{perlpkg -n Tie-Hash}
+%{perlpkg -n Tie-Memoize}
+%{perlpkg -n Tie-RefHash}
+%{perlpkg -n Tie-Scalar}
+%{perlpkg -n Tie-StdHandle}
+%{perlpkg -n Tie-SubstrHash}
+
+%{perlglob -n Time}
+%exclude %{mandir3pm Time-HiRes}
+
+%{perlpkg -n UNIVERSAL}
+%{perlpkg -n Unicode-UCD}
+%{perlglob -n User}
+%{perlpkg -n XSLoader}
+
+#arched
+%{perlpkg -l B}
+%{perlpairs -n B-Debug}
+%{perlpairs -n B-Deparse}
+%{perlpairs B-Concise}
+%{perlpairs B-Showlex}
+%{perlpairs B-Terse}
+%{perlpairs B-Xref}
+
+%{perlpkg -l Cwd}
+%{perlpkg -l DB_File}
+%{perlpkg -l Data-Dumper}
+%{perlpkg -l Devel-PPPort}
+%{perlpkg -l Devel-Peek}
+%{perlpkg -l Digest-MD5}
+
+%{perlpkg -l Encode}
+%{perlpairs Encode-Alias}
+%{perlpairs Encode-CJKConstants}
+%{perlpairs Encode-Config}
+%{perlpairs Encode-Encoder}
+%{perlpairs Encode-Encoding}
+%{perlpairs Encode-GSM0338}
+%{perlpairs Encode-Guess}
+
+%{perlpkg -l Encode-Byte}
+%{perlpkg -lg Encode-CN}
+%{perlpkg -l Encode-EBCDIC}
+%{perlpkg -lg Encode-JP}
+%{perlpkg -lg Encode-KR}
+%{perlpkg -l Encode-Symbol}
+%{perlpkg -l Encode-TW}
+%{perlpkg -lg Encode-Unicode}
+%{perlpkg -l Fcntl}
+%{perlpkg -l File-DosGlob}
+%{perlpkg -l File-Glob}
+%{perlpkg -l Filter-Util-Call}
+%{perlpkg -l GDBM_File}
+%{perlpkg -l Hash-Util}
+%{perlpkg -l Hash-Util-FieldHash}
+%{perlpkg -l I18N-Langinfo}
+%{perlpkg -l IO}
+%{perlpkg IO-File}
+%{perlpkg IO-Handle}
+%{perlpkg IO-Seekable}
+%{perlpkg IO-Select}
+%{perlpkg IO-Socket}
+%{perlpkg IO-Socket-INET}
+%{perlpkg IO-Socket-UNIX}
+%{perlpkg IO-Dir}
+%{perlpkg IO-Pipe}
+%{perlpkg IO-Poll}
+%{perlpkg -n IO-Socket-IP}
+%{perlpkg -l IPC-SysV}
+%{perlpkg -lg List-Util}
+%{perlpkg -l MIME-Base64}
+%{perlpkg -l Math-BigInt-FastCalc}
+%{perlpkg -l NDBM_File}
+%{perlpkg -l ODBM_File}
+%{perlpkg -l Opcode}
+%{perlpkg -l POSIX}
+%{perlpkg -l PerlIO-encoding}
+%{perlpkg -l PerlIO-mmap}
+%{perlpkg -l PerlIO-scalar}
+%{perlpkg -l PerlIO-via}
+%{perlpkg -l SDBM_File}
+%{perlpkg -l Socket}
+%{perlpkg -l Storable}
+%{perlpkg -l Sys-Hostname}
+%{perlpkg -l Sys-Syslog}
+%{perlpkg -l Tie-Hash-NamedCapture}
+%{perlpkg -l Time-HiRes}
+
+%{perlpkg -l Unicode-Collate}
+%{perlpairs Unicode-Collate-Locale}
+%{perldir -n}/Unicode/Collate/Locale/*pl
+%{perlpairs -n Unicode-Collate-CJK-Big5}
+%{perlpairs -ns Unicode-Collate-CJK-GB2312}
+%{perlpairs -ns Unicode-Collate-CJK-JISX0208}
+%{perlpairs -ns Unicode-Collate-CJK-Korean}
+%{perlpairs -ns Unicode-Collate-CJK-Pinyin}
+%{perlpairs -ns Unicode-Collate-CJK-Stroke}
+%{perlpairs -ns Unicode-Collate-CJK-Zhuyin}
+%{perldir -n}/Unicode/Collate/*.txt
+
+%{perlpkg -l Unicode-Normalize}
+
+#no libs in arched pkg
+%{perlpkg Config}
+%{perldir}/Config_git.pl
+%{perldir}/Config_heavy.pl
+
+%{perlpkg DynaLoader}
+
+%{perlglob Encode-MIME}
+%{perldir -d Encode-MIME-Header}
+%{perldir Encode-MIME-Header-ISO_2022_JP}
+
+%{perlpkg Errno}
+%{perlpkg -g File-Spec}
+%{perlpkg MIME-QuotedPrint}
+%{perlpkg IPC-Msg}
+%{perlpkg IPC-Semaphore}
+%{perlpkg IPC-SharedMem}
+%{perlpkg O}
+%{perlpkg Scalar-Util}
+

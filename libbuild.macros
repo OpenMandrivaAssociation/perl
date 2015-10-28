@@ -1,0 +1,144 @@
+#####################################################################
+
+%girpkg() %{expand:%(\
+echo "%%global gir%{3} %{_lib}%{1}-gir%{2}
+%%global girapi %{2}
+%%global girname%{3} %{1}
+%package -n %{gir%{3}}
+Summary:	GObject Introspection interface typelib for %{name}
+Group:		System/Libraries
+\
+%description -n %{gir%{3}}
+The package contains the ${kib} GOject Introspection typelib, a part of %{name}.
+\ 
+%files -n %{gir%{3}}
+%{_libdir}/girepository-1.0/%{1}-%{2}.typelib"
+)}\
+%{nil}
+
+#####################################################################
+
+%devpkg() %{expand:%(\
+nib=$(echo %{1} | sed 's,-,_,g')
+mib=$(echo $nib | sed 's,_$,,')
+kib=$(echo %{1} | sed 's,-$,,')
+echo "%%define dev${mib} %{_lib}${kib}%{?2:%{2}}-devel
+%package -n %{dev${mib}}
+Summary:	The ${kib} development files for %{name}
+Group:		Development/Other
+Requires:	%{lib${mib}} = %{EVRD}"
+if [[ %{with gir} -eq 1 ]]; then
+	echo "Requires:	%{gir${mib}} = %{EVRD}"
+fi
+echo "\
+%description -n %{dev${mib}}
+The package contains the ${kib} development files for %{name}.
+\ 
+%files -n %{dev${mib}}
+%doc AUTHORS ChangeLog NEWS README
+%{_libdir}/lib%{1}%{?2:%{2}}.so"
+if [[ %{with gir} -eq 1 ]]; then
+	echo "%{_datadir}/gir-1.0/%{girname${mib}}-%{girapi}.gir"
+fi
+echo "%optional %{_libdir}/pkgconfig/${kib}.pc"
+)}\
+%{nil}
+
+#####################################################################
+
+%staticpkg() %{expand:%(\
+nib=$(echo %{1} | sed 's,-,_,g')
+mib=$(echo $nib | sed 's,_$,,')
+kib=$(echo %{1} | sed 's,-$,,')
+echo "%%define static${mib} %{_lib}${kib}%{?2:%{2}}-static-devel
+%package -n %{static${mib}}
+Summary:	The ${kib} static library for %{name}
+Group:		Development/Other
+Requires:	%{dev${mib}} = %{EVRD}
+\
+%description -n %{static${mib}}
+The package contains the ${kib} static library, a part of %{name}.
+\ 
+%files -n %{static${mib}}
+%{_libdir}/lib%{1}%{?2:%{2}}.a"
+)}\
+%{nil}
+
+#####################################################################
+
+%libpkg(dsg) %{?-d:%bcond_without dev}%{?-s:%bcond_without static}%{-g:%bcond_without gir}%{expand:%(\
+nib=$(echo %{1} | sed 's,-,_,g')
+mib=$(echo $nib | sed 's,_$,,')
+kib=$(echo %{1} | sed 's,-$,,')
+echo "%%global lib${mib} %{_lib}${kib}%{?2:%{2}}%{?3:_%{3}}
+%package -n %{lib${mib}}
+Summary:	The ${kib} library, a part of %{name}
+Group:		System/Libraries
+\
+%description -n %{lib${mib}}
+This package containts the ${kib} library, a part of %{name}.
+\
+%files -n %{lib${mib}}
+%{_libdir}/lib%{1}%{?3:%{2}}.so.%{?3:%{3}}%{?!3:%{2}}*
+\"
+[[ %{with static} -eq 1 ]] && echo "%%staticpkg %{1} %{?3:%{2}}"
+[[ %{with dev} -eq 1 ]] && echo "%%devpkg %{1} %{?3:%{2}}"
+)}%{nil}
+
+#####################################################################
+
+%perlvendorpkg()\
+%{?2:%define ARCH %{2}}%{!?2:%define ARCH arch}\
+%{expand:%(\
+ARCH=arch
+perlname=$(echo %{1} | sed 's,-,/,g')
+manname=$(echo %{1} | sed 's,-,::,g')
+perllib=$(echo %{1} | awk -F- '{print $NF}')
+echo "%package -n perl-%{1}
+Summary:	Perl Module for %{1}
+Group:		Development/Perl"
+if [[ %{ARCH} == "noarch" ]]; then
+	ARCH=lib
+	echo "BuildArch: 	noarch"
+fi
+echo "\
+%description -n perl-%{1}
+Perl module for %{1}.
+\
+%files -n perl-%{1}
+%doc README Changes
+%{perl_vendor${ARCH}}/$perlname.pm
+%optional %doc %{perl_vendor${ARCH}}/$perlname.pod"
+dirs=($(echo %{1} | sed 's,-, ,g'))
+dirnum=$(echo %{1} | awk -F- '{print NF-1}')
+perldir=$(echo %{1} | awk -F- '{print $1}')
+if [[ $dirnum -gt 0 ]]; then
+	count=0
+	echo "%dir %{perl_vendor${ARCH}}/$perldir"
+	if [[ %{ARCH} == "arch" ]]; then
+		echo "%dir %{perl_vendor${ARCH}}/auto/$perldir"
+	fi
+	while [[ $count -lt $dirnum ]]; do
+		perldir="$perldir/${dirs[$count+1]}"
+		if [[ $count+1 -eq $dirnum ]]; then
+			echo "%optional %dir %{perl_vendor${ARCH}}/$perldir"
+		else
+			echo "%dir %{perl_vendor${ARCH}}/$perldir"
+		fi
+		if [[ %{ARCH} == "arch" ]]; then
+			echo "%dir %{perl_vendor${ARCH}}/auto/$perldir"
+		fi
+		count=$[$count+1]
+	done
+fi
+echo "%optional %{perl_vendor${ARCH}}/$perlname/*"
+if [[ %{ARCH} == "arch" ]]; then
+	echo "%{perl_vendor${ARCH}}/auto/$perlname/$perllib.so"
+	echo "%optional %{perl_vendor${ARCH}}/auto/$perlname/*.itx"
+fi
+echo "%{_mandir}/man3/$manname.3pm.*
+%optional %{_mandir}/man3/$manname::*.3pm.*"
+)}\
+%{nil}
+
+#####################################################################
