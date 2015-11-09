@@ -1,9 +1,9 @@
 #####################################################################
-# create a perl dir/file according to the different arch/lib
+# create a path to a perl dir/file according to the different arch/lib
 # -d just directory
 # -n noarch
 # -l lib auto dir
-%perldir(dnl) %{!-n:%{!-l: }}%{-n:%{-l:%{error:Can't specify both -n and -l}}}%{?-d:%dir }%{_prefix}/lib/perl5/%{version}%{?!-n:/%{full_arch}%{?-l:/auto}}%{expand:%([[ %# -gt 0 ]] && echo "/"$(echo %{1} | sed 's.-./.g')%{?!-d:%{?-l:/%{expand:%(echo %{1} | awk -F- '{print $NF}')}.so}%{?!-l:.pm}})}
+%perlpath(dnl) %{!-n:%{!-l: }}%{-n:%{-l:%{error:Can't specify both -n and -l}}}%{?-d:%dir }%{_prefix}/lib/perl5/%{version}%{?!-n:/%{full_arch}%{?-l:/auto}}%{expand:%([[ %# -gt 0 ]] && echo "/"$(echo %{1} | sed 's.-./.g')%{?!-d:%{?-l:/%{expand:%(echo %{1} | awk -F- '{print $NF}')}.so}%{?!-l:.pm}})}
 
 #####################################################################
 # create a perl module man3 page dir/file
@@ -15,7 +15,7 @@
 # -n noarch
 # -l include lib .so file
 # -s strict: don not include extra directories
-%perlpairs(lns) %{expand:%(\
+%pmpair(lns) %{expand:%(\
 perlroot="%{_prefix}/lib/perl5/%{version}%%{?!-n:/%{full_arch}}"
 dirs=($(echo %{1} | sed 's,-, ,g'))
 dirnum=$(echo %{1} | awk -F- '{print NF-1}')
@@ -98,7 +98,7 @@ echo "$perlmandir/$manname.3pm.*"
 %{nil}
 
 #####################################################################
-#  make a package out of a perl pairs of a perl module and manpage 
+#  make a package out of a perl a pair of a perl module and manpage 
 #  that have no base module
 # -n noarch otherwise package is considered to be arched
 
