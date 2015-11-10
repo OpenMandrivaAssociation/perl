@@ -845,7 +845,7 @@ rm -f %{buildroot}%{perl_root}/%{version}/%{full_arch}/CORE/libperl.so*
 %{pmpair IO-Select}
 
 %{perlpkg IO-Socket}
-%{pmpair -s IO-Socket-INET}
+%{pmpair IO-Socket-INET}
 %{pmpair -s IO-Socket-UNIX}
 
 %{perlpkg IO-Dir}
