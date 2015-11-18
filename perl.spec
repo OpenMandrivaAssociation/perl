@@ -67,7 +67,7 @@ BuildRequires:	pkgconfig(zlib)
 Requires:	perl-base = %{EVRD}
 Conflicts:	perl-devel < 2:5.20.0
 
-%define __noautoreq 'Mac|VMS|Local::Codes::Language_Codes'
+%define __noautoreq 'Mac|VMS|Language_Codes|Currency_Retired'
 
 %{expand:%%{load:%{SOURCE3}}}
 %{expand:%%{load:%{SOURCE4}}}
