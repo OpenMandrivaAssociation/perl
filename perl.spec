@@ -99,6 +99,7 @@ This is the base package for %{name}.
 Summary:	The Perl programming language (binaries)
 Group:		Development/Perl
 Conflicts:	perl < 2:5.20.3-1.1
+Conflicts:	perl-base < 2:5.20.3-1.1
 
 %description	bin
 This is the extra binaries for %{name}.
@@ -110,6 +111,8 @@ Summary:	The Perl programming language (devel)
 Group:		Development/Perl
 Requires:	%{name} = %{EVRD}
 Requires:	%{name}-bin = %{EVRD}
+Conflicts:	perl < 2:5.20.3-1.1
+Conflicts:	perl-base < 2:5.20.3-1.1
 
 %description	devel
 This is the devel package for %{name}.
@@ -131,6 +134,8 @@ Summary:	The Perl programming language (manpages)
 Group:		Development/Perl
 BuildArch:	noarch
 Requires:	%{name} = %{EVRD}
+Conflicts:	perl < 2:5.20.3-1.1
+Conflicts:	perl-base < 2:5.20.3-1.1
 
 %description	man
 This is the manpages package for %{name}.
