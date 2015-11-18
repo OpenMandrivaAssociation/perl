@@ -55,7 +55,7 @@ perllib=$(echo %{1} | awk -F- '{print $NF}')
 echo "%package -n perl-%{1}
 Summary:        Perl Module for %{1}
 Group:          Development/Perl
-Conflicts:	perl < %{EVRD}"
+Conflicts:	perl < %{EVRD}
 Conflicts:	perl-base < %{EVRD}"
 if [[ %{ARCH} == "noarch" ]]; then
         ARCH=lib
@@ -113,7 +113,7 @@ perllib=$(echo %{1} | awk -F- '{print $NF}')
 echo "%package -n perl-%{1}
 Summary:        Perl Module for %{1}
 Group:          Development/Perl
-Conflicts:	perl < %{EVRD}"
+Conflicts:	perl < %{EVRD}
 Conflicts:	perl-base < %{EVRD}"
 if [[ %{ARCH} == "noarch" ]]; then
         ARCH=lib

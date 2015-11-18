@@ -95,13 +95,13 @@ Conflicts:	perl < 2:5.20.3-1.1
 %description	base
 This is the base package for %{name}.
 
-%package	bin
+%package	bin-extras
 Summary:	The Perl programming language (binaries)
 Group:		Development/Perl
 Conflicts:	perl < 2:5.20.3-1.1
 Conflicts:	perl-base < 2:5.20.3-1.1
 
-%description	bin
+%description	bin-extras
 This is the extra binaries for %{name}.
 
 %{libpkg %{name} %{major}}
@@ -110,7 +110,7 @@ This is the extra binaries for %{name}.
 Summary:	The Perl programming language (devel)
 Group:		Development/Perl
 Requires:	%{name} = %{EVRD}
-Requires:	%{name}-bin = %{EVRD}
+Requires:	%{name}-bin-extras = %{EVRD}
 Conflicts:	perl < 2:5.20.3-1.1
 Conflicts:	perl-base < 2:5.20.3-1.1
 
@@ -475,7 +475,7 @@ rm -f %{buildroot}%{perl_root}/%{version}/%{full_arch}/CORE/libperl.so*
 %exclude %{perlpath -n}/unicore/To/Lower.pl
 %exclude %{perlpath -n}/unicore/To/Upper.pl
 
-%files bin
+%files bin-extras
 %{binpair a2p}
 %{binpair find2perl}
 %{binpair perlbug}
