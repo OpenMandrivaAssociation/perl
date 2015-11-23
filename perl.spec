@@ -15,7 +15,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	1.1
+Release:	1.2
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -88,6 +88,7 @@ Summary:	The Perl programming language (base)
 Group:		Development/Perl
 Provides:	perl(abi)
 Provides:	perl(base)
+Requires:	perl(DynaLoader)
 # explicit file provides
 Provides:	/usr/bin/perl
 Conflicts:	perl < 2:5.20.3-1.1
