@@ -88,7 +88,7 @@ Summary:	The Perl programming language (base)
 Group:		Development/Perl
 Provides:	perl(abi)
 Provides:	perl(base)
-Requires:	perl(DynaLoader)
+Requires:	perl-DynaLoader = %{EVRD}
 # explicit file provides
 Provides:	/usr/bin/perl
 Conflicts:	perl < 2:5.20.3-1.1
