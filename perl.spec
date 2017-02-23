@@ -31,9 +31,8 @@ Patch6:		perl-5.22.0-fix-LD_RUN_PATH-for-MakeMaker.patch
 Patch14:	perl-5.22.0-install-files-using-chmod-644.patch
 Patch15:	perl-5.16.0-lib64.patch
 Patch16:	perl-5.16.0-perldoc-use-nroff-compatibility-option.patch
-#(peroyvind) use -fPIC in stead of -fpic or else compile will fail on sparc (taken from redhat)
-Patch21:	perl-5.8.1-RC4-fpic-fPIC.patch
 Patch23:	perl-5.12.0-patchlevel.patch
+Patch28:	perl-5.22.0-Revert-const-the-core-magic-vtables.patch
 Patch29:	perl-5.22.0-rpmdebug.patch
 Patch32:	perl-5.10.0-incversionlist.patch
 Patch38:	perl-donot-defer-sig11.patch
@@ -177,7 +176,6 @@ It contains also the 'perldoc' program.
 %patch14 -p1 -b .644~
 %patch15 -p1 -b .lib64~
 %patch16 -p0
-%patch21 -p1 -b .peroyvind~
 %patch23 -p0
 %patch29 -p1 -b .rpmdebug~
 %patch32 -p1
