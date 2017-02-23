@@ -15,14 +15,14 @@
 Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
-Version:	%{major}.1
+Version:	%{major}.3
 Release:	1
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
 # ftp://ftp.funet.fi/pub/languages/perl/snap/perl@17574.tbz
 #ftp://ftp.funet.fi/pub/languages/perl/CPAN/src/perl-%{version}.tar.bz2
-Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.gz
+Source0:	http://www.cpan.org/src/%{name}-%{version}.tar.xz
 Source1:	perl-headers-wanted
 Source2:	perl-5.8.0-RC2-special-h2ph-not-failing-on-machine_ansi_header.patch
 Source3:	perl.rpmlintrc
