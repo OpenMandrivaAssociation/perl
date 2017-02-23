@@ -210,7 +210,7 @@ sed -i '/\(bzip2\|zlib\)-src/d' MANIFEST
 export AFLAGS="-Wl,--hash-style=both"
 %endif
 sh Configure -des \
-  -Dinc_version_list="5.22.0 5.22.0/%{full_arch} 5.20.2 5.20.2/%{full_arch} 5.20.1 5.20.1/%{full_arch} 5.20.0 5.20.0/%{full_arch} 5.16.3 5.16.3/%{full_arch} 5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
+  -Dinc_version_list="5.22.3 5.22.3/%{full_arch} 5.22.2 5.22.2/%{full_arch} 5.22.1 5.22.1/%{full_arch} 5.22.0 5.22.0/%{full_arch} 5.20.2 5.20.2/%{full_arch} 5.20.1 5.20.1/%{full_arch} 5.20.0 5.20.0/%{full_arch} 5.16.3 5.16.3/%{full_arch} 5.16.2 5.16.2/%{full_arch} 5.16.1 5.16.1/%{full_arch} 5.16.0 5.16.0/%{full_arch} 5.14.2 5.14.1 5.14.0 5.12.3 5.12.2 5.12.1 5.12.0" \
   -Darchname=%{_arch}-%{_os} \
   -Dcc='%{__cc}' \
 %if %debugging
