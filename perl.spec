@@ -16,7 +16,7 @@ Summary:	The Perl programming language
 Name:		perl
 Epoch:		2
 Version:	%{major}.3
-Release:	2
+Release:	3
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://www.perl.org/
@@ -231,7 +231,7 @@ sh Configure -des \
   -Dvendorman3dir=%{_mandir}/man3 \
   -Dman3ext=3pm \
   -Dcf_by="%{vendor}" -Dmyhostname=localhost -Dperladmin=root@localhost -Dcf_email=root@localhost \
-  -Dperllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -lpthread'   \
+  -Dperllibs='-ldl -lm -lcrypt -lutil -lc -lpthread'   \
   -Ud_csh \
   -Duseshrplib \
   -Duselargefiles \
