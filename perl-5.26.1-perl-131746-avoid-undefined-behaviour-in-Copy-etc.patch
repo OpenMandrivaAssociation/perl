@@ -1,0 +1,107 @@
+From 7a962424149cc60f3a187d0213a12689dd5e806b Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Mon, 14 Aug 2017 11:52:39 +1000
+Subject: [PATCH] (perl #131746) avoid undefined behaviour in Copy() etc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+These functions depend on C library functions which have undefined
+behaviour when passed NULL pointers, even when passed a zero 'n' value.
+
+Some compilers use this information, ie. assume the pointers are
+non-NULL when optimizing any following code, so we do need to
+prevent such unguarded calls.
+
+My initial thought was to add conditionals to each macro to skip the
+call to the library function when n is zero, but this adds a cost to
+every use of these macros, even when the n value is always true.
+
+So instead I added asserts() which will give us a much more visible
+indicator of such broken code and revealed the pp_caller and Glob.xs
+issues also patched here.
+
+Petr Písař: Ported to 5.26.1 from
+f14cf3632059d421de83cf901c7e849adc1fcd03.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ ext/File-Glob/Glob.xs |  2 +-
+ handy.h               | 14 +++++++-------
+ pp_ctl.c              |  3 ++-
+ pp_hot.c              |  3 ++-
+ 4 files changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/ext/File-Glob/Glob.xs b/ext/File-Glob/Glob.xs
+index e0a3681..9779d54 100644
+--- a/ext/File-Glob/Glob.xs
++++ b/ext/File-Glob/Glob.xs
+@@ -121,7 +121,7 @@ iterate(pTHX_ bool(*globber)(pTHX_ AV *entries, const char *pat, STRLEN len, boo
+ 
+     /* chuck it all out, quick or slow */
+     if (gimme == G_ARRAY) {
+-	if (!on_stack) {
++	if (!on_stack && AvFILLp(entries) + 1) {
+ 	    EXTEND(SP, AvFILLp(entries)+1);
+ 	    Copy(AvARRAY(entries), SP+1, AvFILLp(entries)+1, SV *);
+ 	    SP += AvFILLp(entries)+1;
+diff --git a/handy.h b/handy.h
+index 80f9cf4..88b5b55 100644
+--- a/handy.h
++++ b/handy.h
+@@ -2409,17 +2409,17 @@ void Perl_mem_log_del_sv(const SV *sv, const char *filename, const int linenumbe
+ #define Safefree(d)	safefree(MEM_LOG_FREE((Malloc_t)(d)))
+ #endif
+ 
+-#define Move(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) (void)memmove((char*)(d),(const char*)(s), (n) * sizeof(t)))
+-#define Copy(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) (void)memcpy((char*)(d),(const char*)(s), (n) * sizeof(t)))
+-#define Zero(d,n,t)	(MEM_WRAP_CHECK_(n,t) (void)memzero((char*)(d), (n) * sizeof(t)))
++#define Move(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), assert(s), (void)memmove((char*)(d),(const char*)(s), (n) * sizeof(t)))
++#define Copy(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), assert(s), (void)memcpy((char*)(d),(const char*)(s), (n) * sizeof(t)))
++#define Zero(d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), (void)memzero((char*)(d), (n) * sizeof(t)))
+ 
+-#define MoveD(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) memmove((char*)(d),(const char*)(s), (n) * sizeof(t)))
+-#define CopyD(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) memcpy((char*)(d),(const char*)(s), (n) * sizeof(t)))
++#define MoveD(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), assert(s), memmove((char*)(d),(const char*)(s), (n) * sizeof(t)))
++#define CopyD(s,d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), assert(s), memcpy((char*)(d),(const char*)(s), (n) * sizeof(t)))
+ #ifdef HAS_MEMSET
+-#define ZeroD(d,n,t)	(MEM_WRAP_CHECK_(n,t) memzero((char*)(d), (n) * sizeof(t)))
++#define ZeroD(d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), memzero((char*)(d), (n) * sizeof(t)))
+ #else
+ /* Using bzero(), which returns void.  */
+-#define ZeroD(d,n,t)	(MEM_WRAP_CHECK_(n,t) memzero((char*)(d), (n) * sizeof(t)),d)
++#define ZeroD(d,n,t)	(MEM_WRAP_CHECK_(n,t) assert(d), memzero((char*)(d), (n) * sizeof(t)),d)
+ #endif
+ 
+ #define PoisonWith(d,n,t,b)	(MEM_WRAP_CHECK_(n,t) (void)memset((char*)(d), (U8)(b), (n) * sizeof(t)))
+diff --git a/pp_ctl.c b/pp_ctl.c
+index 15c193b..f1c57bc 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -1971,7 +1971,8 @@ PP(pp_caller)
+ 
+ 	if (AvMAX(PL_dbargs) < AvFILLp(ary) + off)
+ 	    av_extend(PL_dbargs, AvFILLp(ary) + off);
+-	Copy(AvALLOC(ary), AvARRAY(PL_dbargs), AvFILLp(ary) + 1 + off, SV*);
++        if (AvFILLp(ary) + 1 + off)
++            Copy(AvALLOC(ary), AvARRAY(PL_dbargs), AvFILLp(ary) + 1 + off, SV*);
+ 	AvFILLp(PL_dbargs) = AvFILLp(ary) + off;
+     }
+     mPUSHi(CopHINTS_get(cx->blk_oldcop));
+diff --git a/pp_hot.c b/pp_hot.c
+index 5899413..66b79ea 100644
+--- a/pp_hot.c
++++ b/pp_hot.c
+@@ -4138,7 +4138,8 @@ PP(pp_entersub)
+                 AvARRAY(av) = ary;
+             }
+ 
+-	    Copy(MARK+1,AvARRAY(av),items,SV*);
++            if (items)
++                Copy(MARK+1,AvARRAY(av),items,SV*);
+ 	    AvFILLp(av) = items - 1;
+ 	}
+ 	if (UNLIKELY((cx->blk_u16 & OPpENTERSUB_LVAL_MASK) == OPpLVAL_INTRO &&
+-- 
+2.13.6
+

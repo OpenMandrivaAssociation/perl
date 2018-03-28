@@ -1,0 +1,37 @@
+From 37268580c0cfbf190ff9aa7859a604713cb366ee Mon Sep 17 00:00:00 2001
+From: Yves Orton <demerphq@gmail.com>
+Date: Tue, 27 Jun 2017 16:36:57 +0200
+Subject: [PATCH] t/op/hash.t: fixup intermittently failing test
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Port to 5.26.0:
+
+commit b2ac59d1d0fda74d6612701d8316fe8dfb6a1b90
+Author: Yves Orton <demerphq@gmail.com>
+Date:   Tue Jun 27 16:36:57 2017 +0200
+
+    t/op/hash.t: fixup intermittently failing test
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/op/hash.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/t/op/hash.t b/t/op/hash.t
+index a0e79c7..b941c57 100644
+--- a/t/op/hash.t
++++ b/t/op/hash.t
+@@ -206,7 +206,7 @@ sub torture_hash {
+     my $keys = pop @groups;
+     ++$h->{$_} foreach @$keys;
+     my (undef, $total) = validate_hash("$desc " . keys %$h, $h);
+-    is($total, $total0, "bucket count is constant when rebuilding");
++    ok($total == $total0 || $total == ($total0*2), "bucket count is expected size when rebuilding");
+     is(scalar %$h, pop @groups, "scalar keys is identical when rebuilding");
+     ++$h1->{$_} foreach @$keys;
+     validate_hash("$desc copy " . keys %$h1, $h1);
+-- 
+2.9.4
+

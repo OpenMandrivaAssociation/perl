@@ -1,0 +1,30 @@
+From 4369267db9ca4982c1a9bd1ef680bc4350decc3a Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Mon, 18 Sep 2017 15:07:21 +1000
+Subject: [PATCH] (perl #132008) try to prevent the similar mistakes in the
+ future
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ dist/Term-ReadLine/lib/Term/ReadLine.pm | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/dist/Term-ReadLine/lib/Term/ReadLine.pm b/dist/Term-ReadLine/lib/Term/ReadLine.pm
+index e00fb376cd..78c1ebf5b6 100644
+--- a/dist/Term-ReadLine/lib/Term/ReadLine.pm
++++ b/dist/Term-ReadLine/lib/Term/ReadLine.pm
+@@ -75,6 +75,8 @@ history. Returns the old value.
+ returns an array with two strings that give most appropriate names for
+ files for input and output using conventions C<"E<lt>$in">, C<"E<gt>out">.
+ 
++The strings returned may not be useful for 3-argument open().
++
+ =item Attribs
+ 
+ returns a reference to a hash which describes internal configuration
+-- 
+2.13.6
+

@@ -1,0 +1,72 @@
+From 7b3e03bd309fcc48a135123a60678ae2596b1c38 Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Wed, 7 Jun 2017 15:00:26 +1000
+Subject: [PATCH] clear the UTF8 flag on a glob if it isn't UTF8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Ported to 5.26.0:
+
+commit 1097da16b21fe0a2257dba9937e55c0cca18f7e1
+Author: Tony Cook <tony@develop-help.com>
+Date:   Wed Jun 7 15:00:26 2017 +1000
+
+    [perl #131263] clear the UTF8 flag on a glob if it isn't UTF8
+
+    Previously sv_2pv_flags() would set the UTF8 flag on a glob if it
+    had a UTF8 name, but wouldn't clear tha flag if it didn't.
+
+    This meant a name change, eg. if assigned another glob, from a UTF8
+    name to a non-UTF8 name would leave the flag set.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ sv.c      |  2 ++
+ t/op/gv.t | 10 +++++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/sv.c b/sv.c
+index 9f3e28e..ae3dc95 100644
+--- a/sv.c
++++ b/sv.c
+@@ -3179,6 +3179,8 @@ Perl_sv_2pv_flags(pTHX_ SV *const sv, STRLEN *const lp, const I32 flags)
+ 	assert(SvPOK(buffer));
+ 	if (SvUTF8(buffer))
+ 	    SvUTF8_on(sv);
++        else
++            SvUTF8_off(sv);
+ 	if (lp)
+ 	    *lp = SvCUR(buffer);
+ 	return SvPVX(buffer);
+diff --git a/t/op/gv.t b/t/op/gv.t
+index 4fe6b00..670ccf6 100644
+--- a/t/op/gv.t
++++ b/t/op/gv.t
+@@ -12,7 +12,7 @@ BEGIN {
+ 
+ use warnings;
+ 
+-plan(tests => 280);
++plan(tests => 282);
+ 
+ # type coercion on assignment
+ $foo = 'foo';
+@@ -1170,6 +1170,14 @@ SKIP: {
+     is ($? & 127, 0,"[perl #128597] No crash when gp_free calls ckWARN_d");
+ }
+ 
++{
++    # [perl #131263]
++    *sym = "\N{U+0080}";
++    ok(*sym eq "*main::\N{U+0080}", "utf8 flag properly set");
++    *sym = "\xC3\x80";
++    ok(*sym eq "*main::\xC3\x80", "utf8 flag properly cleared");
++}
++
+ # test gv_try_downgrade()
+ # If a GV can be stored in a stash in a compact, non-GV form, then
+ # whenever ops are freed which reference the GV, an attempt is made to
+-- 
+2.9.4
+

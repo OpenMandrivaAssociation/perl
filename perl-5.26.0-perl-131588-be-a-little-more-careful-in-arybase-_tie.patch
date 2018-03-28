@@ -1,0 +1,61 @@
+From cb2fda94b02c5b7e8d16582410034f5a3dae526f Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Tue, 25 Jul 2017 16:21:22 +1000
+Subject: [PATCH] (perl #131588) be a little more careful in arybase::_tie_it()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Original patch by John Leitch <john@autosectools.com>
+Petr Pisar: Ported to 5.26.0.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ ext/arybase/arybase.xs  | 10 ++++++----
+ ext/arybase/t/arybase.t |  4 +++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/ext/arybase/arybase.xs b/ext/arybase/arybase.xs
+index 880bbe3..216442a 100644
+--- a/ext/arybase/arybase.xs
++++ b/ext/arybase/arybase.xs
+@@ -438,10 +438,12 @@ _tie_it(SV *sv)
+     INIT:
+ 	GV * const gv = (GV *)sv;
+     CODE:
+-	if (GvSV(gv))
+-	    /* This is *our* scalar now!  */
+-	    sv_unmagic(GvSV(gv), PERL_MAGIC_sv);
+-	tie(aTHX_ GvSVn(gv), NULL, GvSTASH(CvGV(cv)));
++	if (isGV(gv)) {
++	    if (GvSV(gv))
++	        /* This is *our* scalar now!  */
++	        sv_unmagic(GvSV(gv), PERL_MAGIC_sv);
++	    tie(aTHX_ GvSVn(gv), NULL, GvSTASH(CvGV(cv)));
++	}
+ 
+ void
+ FETCH(...)
+diff --git a/ext/arybase/t/arybase.t b/ext/arybase/t/arybase.t
+index f3d3287..41e90df 100644
+--- a/ext/arybase/t/arybase.t
++++ b/ext/arybase/t/arybase.t
+@@ -4,7 +4,7 @@
+ # plus miscellaneous bug fix tests
+ 
+ no warnings 'deprecated';
+-use Test::More tests => 7;
++use Test::More tests => 8;
+ 
+ sub outside_base_scope { return "${'['}" }
+ 
+@@ -34,4 +34,6 @@ is $@, "That use of \$[ is unsupported at $f line $l.\n",
+ 
+ sub foo { my $x; $x = wait } # compilation of this routine used to crash
+ 
++ok eval { arybase::_tie_it(1); 1 }, "don't crash on bad call to _tie_it()";
++
+ 1;
+-- 
+2.9.4
+

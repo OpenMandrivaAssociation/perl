@@ -1,0 +1,45 @@
+From b4d257e2d408f0f1c6686dcdc112f3ebfec68f44 Mon Sep 17 00:00:00 2001
+From: Yves Orton <demerphq@gmail.com>
+Date: Tue, 27 Jun 2017 10:22:23 +0200
+Subject: [PATCH] File::Glob - tweak rt131211.t to be less sensitive on wonky
+ boxes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+make the test less senstive and avoid divide by zero errors,
+also we skip the test if either elapsed_match or elapsed_fail is
+true, as we can not rely on the timings then. For the operations
+we are doing we should get a non-zero timing from Time::HiRes.
+
+This should mean that running this test on boxes with heavy
+load, etc, will no longer result in false positives.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ ext/File-Glob/t/rt131211.t | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ext/File-Glob/t/rt131211.t b/ext/File-Glob/t/rt131211.t
+index c1bcbe0..b29cd04 100644
+--- a/ext/File-Glob/t/rt131211.t
++++ b/ext/File-Glob/t/rt131211.t
+@@ -49,8 +49,13 @@ while (++$count < 10) {
+ is $count,10,
+     "tried all the patterns without bailing out";
+ 
+-cmp_ok $elapsed_fail/$elapsed_match,"<",2,
+-    "time to fail less than twice the time to match";
++SKIP: {
++    skip "unstable timing", 1 unless $elapsed_match && $elapsed_fail;
++    ok $elapsed_fail <= 10 * $elapsed_match,
++        "time to fail less than 10x the time to match"
++        or diag("elapsed_match=$elapsed_match elapsed_fail=$elapsed_fail");
++}
++
+ is "@got_files", catfile($path, $files[0]),
+     "only got the expected file for xa*..b";
+ is "@no_files", "", "shouldnt have files for xa*..c";
+-- 
+2.9.4
+

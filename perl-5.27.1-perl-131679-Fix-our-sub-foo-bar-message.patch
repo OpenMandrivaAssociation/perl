@@ -1,0 +1,51 @@
+From b9a58d500dd75ba783abac92a56e57d41227f62b Mon Sep 17 00:00:00 2001
+From: Father Chrysostomos <sprout@cpan.org>
+Date: Sun, 2 Jul 2017 11:35:20 -0700
+Subject: [PATCH] =?UTF-8?q?[perl=20#131679]=20Fix=20=E2=80=98our=20sub=20f?=
+ =?UTF-8?q?oo::bar=E2=80=99=20message?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+It should say subroutine, not variable.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/lib/croak/toke | 6 ++++++
+ toke.c           | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/t/lib/croak/toke b/t/lib/croak/toke
+index 7aa15ef..2603224 100644
+--- a/t/lib/croak/toke
++++ b/t/lib/croak/toke
+@@ -133,6 +133,12 @@ state sub;
+ EXPECT
+ Missing name in "state sub" at - line 2.
+ ########
++# NAME our sub pack::foo
++our sub foo::bar;
++EXPECT
++No package name allowed for subroutine &foo::bar in "our" at - line 1, near "our sub foo::bar"
++Execution of - aborted due to compilation errors.
++########
+ # NAME my sub pack::foo
+ use feature 'lexical_subs', 'state';
+ my sub foo::bar;
+diff --git a/toke.c b/toke.c
+index ace92e3..6aa5f26 100644
+--- a/toke.c
++++ b/toke.c
+@@ -8848,7 +8848,8 @@ S_pending_ident(pTHX)
+         if (PL_in_my == KEY_our) {	/* "our" is merely analogous to "my" */
+             if (has_colon)
+                 yyerror_pv(Perl_form(aTHX_ "No package name allowed for "
+-                                  "variable %s in \"our\"",
++                                  "%se %s in \"our\"",
++                                  *PL_tokenbuf=='&' ?"subroutin":"variabl",
+                                   PL_tokenbuf), UTF ? SVf_UTF8 : 0);
+             tmp = allocmy(PL_tokenbuf, tokenbuf_len, UTF ? SVf_UTF8 : 0);
+         }
+-- 
+2.9.4
+

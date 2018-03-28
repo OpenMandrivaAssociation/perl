@@ -1,0 +1,111 @@
+From 3dfcac940930a8aa6779f5debea6ea6357372419 Mon Sep 17 00:00:00 2001
+From: Daniel Dragan <bulk88@hotmail.com>
+Date: Sun, 16 Aug 2015 04:30:23 -0400
+Subject: [PATCH] fix do dir returning no $!
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+do()ing a directory was returning false/empty string in $!, which isn't
+an error, yet documentation says $! should have the error code in it.
+Fix this by returning EISDIR for dirs, and EINVAL for block devices.
+[perl #125774]
+
+Remove "errno = 0" and comment added in b2da7ead68, since now there is no
+scenario where errno is uninitialized, since the dir and block device
+failure branches now set errno, where previously they didn't.
+
+Petr Písař: Ported to 5.26.1.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ pp_ctl.c  | 25 +++++++++++++++++--------
+ t/op/do.t | 14 +++++++++++++-
+ 2 files changed, 30 insertions(+), 9 deletions(-)
+
+diff --git a/pp_ctl.c b/pp_ctl.c
+index e24d7b6..f136f91 100644
+--- a/pp_ctl.c
++++ b/pp_ctl.c
+@@ -3534,15 +3534,22 @@ S_check_type_and_open(pTHX_ SV *name)
+        errno EACCES, so only do a stat to separate a dir from a real EACCES
+        caused by user perms */
+ #ifndef WIN32
+-    /* we use the value of errno later to see how stat() or open() failed.
+-     * We don't want it set if the stat succeeded but we still failed,
+-     * such as if the name exists, but is a directory */
+-    errno = 0;
+-
+     st_rc = PerlLIO_stat(p, &st);
+ 
+-    if (st_rc < 0 || S_ISDIR(st.st_mode) || S_ISBLK(st.st_mode)) {
++    if (st_rc < 0)
+ 	return NULL;
++    else {
++	int eno;
++	if(S_ISBLK(st.st_mode)) {
++	    eno = EINVAL;
++	    goto not_file;
++	}
++	else if(S_ISDIR(st.st_mode)) {
++	    eno = EISDIR;
++	    not_file:
++	    errno = eno;
++	    return NULL;
++	}
+     }
+ #endif
+ 
+@@ -3554,8 +3561,10 @@ S_check_type_and_open(pTHX_ SV *name)
+ 	int eno;
+ 	st_rc = PerlLIO_stat(p, &st);
+ 	if (st_rc >= 0) {
+-	    if(S_ISDIR(st.st_mode) || S_ISBLK(st.st_mode))
+-		eno = 0;
++	    if(S_ISDIR(st.st_mode))
++		eno = EISDIR;
++	    else if(S_ISBLK(st.st_mode))
++		eno = EINVAL;
+ 	    else
+ 		eno = EACCES;
+ 	    errno = eno;
+diff --git a/t/op/do.t b/t/op/do.t
+index 78d8800..1c54f0b 100644
+--- a/t/op/do.t
++++ b/t/op/do.t
+@@ -7,6 +7,7 @@ BEGIN {
+ }
+ use strict;
+ no warnings 'void';
++use Errno qw(ENOENT EISDIR);
+ 
+ my $called;
+ my $result = do{ ++$called; 'value';};
+@@ -247,7 +248,7 @@ SKIP: {
+     my $saved_errno = $!;
+     ok(!$rv,          "do returns false on io errror");
+     ok(!$saved_error, "\$\@ not set on io error");
+-    ok($saved_errno,  "\$! set on io error");
++    ok($saved_errno == ENOENT, "\$! is ENOENT for nonexistent file");
+ }
+ 
+ # do subname should not be do "subname"
+@@ -305,4 +306,15 @@ SKIP: {
+ }
+ 
+ 
++# do file $!s must be correct
++{
++    local @INC = ('.'); #want EISDIR not ENOENT
++    my $rv = do 'op'; # /t/op dir
++    my $saved_error = $@;
++    my $saved_errno = $!+0;
++    ok(!$rv,                    "do dir returns false");
++    ok(!$saved_error,           "\$\@ is false on do dir");
++    ok($saved_errno == EISDIR,  "\$! is EISDIR on do dir");
++}
++
+ done_testing();
+-- 
+2.13.6
+

@@ -1,0 +1,32 @@
+From e80af1fd276d83858d27742ea887415e3263960b Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Wed, 12 Oct 2016 10:42:47 +1100
+Subject: [PATCH] (perl 129183) don't treat \ as an escape in PATH for -S
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ util.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/util.c b/util.c
+index 5bb0dfc..6bc2fe5 100644
+--- a/util.c
++++ b/util.c
+@@ -3352,9 +3352,8 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
+ 	    if (len < sizeof tmpbuf)
+ 		tmpbuf[len] = '\0';
+ #  else
+-	    s = delimcpy(tmpbuf, tmpbuf + sizeof tmpbuf, s, bufend,
+-			':',
+-			&len);
++	    s = delimcpy_no_escape(tmpbuf, tmpbuf + sizeof tmpbuf, s, bufend,
++                                   ':', &len);
+ #  endif
+ 	    if (s < bufend)
+ 		s++;
+-- 
+2.9.4
+

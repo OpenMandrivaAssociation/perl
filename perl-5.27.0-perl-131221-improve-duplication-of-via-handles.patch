@@ -1,0 +1,299 @@
+From 99b847695211f825df6299aa9da91f9494f741e2 Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Thu, 1 Jun 2017 15:11:27 +1000
+Subject: [PATCH] [perl #131221] improve duplication of :via handles
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Previously duplication (as with open ... ">&...") would fail
+unless the user supplied a GETARG, which wasn't documented, and
+resulted in an attempt to free and unreferened scalar if supplied.
+
+Cloning on thread creation was simply broken.
+
+We now handle GETARG correctly, and provide a useful default if it
+returns nothing.
+
+Cloning on thread creation now duplicates the appropriate parts of the
+parent thread's handle.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ MANIFEST                  |  1 +
+ ext/PerlIO-via/t/thread.t | 73 +++++++++++++++++++++++++++++++++++++++++++++++
+ ext/PerlIO-via/t/via.t    | 56 +++++++++++++++++++++++++++++++++++-
+ ext/PerlIO-via/via.pm     |  2 +-
+ ext/PerlIO-via/via.xs     | 55 +++++++++++++++++++++++++++++++----
+ 5 files changed, 179 insertions(+), 8 deletions(-)
+ create mode 100644 ext/PerlIO-via/t/thread.t
+
+diff --git a/MANIFEST b/MANIFEST
+index 8c4950e..d39f992 100644
+--- a/MANIFEST
++++ b/MANIFEST
+@@ -4056,6 +4056,7 @@ ext/PerlIO-scalar/scalar.xs	PerlIO layer for scalars
+ ext/PerlIO-scalar/t/scalar.t	See if PerlIO::scalar works
+ ext/PerlIO-scalar/t/scalar_ungetc.t	Tests for PerlIO layer for scalars
+ ext/PerlIO-via/hints/aix.pl	Hint for PerlIO::via for named architecture
++ext/PerlIO-via/t/thread.t		See if PerlIO::via works with threads
+ ext/PerlIO-via/t/via.t		See if PerlIO::via works
+ ext/PerlIO-via/via.pm		PerlIO layer for layers in perl
+ ext/PerlIO-via/via.xs		PerlIO layer for layers in perl
+diff --git a/ext/PerlIO-via/t/thread.t b/ext/PerlIO-via/t/thread.t
+new file mode 100644
+index 0000000..e4358f9
+--- /dev/null
++++ b/ext/PerlIO-via/t/thread.t
+@@ -0,0 +1,73 @@
++#!perl
++BEGIN {
++    unless (find PerlIO::Layer 'perlio') {
++	print "1..0 # Skip: not perlio\n";
++	exit 0;
++    }
++    require Config;
++    unless ($Config::Config{'usethreads'}) {
++        print "1..0 # Skip -- need threads for this test\n";
++        exit 0;
++    }
++    if (($Config::Config{'extensions'} !~ m!\bPerlIO/via\b!) ){
++        print "1..0 # Skip -- Perl configured without PerlIO::via module\n";
++        exit 0;
++    }
++}
++
++use strict;
++use warnings;
++use threads;
++
++my $tmp = "via$$";
++
++END {
++    1 while unlink $tmp;
++}
++
++use Test::More tests => 2;
++
++our $push_count = 0;
++
++{
++    open my $fh, ">:via(Test1)", $tmp
++      or die "Cannot open $tmp: $!";
++    $fh->autoflush;
++
++    print $fh "AXAX";
++
++    # previously this would crash
++    threads->create(
++        sub {
++            print $fh "XZXZ";
++        })->join;
++
++    print $fh "BXBX";
++    close $fh;
++
++    open my $in, "<", $tmp;
++    my $line = <$in>;
++    close $in;
++
++    is($line, "AYAYYZYZBYBY", "check thread data delivered");
++
++    is($push_count, 1, "PUSHED not called for dup on thread creation");
++}
++
++package PerlIO::via::Test1;
++
++sub PUSHED {
++    my ($class) = @_;
++    ++$main::push_count;
++    bless {}, $class;
++}
++
++sub WRITE {
++    my ($self, $data, $fh) = @_;
++    $data =~ tr/X/Y/;
++    $fh->autoflush;
++    print $fh $data;
++    return length $data;
++}
++
++
+diff --git a/ext/PerlIO-via/t/via.t b/ext/PerlIO-via/t/via.t
+index 6787e11..80577df 100644
+--- a/ext/PerlIO-via/t/via.t
++++ b/ext/PerlIO-via/t/via.t
+@@ -17,7 +17,7 @@ use warnings;
+ 
+ my $tmp = "via$$";
+ 
+-use Test::More tests => 18;
++use Test::More tests => 26;
+ 
+ my $fh;
+ my $a = join("", map { chr } 0..255) x 10;
+@@ -84,6 +84,60 @@ is( $obj, 'Foo', 'search for package Foo' );
+ open $fh, '<:via(Bar)', "bar";
+ is( $obj, 'PerlIO::via::Bar', 'search for package PerlIO::via::Bar' );
+ 
++{
++    # [perl #131221]
++    ok(open(my $fh1, ">", $tmp), "open $tmp");
++    ok(binmode($fh1, ":via(XXX)"), "binmode :via(XXX) onto it");
++    ok(open(my $fh2, ">&", $fh1), "dup it");
++    close $fh1;
++    close $fh2;
++
++    # make sure the old workaround still works
++    ok(open($fh1, ">", $tmp), "open $tmp");
++    ok(binmode($fh1, ":via(YYY)"), "binmode :via(YYY) onto it");
++    ok(open($fh2, ">&", $fh1), "dup it");
++    print $fh2 "XZXZ";
++    close $fh1;
++    close $fh2;
++
++    ok(open($fh1, "<", $tmp), "open $tmp for check");
++    { local $/; $b = <$fh1> }
++    close $fh1;
++    is($b, "XZXZ", "check result is from non-filtering class");
++
++    package PerlIO::via::XXX;
++
++    sub PUSHED {
++        my $class = shift;
++        bless {}, $class;
++    }
++
++    sub WRITE {
++        my ($self, $buffer, $handle) = @_;
++
++        print $handle $buffer;
++        return length($buffer);
++    }
++    package PerlIO::via::YYY;
++
++    sub PUSHED {
++        my $class = shift;
++        bless {}, $class;
++    }
++
++    sub WRITE {
++        my ($self, $buffer, $handle) = @_;
++
++        $buffer =~ tr/X/Y/;
++        print $handle $buffer;
++        return length($buffer);
++    }
++
++    sub GETARG {
++        "XXX";
++    }
++}
++
+ END {
+     1 while unlink $tmp;
+ }
+diff --git a/ext/PerlIO-via/via.pm b/ext/PerlIO-via/via.pm
+index e477dcc..30083fe 100644
+--- a/ext/PerlIO-via/via.pm
++++ b/ext/PerlIO-via/via.pm
+@@ -1,5 +1,5 @@
+ package PerlIO::via;
+-our $VERSION = '0.16';
++our $VERSION = '0.17';
+ require XSLoader;
+ XSLoader::load();
+ 1;
+diff --git a/ext/PerlIO-via/via.xs b/ext/PerlIO-via/via.xs
+index 8a7f1fc..61953c8 100644
+--- a/ext/PerlIO-via/via.xs
++++ b/ext/PerlIO-via/via.xs
+@@ -38,6 +38,8 @@ typedef struct
+  CV *UTF8;
+ } PerlIOVia;
+ 
++static const MGVTBL PerlIOVia_tag = { 0, 0, 0, 0, 0, 0, 0, 0 };
++
+ #define MYMethod(x) #x,&s->x
+ 
+ static CV *
+@@ -131,8 +133,14 @@ PerlIOVia_pushed(pTHX_ PerlIO * f, const char *mode, SV * arg,
+ 		 PerlIO_funcs * tab)
+ {
+     IV code = PerlIOBase_pushed(aTHX_ f, mode, Nullsv, tab);
++
++    if (SvTYPE(arg) >= SVt_PVMG
++		&& mg_findext(arg, PERL_MAGIC_ext, &PerlIOVia_tag)) {
++	return code;
++    }
++
+     if (code == 0) {
+-	PerlIOVia *s = PerlIOSelf(f, PerlIOVia);
++        PerlIOVia *s = PerlIOSelf(f, PerlIOVia);
+ 	if (!arg) {
+ 	    if (ckWARN(WARN_LAYER))
+ 		Perl_warner(aTHX_ packWARN(WARN_LAYER),
+@@ -583,20 +591,55 @@ static SV *
+ PerlIOVia_getarg(pTHX_ PerlIO * f, CLONE_PARAMS * param, int flags)
+ {
+     PerlIOVia *s = PerlIOSelf(f, PerlIOVia);
+-    PERL_UNUSED_ARG(param);
++    SV *arg;
+     PERL_UNUSED_ARG(flags);
+-    return PerlIOVia_method(aTHX_ f, MYMethod(GETARG), G_SCALAR, Nullsv);
++
++    /* During cloning, return an undef token object so that _pushed() knows
++     * that it should not call methods and wait for _dup() to actually dup the
++     * object. */
++    if (param) {
++	SV *sv = newSV(0);
++	sv_magicext(sv, NULL, PERL_MAGIC_ext, &PerlIOVia_tag, 0, 0);
++	return sv;
++    }
++
++    arg = PerlIOVia_method(aTHX_ f, MYMethod(GETARG), G_SCALAR, Nullsv);
++    if (arg) {
++        /* arg is a temp, and PerlIOBase_dup() will explicitly free it */
++        SvREFCNT_inc(arg);
++    }
++    else {
++        arg = newSVpvn(HvNAME(s->stash), HvNAMELEN(s->stash));
++    }
++
++    return arg;
+ }
+ 
+ static PerlIO *
+ PerlIOVia_dup(pTHX_ PerlIO * f, PerlIO * o, CLONE_PARAMS * param,
+ 	      int flags)
+ {
+-    if ((f = PerlIOBase_dup(aTHX_ f, o, param, flags))) {
+-	/* Most of the fields will lazily set themselves up as needed
+-	   stash and obj have been set up by the implied push
++    if ((f = PerlIOBase_dup(aTHX_ f, o, param, flags)) && param) {
++	/* For a non-interpreter dup stash and obj have been set up
++	   by the implied push.
++
++           But if this is a clone for a new interpreter we need to
++           translate the objects to their dups.
+ 	 */
++
++        PerlIOVia *fs = PerlIOSelf(f, PerlIOVia);
++        PerlIOVia *os = PerlIOSelf(o, PerlIOVia);
++
++        fs->obj = sv_dup_inc(os->obj, param);
++        fs->stash = (HV*)sv_dup((SV*)os->stash, param);
++        fs->var = sv_dup_inc(os->var, param);
++        fs->cnt = os->cnt;
++
++        /* fh, io, cached CVs left as NULL, PerlIOVia_method()
++           will reinitialize them if needed */
+     }
++    /* for a non-threaded dup fs->obj and stash should be set by _pushed() */
++
+     return f;
+ }
+ 
+-- 
+2.9.4
+

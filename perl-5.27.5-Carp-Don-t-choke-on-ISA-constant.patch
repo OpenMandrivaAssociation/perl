@@ -1,0 +1,73 @@
+From b3937e202aaf10c2f8996e2993c880bb38a7a268 Mon Sep 17 00:00:00 2001
+From: Father Chrysostomos <sprout@cpan.org>
+Date: Wed, 1 Nov 2017 13:11:27 -0700
+Subject: [PATCH] =?UTF-8?q?Carp:=20Don=E2=80=99t=20choke=20on=20ISA=20cons?=
+ =?UTF-8?q?tant?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This broke some time between 1.29 (perl 5.18) and 1.3301 (perl 5.20):
+
+$ perl5.20.1 -e 'package Foo { use constant ISA => 42; Bar::f() } package Bar { use Carp; sub f { carp "tun syn" } }'
+Not a GLOB reference at /usr/local/lib/perl5/5.20.1/Carp.pm line 560.
+
+and still persisted in bleadperl (Carp 1.43) until this commit.
+
+The code that goes poking through the symbol table needs to take into
+account that not all stash elements are globs.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ dist/Carp/lib/Carp.pm |  3 ++-
+ dist/Carp/t/Carp.t    | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/dist/Carp/lib/Carp.pm b/dist/Carp/lib/Carp.pm
+index 6127b26f54..ef11a0c046 100644
+--- a/dist/Carp/lib/Carp.pm
++++ b/dist/Carp/lib/Carp.pm
+@@ -593,7 +593,8 @@ sub trusts_directly {
+     for my $var (qw/ CARP_NOT ISA /) {
+         # Don't try using the variable until we know it exists,
+         # to avoid polluting the caller's namespace.
+-        if ( $stash->{$var} && *{$stash->{$var}}{ARRAY} && @{$stash->{$var}} ) {
++        if ( $stash->{$var} && ref \$stash->{$var} eq 'GLOB'
++          && *{$stash->{$var}}{ARRAY} && @{$stash->{$var}} ) {
+            return @{$stash->{$var}}
+         }
+     }
+diff --git a/dist/Carp/t/Carp.t b/dist/Carp/t/Carp.t
+index 65daed7c6c..b1e399d143 100644
+--- a/dist/Carp/t/Carp.t
++++ b/dist/Carp/t/Carp.t
+@@ -3,7 +3,7 @@ no warnings "once";
+ use Config;
+ 
+ use IPC::Open3 1.0103 qw(open3);
+-use Test::More tests => 67;
++use Test::More tests => 68;
+ 
+ sub runperl {
+     my(%args) = @_;
+@@ -488,6 +488,17 @@ SKIP:
+     );
+ }
+ 
++{
++    package Mpar;
++    sub f { Carp::croak "tun syn" }
++
++    package Phou;
++    $Phou::{ISA} = \42;
++    eval { Mpar::f };
++}
++like $@, qr/tun syn/, 'Carp can handle non-glob ISA stash elems';
++
++
+ # New tests go here
+ 
+ # line 1 "XA"
+-- 
+2.13.6
+

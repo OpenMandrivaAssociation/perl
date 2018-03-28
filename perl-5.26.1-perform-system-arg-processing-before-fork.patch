@@ -1,0 +1,90 @@
+From cbe3025c652289aee2f2f4145f882be5b33a27ee Mon Sep 17 00:00:00 2001
+From: Zefram <zefram@fysh.org>
+Date: Sat, 16 Dec 2017 05:33:20 +0000
+Subject: [PATCH] perform system() arg processing before fork
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A lot of things can happen when stringifying an argument list: side
+effects, warnings, exceptions.  In the case of system(), these effects
+should happen in the context of the parent process.  The stringification
+can also depend on which process it happens in, as in the case of
+$$, and in that case it should also happen in the parent process.
+Therefore reduce the argument scalars to strings first thing in pp_system.
+Fixes [perl #121105].
+
+Petr Písař: Ported to 5.26.1 from
+64def2aeaeb63f92dadc6dfa33486c1d7b311963.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ pp_sys.c    | 16 ++++++++++------
+ t/op/exec.t | 15 ++++++++++++++-
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/pp_sys.c b/pp_sys.c
+index 87961f1..07e552a 100644
+--- a/pp_sys.c
++++ b/pp_sys.c
+@@ -4375,14 +4375,18 @@ PP(pp_system)
+     int result;
+ # endif
+ 
++    while (++MARK <= SP) {
++	SV *origsv = *MARK;
++	STRLEN len;
++	char *pv;
++	pv = SvPV(origsv, len);
++	*MARK = newSVpvn_flags(pv, len,
++		    (SvFLAGS(origsv) & SVf_UTF8) | SVs_TEMP);
++    }
++    MARK = ORIGMARK;
++
+     if (TAINTING_get) {
+ 	TAINT_ENV();
+-	while (++MARK <= SP) {
+-	    (void)SvPV_nolen_const(*MARK);      /* stringify for taint check */
+-	    if (TAINT_get)
+-		break;
+-	}
+-	MARK = ORIGMARK;
+ 	TAINT_PROPER("system");
+     }
+     PERL_FLUSHALL_FOR_CHILD;
+diff --git a/t/op/exec.t b/t/op/exec.t
+index 1155439..45237e9 100644
+--- a/t/op/exec.t
++++ b/t/op/exec.t
+@@ -36,7 +36,7 @@ $ENV{LANGUAGE} = 'C';		# Ditto in GNU.
+ my $Is_VMS   = $^O eq 'VMS';
+ my $Is_Win32 = $^O eq 'MSWin32';
+ 
+-plan(tests => 25);
++plan(tests => 28);
+ 
+ my $Perl = which_perl();
+ 
+@@ -156,6 +156,19 @@ TODO: {
+         "exec failure doesn't terminate process");
+ }
+ 
++package CountRead {
++    sub TIESCALAR { bless({ n => 0 }, $_[0]) }
++    sub FETCH { ++$_[0]->{n} }
++}
++my $cr;
++tie $cr, "CountRead";
++is system($^X, "-e", "exit(\$ARGV[0] eq '1' ? 0 : 1)", $cr), 0,
++    "system args have magic processed exactly once";
++is tied($cr)->{n}, 1, "system args have magic processed before fork";
++
++is system($^X, "-e", "exit(\$ARGV[0] eq \$ARGV[1] ? 0 : 1)", "$$", $$), 0,
++    "system args have magic processed before fork";
++
+ my $test = curr_test();
+ exec $Perl, '-le', qq{${quote}print 'ok $test - exec PROG, LIST'${quote}};
+ fail("This should never be reached if the exec() worked");
+-- 
+2.13.6
+

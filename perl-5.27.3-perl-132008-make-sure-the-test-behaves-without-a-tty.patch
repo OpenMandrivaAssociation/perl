@@ -1,0 +1,73 @@
+From 1d217c696857b2bf41d87a7e927c43d20cc556e5 Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Tue, 19 Sep 2017 17:40:52 +1000
+Subject: [PATCH] (perl #132008) make sure the test behaves without a tty
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The test is intended to test how Term::ReadLine behaves without a tty
+and mocks up an invalid tty.
+
+Unfortunately some of the checks it does fail if the test starts without
+a tty.
+
+Modified the test to handle the lack of a tty.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ dist/Term-ReadLine/t/ReadLine-STDERR.t | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/dist/Term-ReadLine/t/ReadLine-STDERR.t b/dist/Term-ReadLine/t/ReadLine-STDERR.t
+index f7aa2df925..2bdf799f42 100644
+--- a/dist/Term-ReadLine/t/ReadLine-STDERR.t
++++ b/dist/Term-ReadLine/t/ReadLine-STDERR.t
+@@ -6,7 +6,7 @@ use Test::More;
+ ## unit test for RT 132008 - https://rt.perl.org/Ticket/Display.html?id=132008
+ 
+ if ( $^O eq 'MSWin32' || !-e q{/dev/tty} ) {
+-    plan skip_all => "Test not tested on windows or when /dev/tty do not exists";
++    plan skip_all => "Not tested on windows or when /dev/tty does not exist";
+ }
+ else {
+     plan tests => 9;
+@@ -19,21 +19,29 @@ if ( -e q[&STDERR] ) {
+ 
+ use_ok('Term::ReadLine');
+ can_ok( 'Term::ReadLine::Stub', qw{new devtty findConsole} );
+-
+-is( Term::ReadLine->devtty(), q{/dev/tty} );
+-my @out = Term::ReadLine::Stub::findConsole();
+-is_deeply \@out, [ q{/dev/tty}, q{/dev/tty} ], "findConsole is using /dev/tty";
++is( Term::ReadLine->devtty(), q{/dev/tty}, "check sub devtty" );
++SKIP:
++{
++    open my $tty, "<",  Term::ReadLine->devtty()
++      or skip "Cannot open tty", 1;
++    -t $tty
++      or skip "No tty found, so findConsole() won't return /dev/tty", 1;
++    my @out = Term::ReadLine::Stub::findConsole();
++    is_deeply \@out, [ q{/dev/tty}, q{/dev/tty} ], "findConsole is using /dev/tty";
++}
+ 
+ {
+     no warnings 'redefine';
+     my $donotexist = q[/this/should/not/exist/hopefully];
+ 
+     ok !-e $donotexist, "File $donotexist does not exist";
+-    local *Term::ReadLine::Stub::devtty = sub { $donotexist };
++    # double mention to prevent warning
++    local *Term::ReadLine::Stub::devtty =
++      *Term::ReadLine::Stub::devtty = sub { $donotexist };
+     is( Term::ReadLine->devtty(), $donotexist, "devtty mocked" );
+ 
+     my @out = Term::ReadLine::Stub::findConsole();
+-    is_deeply \@out, [ q{&STDIN}, q{&STDERR} ], "findConsole is using /dev/tty" or diag explain \@out;
++    is_deeply \@out, [ q{&STDIN}, q{&STDERR} ], "findConsole isn't using /dev/tty" or diag explain \@out;
+ 
+     ok !-e q[&STDERR], 'file &STDERR do not exist before Term::ReadLine call';
+     my $tr = Term::ReadLine->new('whatever');
+-- 
+2.13.6
+

@@ -1,0 +1,54 @@
+From dc5c68130b7c8b727e9e792506183c255fc2bc70 Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Thu, 19 Oct 2017 10:46:04 +1100
+Subject: [PATCH] (perl #132245) don't try to process a char range with no
+ preceding char
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A range like \N{}-0 eventually results in compilation failing, but
+before that, get_and_check_backslash_N_name() attempts to treat
+the memory before the empty output of \N{} as a character.
+
+Petr Písař: Ported to 5.26.1.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/lib/warnings/toke | 5 +++++
+ toke.c              | 6 +++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/t/lib/warnings/toke b/t/lib/warnings/toke
+index fc51d9f..398ee22 100644
+--- a/t/lib/warnings/toke
++++ b/t/lib/warnings/toke
+@@ -1651,3 +1651,8 @@ Execution of - aborted due to compilation errors.
+ use utf8;
+ qw∘foo ∞ ♥ bar∘
+ EXPECT
++########
++# NAME tr/// range with empty \N{} at the start
++tr//\N{}-0/;
++EXPECT
++Unknown charname '' is deprecated. Its use will be fatal in Perl 5.28 at - line 1.
+diff --git a/toke.c b/toke.c
+index 6f84d2d..6ee7a68 100644
+--- a/toke.c
++++ b/toke.c
+@@ -2958,9 +2958,9 @@ S_scan_const(pTHX_ char *start)
+ 
+                 /* Here, we don't think we're in a range.  If the new character
+                  * is not a hyphen; or if it is a hyphen, but it's too close to
+-                 * either edge to indicate a range, then it's a regular
+-                 * character. */
+-                if (*s != '-' || s >= send - 1 || s == start) {
++                 * either edge to indicate a range, or if we haven't output any
++                 * characters yet then it's a regular character. */
++                if (*s != '-' || s >= send - 1 || s == start || d == SvPVX(sv)) {
+ 
+                     /* A regular character.  Process like any other, but first
+                      * clear any flags */
+-- 
+2.13.6
+

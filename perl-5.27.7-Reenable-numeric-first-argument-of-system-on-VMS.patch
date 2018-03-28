@@ -1,0 +1,34 @@
+From 8e7c2faafb74d3b07e8a5818608dfe065e361604 Mon Sep 17 00:00:00 2001
+From: "Craig A. Berry" <craigberry@mac.com>
+Date: Mon, 1 Jan 2018 10:10:33 -0600
+Subject: [PATCH] Reenable numeric first argument of system() on VMS.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This was broken in 64def2aeaeb63f92dadc6dfa334, and fixed for Win32
+only in 8fe3452cc6ac7af8c08.  But VMS also uses a numeric first
+argument to system() as a flag indicating spawn without waiting for
+completion.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ pp_sys.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pp_sys.c b/pp_sys.c
+index 0c9147bc4e..5154b9baa8 100644
+--- a/pp_sys.c
++++ b/pp_sys.c
+@@ -4375,7 +4375,7 @@ PP(pp_system)
+ 	STRLEN len;
+ 	char *pv;
+ 	SvGETMAGIC(origsv);
+-#ifdef WIN32
++#if defined(WIN32) || defined(__VMS)
+ 	/*
+ 	 * Because of a nasty platform-specific variation on the meaning
+ 	 * of arguments to this op, we must preserve numeric arguments
+-- 
+2.13.6
+

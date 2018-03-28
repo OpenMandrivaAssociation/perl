@@ -1,0 +1,92 @@
+From 57bd660029d94312ca4eb88993889d981f41b484 Mon Sep 17 00:00:00 2001
+From: Tony Cook <tony@develop-help.com>
+Date: Thu, 24 Aug 2017 15:52:33 +1000
+Subject: [PATCH] (perl #131954) don't initialize mark before a possible move
+ of the stack
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ pp.c        |  4 +++-
+ t/op/list.t | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/pp.c b/pp.c
+index ae6d9c94d1..4b1ccbba80 100644
+--- a/pp.c
++++ b/pp.c
+@@ -5104,9 +5104,11 @@ PP(pp_list)
+ {
+     I32 markidx = POPMARK;
+     if (GIMME_V != G_ARRAY) {
+-	SV **mark = PL_stack_base + markidx;
++        /* don't initialize mark here, EXTEND() may move the stack */
++        SV **mark;
+ 	dSP;
+         EXTEND(SP, 1);          /* in case no arguments, as in @empty */
++        mark = PL_stack_base + markidx;
+ 	if (++MARK <= SP)
+ 	    *MARK = *SP;		/* unwanted list, return last item */
+ 	else
+diff --git a/t/op/list.t b/t/op/list.t
+index 3f9487b96f..2acb03a321 100644
+--- a/t/op/list.t
++++ b/t/op/list.t
+@@ -6,7 +6,7 @@ BEGIN {
+     set_up_inc(qw(. ../lib));
+ }
+ 
+-plan( tests => 71 );
++plan( tests => 72 );
+ 
+ @foo = (1, 2, 3, 4);
+ cmp_ok($foo[0], '==', 1, 'first elem');
+@@ -228,3 +228,43 @@ ok(($0[()[()]],1), "[perl #126193] list slice with zero indexes");
+     @x;
+     pass('no panic'); # panics only under DEBUGGING
+ }
++
++fresh_perl_is(<<'EOS', "", {}, "[perl #131954] heap use after free in pp_list");
++#!./perl
++BEGIN {
++my $bar = "bar";
++
++sub test_no_error {
++    eval $_[0];
++}
++
++test_no_error($_) for split /\n/,
++q[	x
++	definfoo, $bar;
++	x
++	x
++	x
++	grep((not $bar, $bar, $bar), $bar);
++        x
++        x
++    x
++        x
++        x
++        x
++        x
++        x
++        x
++        x
++        x
++        x
++        x
++       x
++        x
++        x
++        x
++        x
++        x
++        x
++ ];
++}
++EOS
+-- 
+2.13.6
+

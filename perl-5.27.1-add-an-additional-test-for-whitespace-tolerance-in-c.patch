@@ -1,0 +1,43 @@
+From 9b7d3fdf8458e3581b4fb3a6c557b4db4e1f31e8 Mon Sep 17 00:00:00 2001
+From: Yves Orton <demerphq@gmail.com>
+Date: Thu, 29 Jun 2017 13:20:49 +0200
+Subject: [PATCH] add an additional test for whitespace tolerance in caret
+ word-vars
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/base/lex.t | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/t/base/lex.t b/t/base/lex.t
+index 89d46df..de33e7a 100644
+--- a/t/base/lex.t
++++ b/t/base/lex.t
+@@ -1,6 +1,6 @@
+ #!./perl
+ 
+-print "1..116\n";
++print "1..117\n";
+ 
+ $x = 'x';
+ 
+@@ -158,9 +158,12 @@ my $test = 31;
+   ${^TEST}= "splat";
+   @{^TEST}= ("foo", "bar");
+   %{^TEST}= ("foo" => "FOO", "bar" => "BAR" );
+-
++  
+   print "not " if "${^TEST}" ne "splat";
+   print "ok $test\n"; $test++;
++  
++  print "not " if "${ ^TEST }" ne "splat";
++  print "ok $test\n"; $test++;
+ 
+   print "not " if "${^TEST}[0]" ne "splat[0]";
+   print "ok $test\n"; $test++;
+-- 
+2.9.4
+
