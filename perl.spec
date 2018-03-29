@@ -1,3 +1,29 @@
+# ******************************************************************
+# *** IMPORTANT: When upgrading to a newer, incompatible release ***
+# *** (e.g. 5.26.x -> 5.27, not 5.26.1 -> 5.26.2), a number of   ***
+# *** package builds will break due to the gprintify script in   ***
+# *** spec-helper requiring some extra modules that can be       ***
+# *** run by /usr/bin/perl.                                      ***
+# *** Please make sure that after building the new perl package, ***
+# *** you rebuild (in that order):                               ***
+# *** perl-File-Slurp                                            ***
+# *** perl-Test-Pod                                              ***
+# *** perl-Devel-Symdump                                         ***
+# *** perl-Pod-Coverage                                          ***
+# *** perl-Test-Pod-Coverage                                     ***
+# *** perl-Try-Tiny                                              ***
+# *** perl-Test-Fatal                                            ***
+# *** perl-Test-Nowarnings                                       ***
+# *** perl-Test-Deep                                             ***
+# *** perl-Test-Warnings                                         ***
+# *** perl-Exporter-Tiny                                         ***
+# *** perl-List-MoreUtils                                        ***
+# *** perl-IPC-Run                                               ***
+# ***                                                            ***
+# *** gprintify is disabled for those packages; they will not    ***
+# *** fail because of its dependencies.                          ***
+# ******************************************************************
+
 %global perl_version    5.26.1
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
