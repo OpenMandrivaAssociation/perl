@@ -3,6 +3,10 @@
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
 
+# Avoid nasty circular dependency loop -- gprintify uses perl
+# and various perl-modules not in the perl core distro
+%define dont_gprintify 1
+
 %global multilib_64_archs aarch64 %{power64} s390x sparc64 x86_64 
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
@@ -328,7 +332,7 @@ BuildRequires:  rsyslog
 %global perl_compat perl(:MODULE_COMPAT_5.26.1)
 
 Requires:       %perl_compat
-Requires:       perl-interpreter%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
+Requires:       perl-base%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 Requires:       perl-libs%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 Requires:       perl-devel%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 ### FIXME enable once macros.perl is removed from rpm-openmandriva-macros
@@ -387,14 +391,9 @@ Requires:       perl-Time-Local, perl-Time-Piece
 Requires:       perl-Unicode-Collate, perl-Unicode-Normalize,
 Requires:       perl-version, perl-threads, perl-threads-shared, perl-parent
 
-# Full EVR is for compatibility with systems that swapped perl and perl-core
-# <https://fedoraproject.org/wiki/Changes/perl_Package_to_Install_Core_Modules>,
-# bug #1464903.
+# For compatibility with Fedora packages
 Provides:       perl-core = %{perl_version}-%{release}
 Provides:       perl-core%{?_isa} = %{perl_version}-%{release}
-# perl was renamed to perl-interpreter and perl-core renamed to perl
-Obsoletes:      perl-core < 5.26.0-395
-
 
 %description
 Perl is a high-level programming language with roots in C, sed, awk and shell
@@ -408,19 +407,22 @@ found in the upstream tarball from perl.org.
 
 If you need only a specific feature, you can install a specific package
 instead. E.g. to handle Perl scripts with %{_bindir}/perl interpreter,
-install perl-interpreter package. See perl-interpreter description for more
+install perl-base package. See perl-base description for more
 details on the Perl decomposition into packages.
 
 
-%package interpreter
+%package base
 Summary:        Standalone executable Perl interpreter
 License:        (GPL+ or Artistic) and (GPLv2+ or Artistic) and BSD and Public Domain and UCD
-# perl-interpreter denotes a package with the perl executable.
+# perl-base denotes a package with the perl executable.
 # Full EVR is for compatibility with systems that swapped perl and perl-core
 # <https://fedoraproject.org/wiki/Changes/perl_Package_to_Install_Core_Modules>,
 # bug #1464903.
 Version:        %{perl_version}
 Epoch:          %{perl_epoch}
+
+# For compatibility with Fedora packages
+Provides: perl-interpreter = %{perl_epoch}:%{perl_version}-%{release}
 
 Requires:       perl-libs%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 # Require this till perl-interpreter sub-package provides any modules
@@ -451,7 +453,7 @@ Obsoletes:      perl < 4:5.26.0-395
 %rename perl-base
 
 
-%description interpreter
+%description base
 This is a Perl interpreter as a standalone executable %{_bindir}/perl
 required for handling Perl scripts. It does not provide all the other Perl
 modules or tools.
@@ -501,6 +503,7 @@ Requires:       perl(Carp)
 Requires:       perl(Exporter)
 # Term::Cap is optional
 Requires:       perl(XSLoader)
+Requires:	%{_lib}perl5 = %{perl_epoch}:%{perl_version}-%{release}
 %if %{defined perl_bootstrap}
 %gendep_perl_libs
 %endif
@@ -3226,10 +3229,10 @@ popd
 %endif
 
 %files
-# We sub-package modules from perl-interpreter subpackage. Main perl package
+# We sub-package modules from perl-base subpackage. Main perl package
 # is a meta package.
 
-%files interpreter
+%files base
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*
 %{_bindir}/*
@@ -4115,6 +4118,8 @@ popd
 %exclude %{_mandir}/man3/version.3*
 %exclude %{_mandir}/man3/version::Internals.3*
 
+%libpackage perl 5
+
 %files libs
 %license Artistic Copying
 %doc AUTHORS README Changes
@@ -4124,7 +4129,6 @@ popd
 %dir %{archlib}/CORE
 %{archlib}/CORE/libperl.so
 %{archlib}/re.pm
-%{_libdir}/libperl.so.*
 %dir %{perl_vendorarch}
 %dir %{perl_vendorarch}/auto
 %dir %{privlib}
