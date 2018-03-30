@@ -33,6 +33,10 @@
 # and various perl-modules not in the perl core distro
 %define dont_gprintify 1
 
+# And don't run perl_cleaner -- we want to own some directories even
+# if they're empty.
+%define dont_cleanup_perl 1
+
 %global multilib_64_archs aarch64 %{power64} s390x sparc64 x86_64 
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
