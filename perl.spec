@@ -22,6 +22,93 @@
 # ***                                                            ***
 # *** gprintify is disabled for those packages; they will not    ***
 # *** fail because of its dependencies.                          ***
+# ***                                                            ***
+# *** Due to other dependency issues in build roots, you will    ***
+# *** also want to rebuild (in that order):                      ***
+# *** perl-HTML-Tagset                                           ***
+# *** perl-HTML-Parser                                           ***
+# *** perl-Sub-Install                                           ***
+# *** perl-Params-Util                                           ***
+# *** perl-Data-OptList                                          ***
+# *** perl-Test-Requires                                         ***
+# *** perl-Spiffy                                                ***
+# *** perl-Test-Base                                             ***
+# *** perl-YAML                                                  ***
+# *** perl-Module-Build                                          ***
+# *** perl-DynaLoader-Functions                                  ***
+# *** perl-Devel-CallChecker                                     ***
+# *** perl-Params-Classify                                       ***
+# *** perl-Module-Runtime                                        ***
+# *** perl-Sub-Exporter                                          ***
+# *** perl-Dist-CheckConflicts                                   ***
+# *** perl-Module-Implementation                                 ***
+# *** perl-Sub-Uplevel                                           ***
+# *** perl-Test-Exception                                        ***
+# *** perl-Test-Needs                                            ***
+# *** perl-Capture-Tiny                                          ***
+# *** perl-Test-Output                                           ***
+# *** perl-Sub-Name                                              ***
+# *** perl-Package-Stash-XS                                      ***
+# *** perl-Package-Stash                                         ***
+# *** perl-Package-DeprecationManager                            ***
+# *** perl-Sub-Identify                                          ***
+# *** perl-Scope-Guard                                           ***
+# *** perl-Sub-Exporter-Progressive                              ***
+# *** perl-B-Hooks-EndOfScope                                    ***
+# *** perl-namespace-clean                                       ***
+# *** perl-Class-Load                                            ***
+# *** perl-Devel-GlobalDestruction                               ***
+# *** perl-Devel-StackTrace                                      ***
+# *** perl-Eval-Closure                                          ***
+# *** perl-Class-C3-XS                                           ***
+# *** perl-Algorithm-C3                                          ***
+# *** perl-Class-C3                                              ***
+# *** perl-File-Remove                                           ***
+# *** perl-JSON                                                  ***
+# *** perl-Module-ScanDeps                                       ***
+# *** perl-PathTools                                             ***
+# *** perl-Probe-Perl                                            ***
+# *** perl-IPC-Run3                                              ***
+# *** perl-Test-Script                                           ***
+# *** perl-File-Which                                            ***
+# *** perl-SUPER                                                 ***
+# *** perl-Test-MockModule                                       ***
+# *** perl-Archive-Zip                                           ***
+# *** perl-PAR-Dist                                              ***
+# *** perl-Module-Install                                        ***
+# *** perl-MRO-Compat                                            ***
+# *** perl-Task-Weaken                                           ***
+# *** perl-Test-LongString                                       ***
+# *** perl-Devel-OverloadInfo                                    ***
+# *** perl-Moose                                                 ***
+# *** perl-strictures                                            ***
+# *** perl-Class-Method-Modifiers                                ***
+# *** perl-Role-Tiny                                             ***
+# *** perl-Sub-Quote                                             ***
+# *** perl-Moo                                                   ***
+# *** perl-PerlIO-utf8_strict                                    ***
+# *** perl-IO-String                                             ***
+# *** perl-Mixin-Linewise                                        ***
+# *** perl-Config-INI                                            ***
+# *** perl-Type-Tiny                                             ***
+# *** perl-Array-Compare                                         ***
+# *** perl-File-Slurp-Tiny                                       ***
+# *** perl-Tree-DAG_Node                                         ***
+# *** perl-Test-Warn                                             ***
+# *** perl-Algorithm-Diff                                        ***
+# *** perl-Text-Diff                                             ***
+# *** perl-Test-Differences                                      ***
+# *** perl-File-Slurper                                          ***
+# *** perl-Pod-POM                                               ***
+# *** perl-File-HomeDir                                          ***
+# *** perl-AppConfig                                             ***
+# *** perl-Text-Reform                                           ***
+# *** perl-Text-Autoformat                                       ***
+# *** perl-Template-Toolkit (force installation -- circular dep) ***
+# *** perl-CGI                                                   ***
+# *** perl-SGMLSpm                                               ***
+# *** git                                                        ***
+# *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
 %global perl_version    5.26.1
