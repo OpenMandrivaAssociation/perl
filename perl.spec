@@ -3122,6 +3122,13 @@ echo "RPM Build arch: %{_arch}"
 %global perl_vendorlib  %{privlib}/vendor_perl
 %global perl_vendorarch %{archlib}/vendor_perl
 
+%ifarch aarch64
+# FIXME Building with clang is currently broken due to
+# https://bugs.llvm.org/show_bug.cgi?id=31940
+# Remove gcc hardcode once this is fixed.
+%define __cc gcc
+%endif
+
 # ldflags is not used when linking XS modules.
 # Only ldflags is used when linking miniperl.
 # Only ccflags and ldflags are used for Configure's compiler checks.
@@ -3138,7 +3145,7 @@ echo "RPM Build arch: %{_arch}"
         -Dmyhostname=localhost \
         -Dperladmin=root@localhost \
         -Dcc='%{__cc}' \
-        -Dcf_by='Red Hat, Inc.' \
+        -Dcf_by='OpenMandriva' \
         -Dprefix=%{_prefix} \
 %if %{without perl_enables_groff}
         -Dman1dir="%{_mandir}/man1" \
