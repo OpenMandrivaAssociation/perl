@@ -204,7 +204,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        1
+Release:        2
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -459,54 +459,32 @@ Requires:       perl-utils
 %gendep_perl
 %endif
 
-Requires:       perl-Archive-Tar, perl-Attribute-Handlers, perl-autodie,
-Requires:       perl-B-Debug, perl-bignum
-Requires:       perl-Compress-Raw-Bzip2,
-Requires:       perl-Carp, perl-Compress-Raw-Zlib, perl-Config-Perl-V,
-Requires:       perl-constant,
-Requires:       perl-CPAN, perl-CPAN-Meta, perl-CPAN-Meta-Requirements,
-Requires:       perl-CPAN-Meta-YAML, perl-Encode, perl-encoding
-Requires:       perl-Data-Dumper, perl-DB_File,
-Requires:       perl-Devel-Peek, perl-Devel-PPPort, perl-Devel-SelfStubber,
-Requires:       perl-Digest, perl-Digest-MD5,
-Requires:       perl-Digest-SHA,
-Requires:       perl-Env, perl-Errno, perl-Exporter, perl-experimental
-Requires:       perl-ExtUtils-CBuilder, perl-ExtUtils-Command,
-Requires:       perl-ExtUtils-Embed,
-Requires:       perl-ExtUtils-Install, perl-ExtUtils-MakeMaker
-Requires:       perl-ExtUtils-Manifest, perl-ExtUtils-Miniperl
-Requires:       perl-ExtUtils-ParseXS, perl-File-Fetch
-Requires:       perl-File-Path, perl-File-Temp, perl-Filter,
-Requires:       perl-Filter-Simple, perl-Getopt-Long
-Requires:       perl-HTTP-Tiny,
-Requires:       perl-IO, perl-IO-Compress, perl-IO-Socket-IP
-Requires:       perl-IO-Zlib, perl-IPC-Cmd, perl-IPC-SysV, perl-JSON-PP
-Requires:       perl-libnet, perl-libnetcfg,
-Requires:       perl-Locale-Codes, perl-Locale-Maketext,
-Requires:       perl-Locale-Maketext-Simple
-Requires:       perl-Math-BigInt, perl-Math-BigInt-FastCalc, perl-Math-BigRat,
-Requires:       perl-Math-Complex, perl-Memoize,
-Requires:       perl-MIME-Base64,
-Requires:       perl-Module-CoreList,
-Requires:       perl-Module-CoreList-tools, perl-Module-Load
-Requires:       perl-Module-Load-Conditional, perl-Module-Loaded,
-Requires:       perl-Module-Metadata, perl-Net-Ping,
-Requires:       perl-open, perl-PathTools
-Requires:       perl-Params-Check
-Requires:       perl-perlfaq,
-Requires:       perl-PerlIO-via-QuotedPrint, perl-Perl-OSType
-Requires:       perl-Pod-Checker, perl-Pod-Escapes, perl-Pod-Html,
-Requires:       perl-Pod-Parser, perl-Pod-Perldoc, perl-Pod-Usage
-Requires:       perl-podlators, perl-Pod-Simple, perl-Scalar-List-Utils
-Requires:       perl-SelfLoader, perl-Socket, perl-Storable, perl-Sys-Syslog,
-Requires:       perl-Term-ANSIColor, perl-Term-Cap,
-Requires:       perl-Test, perl-Test-Harness, perl-Test-Simple
-Requires:       perl-Text-Balanced, perl-Text-ParseWords, perl-Text-Tabs+Wrap,
-Requires:       perl-Thread-Queue
-Requires:       perl-Time-HiRes
-Requires:       perl-Time-Local, perl-Time-Piece
-Requires:       perl-Unicode-Collate, perl-Unicode-Normalize,
-Requires:       perl-version, perl-threads, perl-threads-shared, perl-parent
+Requires:       perl-File
+Requires:       perl-File-Fetch
+Requires:       perl-File-Path
+Requires:       perl-File-Temp
+Requires:       perl-Getopt-Long
+Requires:       perl-Encode
+Requires:       perl-IO-Compress
+Requires:       perl-IO-Zlib
+Requires:       perl-Compress-Raw-Zlib
+Requires:       perl-Compress-Raw-Bzip2
+Requires:       perl-Carp
+Requires:       perl-Exporter
+Requires:       perl-IPC-Cmd
+Requires:       perl-Data-Dumper
+Requires:       perl-Digest
+Requires:       perl-Digest-MD5
+Requires:       perl-Digest-SHA
+Requires:       perl-MIME-Base64
+Requires:       perl-Module-CoreList
+Requires:       perl-version
+Requires:       perl-threads
+Requires:       perl-threads-shared
+Requires:       perl-parent
+Requires:       perl-autodie
+Requires:       perl-constant
+Requires:       perl-encoding
 
 # For compatibility with Fedora packages
 Provides:       perl-core = %{perl_version}-%{release}
@@ -568,7 +546,6 @@ Obsoletes:      perl-suidperl <= 4:5.12.2
 # bug #1464903.
 Obsoletes:      perl < 4:5.26.0-395
 %rename perl-base
-
 
 %description base
 This is a Perl interpreter as a standalone executable %{_bindir}/perl
