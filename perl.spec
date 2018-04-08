@@ -213,7 +213,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        4
+Release:        5
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -485,6 +485,7 @@ Requires:       perl-Digest-MD5
 Requires:       perl-Digest-SHA
 Requires:       perl-MIME-Base64
 Requires:       perl-Module-CoreList
+Requires:       perl-Thread-Queue
 Requires:       perl-version
 Requires:       perl-threads
 Requires:       perl-threads-shared
