@@ -204,7 +204,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        2
+Release:        3
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -459,7 +459,6 @@ Requires:       perl-utils
 %gendep_perl
 %endif
 
-Requires:       perl-File
 Requires:       perl-File-Fetch
 Requires:       perl-File-Path
 Requires:       perl-File-Temp
