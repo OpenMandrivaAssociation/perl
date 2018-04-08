@@ -133,13 +133,22 @@
 %global dual_life 1
 %global rebuild_from_scratch %{defined perl_bootstrap}
 
+# This is to emulate the perl_archlib macro but of the newly installed perl
+# which may be different
+%define this_perl_archlib %{_prefix}/lib/perl5/%{version}/%{perl_archname}
+
 # This overrides filters from build root (/usr/lib/rpm/macros.d/macros.perl)
 # intentionally (unversioned perl(DB) is removed and versioned one is kept).
 # Filter provides from *.pl files, bug #924938
-%global __provides_exclude_from .*%{_docdir}|.*%{perl_archlib}/.*\\.pl$|.*%{perl_privlib}/.*\\.pl$
+%global __provides_exclude_from .*%{_docdir}|.*%{this_perl_archlib}/.*\\.pl$|.*%{perl_privlib}/.*\\.pl$
 %global __requires_exclude_from %{_docdir}
 %global __provides_exclude perl\\((VMS|Win32|BSD::|DB\\)$)
-%global __requires_exclude perl\\((VMS|BSD::|Win32|Tk|Mac::|Your::Module::Here)
+%global __requires_exclude perl\\((VMS|BSD::|Win32|Tk|Mac::|Your::Module::Here|unicore::Name|FCGI|Locale::Codes::.*(Code|Retired))
+
+# Filter dependencies on private modules. Generator:
+# for F in $(find lib -type f); do perl -e '$/ = undef; $_ = <>; if (/^package #\R([\w:]*);/m) { print qq{|^perl\\\\($1\\\\)} }' "$F"; done
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Locale::Codes::Country_Retired\\)|^perl\\(Locale::Codes::LangFam_Retired\\)|^perl\\(Locale::Codes::Script_Retired\\)|^perl\\(Locale::Codes::LangExt_Codes\\)|^perl\\(Locale::Codes::LangFam_Codes\\)|^perl\\(Locale::Codes::Script_Codes\\)|^perl\\(Locale::Codes::Language_Codes\\)|^perl\\(Locale::Codes::LangExt_Retired\\)|^perl\\(Locale::Codes::Currency_Codes\\)|^perl\\(Locale::Codes::LangVar_Retired\\)|^perl\\(Locale::Codes::Language_Retired\\)|^perl\\(Locale::Codes::Country_Codes\\)|^perl\\(Locale::Codes::LangVar_Codes\\)|^perl\\(Locale::Codes::Currency_Retired\\)
+
 # same as we provide in /usr/lib/rpm/macros.d/macros.perl
 %global perl5_testdir   %{_libexecdir}/perl5-tests
 
@@ -204,7 +213,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        3
+Release:        4
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -408,7 +417,7 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
 
 BuildRequires:  bash
-BuildRequires:  bzip2-devel
+BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  gcc
@@ -434,7 +443,7 @@ BuildRequires:  tar
 %if %{with perl_enables_tcsh}
 BuildRequires:  tcsh
 %endif
-BuildRequires:  zlib-devel
+BuildRequires:  pkgconfig(zlib)
 
 # For tests
 %if %{with test}
@@ -451,7 +460,6 @@ BuildRequires:  rsyslog
 Requires:       %perl_compat
 Requires:       perl-base%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 Requires:       perl-libs%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
-Requires:       perl-devel%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
 ### FIXME enable once macros.perl is removed from rpm-openmandriva-macros
 #Requires:       perl-macros
 Requires:       perl-utils
@@ -2919,7 +2927,7 @@ Requires:       %perl_compat
 BuildArch:      noarch
 
 %description version
-Perl extension for Version Objects
+Perl extension for Version Objects.
 %endif
 
 %prep
@@ -3111,17 +3119,17 @@ echo "RPM Build arch: %{_arch}"
 # Set optimize=none to prevent from injecting upstream's value.
 /bin/sh Configure -des \
         -Doptimize="none" \
-        -Dccflags="$RPM_OPT_FLAGS" \
-        -Dldflags="$RPM_OPT_FLAGS $RPM_LD_FLAGS" \
-        -Dccdlflags="-Wl,--enable-new-dtags $RPM_OPT_FLAGS $RPM_LD_FLAGS" \
-        -Dlddlflags="-shared $RPM_OPT_FLAGS $RPM_LD_FLAGS" \
+        -Dccflags="%{optflags}" \
+        -Dldflags="%{optflags} %{ldflags}" \
+        -Dccdlflags="-Wl,--enable-new-dtags %{optflags} %{ldflags}" \
+        -Dlddlflags="-shared %{optflags} %{ldflags}" \
         -Dshrpdir="%{_libdir}" \
         -DDEBUGGING=-g \
         -Dversion=%{perl_version} \
         -Dmyhostname=localhost \
         -Dperladmin=root@localhost \
         -Dcc='%{__cc}' \
-        -Dcf_by='OpenMandriva' \
+        -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
 %if %{without perl_enables_groff}
         -Dman1dir="%{_mandir}/man1" \
@@ -3190,11 +3198,11 @@ make %{?_smp_mflags}
 %endif
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
-%global build_archlib $RPM_BUILD_ROOT%{archlib}
-%global build_privlib $RPM_BUILD_ROOT%{privlib}
-%global build_bindir  $RPM_BUILD_ROOT%{_bindir}
+%global build_archlib %{buildroot}%{archlib}
+%global build_privlib %{buildroot}%{privlib}
+%global build_bindir  %{buildroot}%{_bindir}
 %global new_perl LD_PRELOAD="%{build_archlib}/CORE/libperl.so" \\\
     LD_LIBRARY_PATH="%{build_archlib}/CORE" \\\
     PERL5LIB="%{build_archlib}:%{build_privlib}" \\\
@@ -3202,9 +3210,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Make proper DSO names, move libperl to standard path.
 mv "%{build_archlib}/CORE/libperl.so" \
-    "$RPM_BUILD_ROOT%{_libdir}/libperl.so.%{perl_version}"
-ln -s "libperl.so.%{perl_version}" "$RPM_BUILD_ROOT%{_libdir}/%{soname}"
-ln -s "libperl.so.%{perl_version}" "$RPM_BUILD_ROOT%{_libdir}/libperl.so"
+    "%{buildroot}%{_libdir}/libperl.so.%{perl_version}"
+ln -s "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/%{soname}"
+ln -s "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/libperl.so"
 # XXX: Keep symlink from original location because various code glues
 # $archlib/CORE/$libperl to get the DSO.
 ln -s "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
@@ -3225,8 +3233,8 @@ done
 # perl doesn't create the auto subdirectory, but modules put things in it,
 # so we need to own it.
 
-mkdir -p $RPM_BUILD_ROOT%{perl_vendorarch}/auto
-mkdir -p $RPM_BUILD_ROOT%{perl_vendorlib}
+mkdir -p %{buildroot}%{perl_vendorarch}/auto
+mkdir -p %{buildroot}%{perl_vendorlib}
 
 #
 # perl RPM macros
@@ -3241,8 +3249,8 @@ mkdir -p $RPM_BUILD_ROOT%{perl_vendorlib}
 # Dual-living binaries clashes on debuginfo files between perl and standalone
 # packages. Excluding is not enough, we need to remove them. This is
 # a work-around for rpmbuild bug #878863.
-find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -delete
-chmod -R u+w $RPM_BUILD_ROOT/*
+find %{buildroot} -type f -name '*.bs' -empty -delete
+chmod -R u+w %{buildroot}/*
 
 # miniperl? As an interpreter? How odd. Anyway, a symlink does it:
 rm %{build_privlib}/ExtUtils/xsubpp
@@ -3254,22 +3262,22 @@ rm %{build_archlib}/.packlist
 # Do not distribute File::Spec::VMS as it works on VMS only (bug #973713)
 # We cannot remove it in %%prep because dist/Cwd/t/Spec.t test needs it.
 rm %{build_archlib}/File/Spec/VMS.pm
-rm $RPM_BUILD_ROOT%{_mandir}/man3/File::Spec::VMS.3*
+rm %{buildroot}%{_mandir}/man3/File::Spec::VMS.3*
 
 # Fix some manpages to be UTF-8
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1/
-pushd $RPM_BUILD_ROOT%{_mandir}/man1/
+mkdir -p %{buildroot}%{_mandir}/man1/
+cd %{buildroot}%{_mandir}/man1/
   for i in perl588delta.1 perldelta.1 ; do
     iconv -f MS-ANSI -t UTF-8 $i --output new-$i
     rm $i
     mv new-$i $i
   done
-popd
+cd -
 
 # for now, remove Bzip2:
 # Why? Now is missing Bzip2 files and provides
-##find $RPM_BUILD_ROOT -name Bzip2 | xargs rm -r
-##find $RPM_BUILD_ROOT -name '*B*zip2*'| xargs rm
+##find %{buildroot} -name Bzip2 | xargs rm -r
+##find %{buildroot} -name '*B*zip2*'| xargs rm
 
 # tests -- FIXME need to validate that this all works as expected
 mkdir -p %{buildroot}%{perl5_testdir}/perl-tests
@@ -3317,9 +3325,9 @@ sed \
 %check
 %if %{with test}
 %{new_perl} -I/lib regen/lib_cleanup.pl
-pushd t
+cd t
 %{new_perl} -I../lib porting/customized.t --regen
-popd
+cd -
 %if %{parallel_tests}
     JOBS=$(printf '%%s' "%{?_smp_mflags}" | sed 's/.*-j\([0-9][0-9]*\).*/\1/')
     LC_ALL=C TEST_JOBS=$JOBS make test_harness
