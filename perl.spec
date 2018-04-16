@@ -111,7 +111,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.26.1
+%global perl_version    5.26.2
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -213,7 +213,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        5
+Release:        1
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -278,11 +278,6 @@ Patch30:        perl-5.22.1-Replace-EU-MM-dependnecy-with-EU-MM-Utils-in-IPC-Cmd
 # in upstream after 5.27.0
 Patch31:        perl-5.27.0-perl-131211-fixup-File-Glob-degenerate-matching.patch
 
-# Fix cloning :via handles on thread creation, RT#131221,
-# in upstream after 5.27.0
-Patch34:        perl-5.27.0-perl-131221-improve-duplication-of-via-handles.patch
-Patch35:        perl-5.27.0-perl-131221-sv_dup-sv_dup_inc-are-only-available-und.patch
-
 # Fix glob UTF-8 flag on a glob reassignment, RT#131263,
 # in upstream after 5.27.0
 Patch36:        perl-5.26.0-perl-131263-clear-the-UTF8-flag-on-a-glob-if-it-isn-.patch
@@ -330,20 +325,6 @@ Patch56:        perl-5.27.2-EU-Constant-avoid-uninit-warning.patch
 
 # Fix unreliable Time-HiRes tests, CPAN RT#122819, in Time-HiRes-1.9746
 Patch58:        perl-5.26.0-Time-HiRes-Fix-unreliable-t-usleep.t-and-t-utime.t.patch
-
-# Fix an overflow in the lexer when reading a new line, RT#131793,
-# in upstream after 5.27.2
-Patch59:        perl-5.27.2-perl-131793-sanely-handle-PL_linestart-PL_bufptr.patch
-
-# Fix Term::ReadLine not to create spurious &STDERR files, RT#132008,
-# in upstream after 5.27.3
-Patch60:        perl-5.27.3-Term-ReadLine-generates-empty-STDERR-files.patch
-Patch61:        perl-5.27.3-perl-132008-try-to-prevent-the-similar-mistakes-in-t.patch
-Patch62:        perl-5.27.3-perl-132008-make-sure-the-test-behaves-without-a-tty.patch
-
-# Fix a crash when a match for inversely repeated group fails, RT#132017,
-# in upstream after 5.27.3
-Patch63:        perl-5.26.1-fix-132017-OPFAIL-insert-needs-to-set-flags-to-0.patch
 
 # Fix an overflow when parsing a character range with no preceding character,
 # RT#132245, in upstream after 5.27.5
@@ -402,10 +383,6 @@ Patch79:        perl-5.27.8-hints-linux-Add-lphtread-to-lddlflags.patch
 # Fix parsing braced subscript after parentheses, RT#8045,
 # in upstream after 5.27.7
 Patch80:        perl-5.26.1-fix-parsing-of-braced-subscript-after-parens.patch
-
-# Fix a heap use after free when moving a stack, RT#131954,
-# in upstream after 5.27.7
-Patch81:        perl-5.27.7-perl-131954-don-t-initialize-mark-before-a-possible-.patch
 
 # Link XS modules to libperl.so with EU::CBuilder on Linux, bug #960048
 Patch200:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-CBuilder-on-Li.patch
@@ -2948,8 +2925,6 @@ Perl extension for Version Objects.
 %patch26 -p1
 %patch30 -p1
 %patch31 -p1
-%patch34 -p1
-%patch35 -p1
 %patch36 -p1
 %patch38 -p1
 %patch43 -p1
@@ -2964,11 +2939,6 @@ Perl extension for Version Objects.
 %patch55 -p1
 %patch56 -p1
 %patch58 -p1
-%patch59 -p1
-%patch60 -p1
-%patch61 -p1
-%patch62 -p1
-%patch63 -p1
 %patch64 -p1
 %patch65 -p1
 %patch66 -p1
@@ -2986,7 +2956,6 @@ Perl extension for Version Objects.
 %patch78 -p1
 %patch79 -p1
 %patch80 -p1
-%patch81 -p1
 %patch200 -p1
 %patch201 -p1
 

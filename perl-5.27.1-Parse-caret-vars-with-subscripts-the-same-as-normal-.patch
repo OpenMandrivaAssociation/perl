@@ -1,36 +1,11 @@
-From 4f08ed80a1ad3deb06ce5d8d20cc2d176dcbced0 Mon Sep 17 00:00:00 2001
-From: Yves Orton <demerphq@gmail.com>
-Date: Thu, 29 Jun 2017 11:31:14 +0200
-Subject: [PATCH] Parse caret vars with subscripts the same as normal vars
- inside of ${..} escaping
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This behavior is discussed in perl #131664, which complains that
-"${^CAPTURE}[0]" does not work as expected. Abigail explains the
-behavior is by design and Eirik Berg Hanssen expands on that explanation
-pointing out that what /should/ work, "${^CAPTURE[0]}" does not,
-which Sawyer then ruled was a bug.
-
-So this patch makes "${^CAPTURE[0]}" (and "${^CAPTURE [0]}" [hi
-abigial]) work the same as they would if the var was called @foo.
-
-Signed-off-by: Petr Písař <ppisar@redhat.com>
----
- t/base/lex.t | 28 +++++++++++++++++++++++++++-
- toke.c       | 46 +++++++++++++++++++++++++---------------------
- 2 files changed, 52 insertions(+), 22 deletions(-)
-
-diff --git a/t/base/lex.t b/t/base/lex.t
-index e154aca..89d46df 100644
---- a/t/base/lex.t
-+++ b/t/base/lex.t
+diff -up perl-5.26.2/t/base/lex.t.omv~ perl-5.26.2/t/base/lex.t
+--- perl-5.26.2/t/base/lex.t.omv~	2018-03-23 20:34:42.000000000 +0100
++++ perl-5.26.2/t/base/lex.t	2018-04-16 22:01:54.130234171 +0200
 @@ -1,6 +1,6 @@
  #!./perl
  
--print "1..109\n";
-+print "1..116\n";
+-print "1..112\n";
++print "1..119\n";
  
  $x = 'x';
  
@@ -67,11 +42,10 @@ index e154aca..89d46df 100644
  
  # Now let's make sure that caret variables are all forced into the main package.
    package Someother;
-diff --git a/toke.c b/toke.c
-index 0dcf623..ace92e3 100644
---- a/toke.c
-+++ b/toke.c
-@@ -9352,19 +9352,36 @@ S_scan_ident(pTHX_ char *s, char *dest, STRLEN destlen, I32 ck_uni)
+diff -up perl-5.26.2/toke.c.omv~ perl-5.26.2/toke.c
+--- perl-5.26.2/toke.c.omv~	2018-03-23 20:34:44.000000000 +0100
++++ perl-5.26.2/toke.c	2018-04-16 22:01:36.422233257 +0200
+@@ -9416,19 +9416,36 @@ S_scan_ident(pTHX_ char *s, char *dest,
          bool skip;
          char *s2;
          /* If we were processing {...} notation then...  */
@@ -116,7 +90,7 @@ index 0dcf623..ace92e3 100644
  		if (ckWARN(WARN_AMBIGUOUS) && keyword(dest, d - dest, 0)) {
  		    const char * const brack =
  			(const char *)
-@@ -9383,19 +9400,6 @@ S_scan_ident(pTHX_ char *s, char *dest, STRLEN destlen, I32 ck_uni)
+@@ -9447,19 +9464,6 @@ S_scan_ident(pTHX_ char *s, char *dest,
  		return s;
  	    }
  	}
@@ -136,6 +110,3 @@ index 0dcf623..ace92e3 100644
  
          if ( !tmp_copline )
              tmp_copline = CopLINE(PL_curcop);
--- 
-2.9.4
-
