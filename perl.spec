@@ -213,7 +213,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        1
+Release:        2
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -897,7 +897,6 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.18
 Requires:       make
-Provides:	perl(Module::Build)
 # Prefer Archive::Tar and Compress::Zlib over tar and gzip
 Requires:       perl(Archive::Tar) >= 1.50
 Requires:       perl(base)
@@ -937,6 +936,7 @@ Requires:       perl(ExtUtils::CBuilder)
 # local::lib recommended by CPAN::FirstTime default choice, bug #1122498
 Requires:       perl(local::lib)
 %endif
+# FIXME is this actually a hard requirement?
 Requires:       perl(Module::Build)
 %if ! %{defined perl_bootstrap}
 Requires:       perl(Text::Glob)
