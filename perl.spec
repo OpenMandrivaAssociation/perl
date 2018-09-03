@@ -124,7 +124,7 @@
 # if they're empty.
 %define dont_cleanup_perl 1
 
-%global multilib_64_archs aarch64 %{power64} s390x sparc64 x86_64 
+%global multilib_64_archs aarch64 %{power64} s390x sparc64 %{x86_64}
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
@@ -213,7 +213,7 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        2
+Release:        3
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -389,6 +389,11 @@ Patch200:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-CBuilder-on-Li
 
 # Link XS modules to libperl.so with EU::MM on Linux, bug #960048
 Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.patch
+
+# (tpg) fix build with gdbm >= 1.15 
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=904005
+# https://rt.perl.org/Public/Bug/Display.html?id=133295
+Patch202:       gdbm-fatal.diff
 
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
@@ -2958,6 +2963,7 @@ Perl extension for Version Objects.
 %patch80 -p1
 %patch200 -p1
 %patch201 -p1
+%patch202 -p1
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
