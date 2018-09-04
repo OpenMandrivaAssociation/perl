@@ -125,7 +125,7 @@
 %define dont_cleanup_perl 1
 
 %global multilib_64_archs aarch64 %{power64} s390x sparc64 %{x86_64}
-%global parallel_tests 1
+%global parallel_tests 0
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
 %define perl_bootstrap 0
