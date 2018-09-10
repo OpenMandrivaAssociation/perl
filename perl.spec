@@ -395,6 +395,9 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 # https://rt.perl.org/Public/Bug/Display.html?id=133295
 Patch202:       gdbm-fatal.diff
 
+# https://rt.perl.org/Public/Bug/Display.html?id=131388
+Patch203:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
+
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
 
@@ -2964,6 +2967,7 @@ Perl extension for Version Objects.
 %patch200 -p1
 %patch201 -p1
 %patch202 -p1
+%patch203 -p1
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
