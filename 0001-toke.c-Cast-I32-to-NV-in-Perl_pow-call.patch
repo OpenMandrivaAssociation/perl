@@ -1,0 +1,25 @@
+From 9d00f794432f827520b5db60b8a12d897248d1cf Mon Sep 17 00:00:00 2001
+From: sisyphus <sisyphus1@optusnet.com.au>
+Date: Wed, 5 Sep 2018 21:36:29 +1000
+Subject: [PATCH] toke.c - Cast I32 to NV in Perl_pow() call
+
+---
+ toke.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/toke.c b/toke.c
+index 24e614fd50..191a1ce8b9 100644
+--- a/toke.c
++++ b/toke.c
+@@ -11221,7 +11221,7 @@ Perl_scan_num(pTHX_ const char *start, YYSTYPE* lvalp)
+ #ifdef HEXFP_UQUAD
+                         hexfp_exp -= hexfp_frac_bits;
+ #endif
+-                        hexfp_mult = Perl_pow(2.0, hexfp_exp);
++                        hexfp_mult = Perl_pow(2.0, (NV)hexfp_exp);
+                         hexfp = TRUE;
+                         goto decimal;
+                     }
+-- 
+2.17.1
+
