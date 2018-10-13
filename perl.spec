@@ -216,7 +216,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        3
+# (tpg) for now keep at least 4 - 2018-10-13
+Release:        4
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
@@ -2766,7 +2767,7 @@ any number of threads.
 %package Time-HiRes
 Summary:        High resolution alarm, sleep, gettimeofday, interval timers
 License:        GPL+ or Artistic
-Epoch:          0
+Epoch:          1
 Version:        1.9741
 Requires:       %perl_compat
 Requires:       perl(Carp)
