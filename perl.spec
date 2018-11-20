@@ -120,6 +120,10 @@
 # and various perl-modules not in the perl core distro
 %define dont_gprintify 1
 
+# (tpg) without this other perl modules fails to build
+# do NOT remove it unless you want to fix all the perl crazy world
+%define _disable_ld_no_undefined 1
+
 # And don't run perl_cleaner -- we want to own some directories even
 # if they're empty.
 %define dont_cleanup_perl 1
@@ -217,7 +221,7 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 4 - 2018-10-13
-Release:        5
+Release:        6
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.bz2
