@@ -41,15 +41,15 @@ index 33e08e2..7160f54 100644
  	GDBM_FILE 	dbp ;
  	SV *    filter[4];
  	int     filtering ;
-@@ -89,6 +90,7 @@ gdbm_TIEHASH(dbtype, name, read_write, mode)
- 	    if ((dbp =  gdbm_open(name, GDBM_BLOCKSIZE, read_write, mode,
- 	       	     	          (FATALFUNC) croak_string))) {
- 	        RETVAL = (GDBM_File)safecalloc(1, sizeof(GDBM_File_type)) ;
-+		RETVAL->owner = aTHX;
- 		RETVAL->dbp = dbp ;
- 	    }
- 	    
-@@ -109,12 +111,14 @@ gdbm_DESTROY(db)
+@@ -98,6 +99,7 @@ gdbm_TIEHASH(dbtype, name, read_write, m
+ 	}
+ 	if (dbp) {
+ 	    RETVAL = (GDBM_File)safecalloc(1, sizeof(GDBM_File_type));
++	    RETVAL->owner = aTHX;
+ 	    RETVAL->dbp = dbp;
+ 	} else {
+ 	    RETVAL = NULL;
+@@ -118,12 +120,14 @@ gdbm_DESTROY(db)
  	PREINIT:
  	int i = store_value;
  	CODE:
@@ -115,7 +115,7 @@ diff --git a/ext/ODBM_File/ODBM_File.xs b/ext/ODBM_File/ODBM_File.xs
 index d1ece7f..f7e00a0 100644
 --- a/ext/ODBM_File/ODBM_File.xs
 +++ b/ext/ODBM_File/ODBM_File.xs
-@@ -45,6 +45,7 @@ datum	nextkey(datum key);
+@@ -49,6 +49,7 @@ datum	nextkey(datum key);
  #define store_value 3
  
  typedef struct {
@@ -123,7 +123,7 @@ index d1ece7f..f7e00a0 100644
  	void * 	dbp ;
  	SV *    filter[4];
  	int     filtering ;
-@@ -112,6 +113,7 @@ odbm_TIEHASH(dbtype, filename, flags, mode)
+@@ -137,6 +138,7 @@ odbm_TIEHASH(dbtype, filename, flags, mode)
  	    }
  	    dbp = (void*)(dbminit(filename) >= 0 ? &dbmrefcnt : 0);
  	    RETVAL = (ODBM_File)safecalloc(1, sizeof(ODBM_File_type));
@@ -131,7 +131,7 @@ index d1ece7f..f7e00a0 100644
  	    RETVAL->dbp = dbp ;
  	}
  	OUTPUT:
-@@ -124,13 +126,15 @@ DESTROY(db)
+@@ -149,13 +151,15 @@ DESTROY(db)
  	dMY_CXT;
  	int i = store_value;
  	CODE:
@@ -166,7 +166,7 @@ index 291e41b..0bdae9a 100644
  	DBM * 	dbp ;
  	SV *    filter[4];
  	int     filtering ;
-@@ -49,6 +50,7 @@ sdbm_TIEHASH(dbtype, filename, flags, mode)
+@@ -51,6 +52,7 @@ sdbm_TIEHASH(dbtype, filename, flags, mode)
  	    }
  	    if (dbp) {
  	        RETVAL = (SDBM_File)safecalloc(1, sizeof(SDBM_File_type));
@@ -174,7 +174,7 @@ index 291e41b..0bdae9a 100644
  		RETVAL->dbp = dbp ;
  	    }
  	    
-@@ -60,7 +62,7 @@ void
+@@ -62,7 +64,7 @@ void
  sdbm_DESTROY(db)
  	SDBM_File	db
  	CODE:
@@ -187,7 +187,7 @@ diff --git a/t/lib/dbmt_common.pl b/t/lib/dbmt_common.pl
 index 5d4098c..a0a4d52 100644
 --- a/t/lib/dbmt_common.pl
 +++ b/t/lib/dbmt_common.pl
-@@ -511,5 +511,40 @@ unlink <Op_dbmx*>, $Dfile;
+@@ -510,5 +510,40 @@ unlink <Op_dbmx*>, $Dfile;
     unlink <Op1_dbmx*>;
  }
  
