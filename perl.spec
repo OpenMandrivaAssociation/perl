@@ -67,7 +67,6 @@
 # *** perl-File-Remove                                           ***
 # *** perl-JSON                                                  ***
 # *** perl-Module-ScanDeps                                       ***
-# *** perl-PathTools                                             ***
 # *** perl-Probe-Perl                                            ***
 # *** perl-IPC-Run3                                              ***
 # *** perl-Test-Script                                           ***
