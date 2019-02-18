@@ -220,8 +220,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 8 - 2018-12-23
-Release:        8
+# (tpg) for now keep at least 9 - 2019-02-18
+Release:        9
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -321,7 +321,7 @@ BuildRequires:  glibc
 # Build-require groff tools for populating %%Config correctly, bug #135101
 BuildRequires:  groff-base
 %endif
-BuildRequires:  db-devel
+BuildRequires:  db-devel >= 18
 BuildRequires:  make
 %if !%{defined perl_bootstrap}
 BuildRequires:  perl
