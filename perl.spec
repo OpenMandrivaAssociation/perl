@@ -156,6 +156,9 @@
 # same as we provide in /usr/lib/rpm/macros.d/macros.perl
 %global perl5_testdir   %{_libexecdir}/perl5-tests
 
+# (tpg) enable PGO build
+%bcond_without pgo
+
 # Optional features
 # We can bootstrap without gdbm
 %bcond_without gdbm
@@ -221,7 +224,7 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 9 - 2019-02-18
-Release:        9
+Release:        10
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -307,6 +310,8 @@ Patch203:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
 
+Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
+Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 BuildRequires:  bash
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
@@ -2846,6 +2851,8 @@ Perl extension for Version Objects.
 %patch201 -p1
 %patch202 -p1
 %patch203 -p1
+%patch300 -p1
+%patch301 -p1
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
@@ -2952,16 +2959,43 @@ echo "RPM Build arch: %{_arch}"
 %define __cc gcc
 %endif
 
+%if %{with pgo}
+CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
+CXXFLAGS_PGO="%{optflags} -fprofile-instr-generate"
+FFLAGS_PGO="$CFLAGS_PGO"
+FCFLAGS_PGO="$CFLAGS_PGO"
+LDFLAGS_PGO="%{ldflags} -fprofile-instr-generate"
+export LLVM_PROFILE_FILE=%{name}-%p.profile.d
+export LD_LIBRARY_PATH="$(pwd)"
+/bin/sh Configure -des \
+        -Dccflags="${CFLAGS_PGO}" \
+        -Dldflags="${CFLAGS_PGO} ${LDFLAGS_PGO}" \
+        -Dccdlflags="-Wl,--enable-new-dtags ${CFLAGS_PGO} ${LDFLAGS_PGO}" \
+        -Dlddlflags="-shared ${CFLAGS_PGO} ${LDFLAGS_PGO}" \
+        -Dcc='%{__cc}'
+
+make
+make test_pgo
+unset LD_LIBRARY_PATH
+unset LLVM_PROFILE_FILE
+llvm-profdata merge --output=%{name}.profile *.profile.d
+rm -f *.profile.d
+make clean
+export CFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
+export CXXFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
+export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
+%endif
+
 # ldflags is not used when linking XS modules.
 # Only ldflags is used when linking miniperl.
 # Only ccflags and ldflags are used for Configure's compiler checks.
 # Set optimize=none to prevent from injecting upstream's value.
 /bin/sh Configure -des \
         -Doptimize="none" \
-        -Dccflags="%{optflags}" \
-        -Dldflags="%{optflags} %{ldflags}" \
-        -Dccdlflags="-Wl,--enable-new-dtags %{optflags} %{ldflags}" \
-        -Dlddlflags="-shared %{optflags} %{ldflags}" \
+        -Dccflags="${CFLAGS}" \
+        -Dldflags="${CFLAGS} ${LDFLAGS}" \
+        -Dccdlflags="-Wl,--enable-new-dtags ${CFLAGS} ${LDFLAGS}" \
+        -Dlddlflags="-shared ${CFLAGS} ${LDFLAGS}" \
         -Dshrpdir="%{_libdir}" \
         -DDEBUGGING=-g \
         -Dversion=%{perl_version} \
@@ -3031,13 +3065,13 @@ export BUILD_BZIP2 BZIP2_LIB
 test -L %soname || ln -s libperl.so %soname
 
 %ifarch sparc64 %{arm}
-make
+%make_build -j1
 %else
-make %{?_smp_mflags}
+%make_build
 %endif
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install DESTDIR=%{buildroot}
 
 %global build_archlib %{buildroot}%{archlib}
 %global build_privlib %{buildroot}%{privlib}
