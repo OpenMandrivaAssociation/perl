@@ -235,7 +235,6 @@ Source4:        perl.stp
 Source5:        perl-example.stp
 # Tom Christiansen confirms Pod::Html uses the same license as perl
 Source6:        Pod-Html-license-clarification
-
 # Pregenerated dependencies for bootstrap.
 # If your RPM tool fails on including the source file, then you forgot to
 # define _sourcedir macro to point to the directory with the sources.
@@ -299,7 +298,7 @@ Patch200:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-CBuilder-on-Li
 # Link XS modules to libperl.so with EU::MM on Linux, bug #960048
 Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.patch
 
-# (tpg) fix build with gdbm >= 1.15 
+# (tpg) fix build with gdbm >= 1.15
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=904005
 # https://rt.perl.org/Public/Bug/Display.html?id=133295
 Patch202:       gdbm-fatal.diff
@@ -317,6 +316,8 @@ BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  gcc
+BuildRequires:  binutils-devel
+BuildRequires:  pkgconfig(libbsd)
 %if %{with gdbm}
 BuildRequires:  gdbm-devel
 %endif
@@ -348,7 +349,6 @@ BuildRequires:  procps
 BuildRequires:  rsyslog
 %endif
 %endif
-
 
 # compat macro needed for rebuild
 %global perl_compat perl(:MODULE_COMPAT_5.28.0)
@@ -2900,9 +2900,9 @@ cp %{SOURCE6} .
 # find . -name "*.pod" -o -name "README*" -o -name "*.pm" | xargs file -i | grep charset= | grep -v '\(us-ascii\|utf-8\)'
 recode()
 {
-        iconv -f "${2:-iso-8859-1}" -t utf-8 < "$1" > "${1}_"
-        touch -r "$1" "${1}_"
-        mv -f "${1}_" "$1"
+    iconv -f "${2:-iso-8859-1}" -t utf-8 < "$1" > "${1}_"
+    touch -r "$1" "${1}_"
+    mv -f "${1}_" "$1"
 }
 # TODO iconv fail on this one
 ##recode README.tw big5
@@ -2958,6 +2958,9 @@ echo "RPM Build arch: %{_arch}"
 # Remove gcc hardcode once this is fixed.
 %define __cc gcc
 %endif
+BUILD_BZIP2=0
+BZIP2_LIB=%{_libdir}
+export BUILD_BZIP2 BZIP2_LIB
 
 %if %{with pgo}
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
