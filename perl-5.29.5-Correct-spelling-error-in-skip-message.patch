@@ -1,0 +1,29 @@
+From c4df8c74c98b6ecac7f95d0184638f24f0a13bcc Mon Sep 17 00:00:00 2001
+From: James E Keenan <jkeenan@cpan.org>
+Date: Sat, 15 Dec 2018 09:01:55 -0500
+Subject: [PATCH] Correct spelling error in 'skip' message
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ ext/GDBM_File/t/fatal.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/GDBM_File/t/fatal.t b/ext/GDBM_File/t/fatal.t
+index 159916901a..01068f3cf4 100644
+--- a/ext/GDBM_File/t/fatal.t
++++ b/ext/GDBM_File/t/fatal.t
+@@ -52,7 +52,7 @@ my $res = eval {
+ };
+ 
+ SKIP: {
+-    skip "Can't tigger failure", 2 if $res == 99;
++    skip "Can't trigger failure", 2 if $res == 99;
+ 
+     is $res, undef, "eval should return undef";
+ 
+-- 
+2.17.2
+

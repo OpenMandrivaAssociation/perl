@@ -301,10 +301,13 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 # (tpg) fix build with gdbm >= 1.15
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=904005
 # https://rt.perl.org/Public/Bug/Display.html?id=133295
-Patch202:       gdbm-fatal.diff
+# Adjust tests to gdbm-1.15, RT#133295, in upstream after 5.29.5
+Patch202:        perl-5.28.1-ext-GDBM_File-t-fatal.t-handle-non-fatality.patch
+Patch203:        perl-5.29.5-Correct-spelling-error-in-skip-message.patch
+Patch204:        perl-5.29.5-Avoid-Use-of-uninitialized-value-res-in-numeric-eq-w.patch
 
 # https://rt.perl.org/Public/Bug/Display.html?id=131388
-Patch203:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
+Patch205:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
 
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
@@ -2851,6 +2854,8 @@ Perl extension for Version Objects.
 %patch201 -p1
 %patch202 -p1
 %patch203 -p1
+%patch204 -p1
+%patch205 -p1
 %patch300 -p1
 %patch301 -p1
 
