@@ -1,0 +1,80 @@
+From 72cc38bc65d4a675d9134acb085d2e0c3dcd5383 Mon Sep 17 00:00:00 2001
+From: David Mitchell <davem@iabyn.com>
+Date: Fri, 14 Dec 2018 16:54:42 +0000
+Subject: [PATCH] ext/GDBM_File/t/fatal.t: handle non-fatality
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This script is supposed to exercise the error handling callback
+mechanism in gdbm, by triggering an error by surreptitiously closing
+the file handle which gdbm has opened.
+
+However, this doesn't trigger an error in newer releases of the gdbm
+library, which uses mmap() rather than write() etc. In fact I can't see
+any way of triggering an error: so just skip the relevant tests if we
+can't trigger a failure.
+
+Petr Písař: Ported to 5.28.1 from
+upstream's d33f9fbdb3bb27a3b32a2ffa9aa035617c07f7a1.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ ext/GDBM_File/t/fatal.t | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
+
+diff --git a/ext/GDBM_File/t/fatal.t b/ext/GDBM_File/t/fatal.t
+index 0e426d4..6945653 100644
+--- a/ext/GDBM_File/t/fatal.t
++++ b/ext/GDBM_File/t/fatal.t
+@@ -1,4 +1,12 @@
+ #!./perl -w
++#
++# Exercise the error handling callback mechanism in gdbm.
++#
++# Try to trigger an error by surreptitiously closing the file handle which
++# gdbm has opened.  Note that this won't trigger an error in newer
++# releases of the gdbm library, which uses mmap() rather than write() etc:
++# so skip in that case.
++
+ use strict;
+ 
+ use Test::More;
+@@ -34,16 +42,25 @@ isnt((open $fh, "<&=$fileno"), undef, "dup fileno $fileno")
+     or diag("\$! = $!");
+ isnt(close $fh, undef,
+      "close fileno $fileno, out from underneath the GDBM_File");
+-is(eval {
++
++# store some data to a closed file handle
++
++my $res = eval {
+     $h{Perl} = 'Rules';
+     untie %h;
+-    1;
+-}, undef, 'Trapped error when attempting to write to knobbled GDBM_File');
+-
+-# Observed "File write error" and "lseek error" from two different systems.
+-# So there might be more variants. Important part was that we trapped the error
+-# via croak.
+-like($@, qr/ at .*\bfatal\.t line \d+\.\n\z/,
+-     'expected error message from GDBM_File');
++    99;
++};
++
++SKIP: {
++    skip "Can't tigger failure", 2 if $res == 99;
++
++    is $res, undef, "eval should return undef";
++
++    # Observed "File write error" and "lseek error" from two different
++    # systems.  So there might be more variants. Important part was that
++    # we trapped the error # via croak.
++    like($@, qr/ at .*\bfatal\.t line \d+\.\n\z/,
++         'expected error message from GDBM_File');
++}
+ 
+ unlink <Op_dbmx*>;
+-- 
+2.17.2
+
