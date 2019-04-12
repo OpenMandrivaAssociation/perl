@@ -2991,6 +2991,9 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
         -Dscriptdir='%{_bindir}' \
+        -Duseshrplib \
+        -Ui_ndbm \
+        -Ui_gdbm \
         -Duse64bitint
 
 make
