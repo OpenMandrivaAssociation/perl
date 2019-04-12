@@ -2971,6 +2971,7 @@ BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
 
 %if %{with pgo}
+%global optflags %{optflags} -O3
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 CXXFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 FFLAGS_PGO="$CFLAGS_PGO"
@@ -2989,11 +2990,6 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dcc='%{__cc}' \
         -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
-        -Di_db \
-%if %{with gdbm}
-        -Ui_ndbm \
-        -Di_gdbm \
-%endif
         -Dscriptdir='%{_bindir}' \
         -Duse64bitint
 
