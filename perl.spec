@@ -2989,19 +2989,12 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dcc='%{__cc}' \
         -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
-        -Dusethreads \
-        -Duseshrplib \
-        -Duseithreads \
         -Di_db \
 %if %{with gdbm}
         -Ui_ndbm \
         -Di_gdbm \
 %endif
-        -Di_shadow \
-        -Di_syslog \
-        -Duseperlio \
         -Dscriptdir='%{_bindir}' \
-        -Dusesitecustomize \
         -Duse64bitint
 
 make
