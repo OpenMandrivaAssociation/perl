@@ -318,9 +318,12 @@ BuildRequires:  bash
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
+BuildRequires:  bison
+BuildRequires:  byacc
+BuildRequires:  less
+BuildRequires:  zip
 BuildRequires:  gcc
 BuildRequires:  binutils-devel
-BuildRequires:  pkgconfig(libbsd)
 %if %{with gdbm}
 BuildRequires:  gdbm-devel
 %endif
@@ -2936,7 +2939,6 @@ rm -rf 'cpan/Memoize/Memoize/NDBM_File.pm'
 sed -i '\|cpan/Memoize/Memoize/NDBM_File.pm|d' MANIFEST
 %endif
 
-
 %build
 echo "RPM Build arch: %{_arch}"
 
@@ -2963,6 +2965,7 @@ echo "RPM Build arch: %{_arch}"
 # Remove gcc hardcode once this is fixed.
 %define __cc gcc
 %endif
+
 BUILD_BZIP2=0
 BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
@@ -3002,6 +3005,7 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dscriptdir='%{_bindir}' \
         -Dusesitecustomize \
         -Duse64bitint
+
 make
 make test_pgo
 unset LD_LIBRARY_PATH
