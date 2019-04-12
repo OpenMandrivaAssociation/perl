@@ -2978,7 +2978,7 @@ FCFLAGS_PGO="$CFLAGS_PGO"
 LDFLAGS_PGO="%{ldflags} -fprofile-instr-generate"
 export LLVM_PROFILE_FILE=%{name}-%p.profile.d
 export LD_LIBRARY_PATH="$(pwd)"
-/bin/sh Configure -d -e \
+/bin/sh Configure -der \
         -Dccflags="${CFLAGS_PGO}" \
         -Dldflags="${CFLAGS_PGO} ${LDFLAGS_PGO}" \
         -Dccdlflags="-Wl,--enable-new-dtags ${CFLAGS_PGO} ${LDFLAGS_PGO}" \
@@ -2986,8 +2986,6 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dshrpdir="%{_libdir}" \
         -DDEBUGGING=-g \
         -Dversion=%{perl_version} \
-        -Dmyhostname=localhost \
-        -Dperladmin=root@localhost \
         -Dcc='%{__cc}' \
         -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
