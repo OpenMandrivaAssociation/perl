@@ -278,7 +278,7 @@ Patch16:        perl-5.22.0-Install-libperl.so-to-shrpdir-on-Linux.patch
 Patch22:        perl-5.18.1-Document-Math-BigInt-CalcEmu-requires-Math-BigInt.patch 
 
 # Make *DBM_File desctructors thread-safe, bug #1107543, RT#61912
-#Patch26:        https://src.fedoraproject.org/rpms/perl/raw/master/f/perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
+Patch26:        https://src.fedoraproject.org/rpms/perl/raw/master/f/perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
 
 # Replace ExtUtils::MakeMaker dependency with ExtUtils::MM::Utils.
 # This allows not to require perl-devel. Bug #1129443
