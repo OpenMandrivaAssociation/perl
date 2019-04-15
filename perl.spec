@@ -2846,7 +2846,9 @@ Perl extension for Version Objects.
 %patch15 -p1
 %patch16 -p1
 %patch22 -p1
+%if !%{with pgo}
 %patch26 -p1
+%endif
 %patch30 -p1
 %patch52 -p1
 %patch79 -p1
@@ -3009,6 +3011,10 @@ unset LLVM_PROFILE_FILE
 llvm-profdata merge --output=%{name}.profile *.profile.d
 rm -f *.profile.d
 make clean
+
+# (tpg) apply patch after PGO build
+%patch26 -p1
+
 export CFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
 export CXXFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
 export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
