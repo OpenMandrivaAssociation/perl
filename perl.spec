@@ -278,7 +278,7 @@ Patch16:        perl-5.22.0-Install-libperl.so-to-shrpdir-on-Linux.patch
 Patch22:        perl-5.18.1-Document-Math-BigInt-CalcEmu-requires-Math-BigInt.patch 
 
 # Make *DBM_File desctructors thread-safe, bug #1107543, RT#61912
-Patch26:        https://src.fedoraproject.org/rpms/perl/raw/master/f/perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
+#Patch26:        https://src.fedoraproject.org/rpms/perl/raw/master/f/perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
 
 # Replace ExtUtils::MakeMaker dependency with ExtUtils::MM::Utils.
 # This allows not to require perl-devel. Bug #1129443
@@ -318,9 +318,12 @@ BuildRequires:  bash
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
+BuildRequires:  bison
+BuildRequires:  byacc
+BuildRequires:  less
+BuildRequires:  zip
 BuildRequires:  gcc
 BuildRequires:  binutils-devel
-BuildRequires:  pkgconfig(libbsd)
 %if %{with gdbm}
 BuildRequires:  gdbm-devel
 %endif
@@ -2938,7 +2941,6 @@ rm -rf 'cpan/Memoize/Memoize/NDBM_File.pm'
 sed -i '\|cpan/Memoize/Memoize/NDBM_File.pm|d' MANIFEST
 %endif
 
-
 %build
 echo "RPM Build arch: %{_arch}"
 
@@ -2965,11 +2967,13 @@ echo "RPM Build arch: %{_arch}"
 # Remove gcc hardcode once this is fixed.
 %define __cc gcc
 %endif
+
 BUILD_BZIP2=0
 BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
 
 %if %{with pgo}
+%global optflags %{optflags} -O3
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 CXXFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 FFLAGS_PGO="$CFLAGS_PGO"
@@ -2977,7 +2981,7 @@ FCFLAGS_PGO="$CFLAGS_PGO"
 LDFLAGS_PGO="%{ldflags} -fprofile-instr-generate"
 export LLVM_PROFILE_FILE=%{name}-%p.profile.d
 export LD_LIBRARY_PATH="$(pwd)"
-/bin/sh Configure -d -e \
+/bin/sh Configure -der \
         -Dccflags="${CFLAGS_PGO}" \
         -Dldflags="${CFLAGS_PGO} ${LDFLAGS_PGO}" \
         -Dccdlflags="-Wl,--enable-new-dtags ${CFLAGS_PGO} ${LDFLAGS_PGO}" \
@@ -2985,25 +2989,15 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Dshrpdir="%{_libdir}" \
         -DDEBUGGING=-g \
         -Dversion=%{perl_version} \
-        -Dmyhostname=localhost \
-        -Dperladmin=root@localhost \
         -Dcc='%{__cc}' \
         -Dcf_by="%{vendor}" \
         -Dprefix=%{_prefix} \
-        -Dusethreads \
-        -Duseshrplib \
-        -Duseithreads \
-        -Di_db \
-%if %{with gdbm}
-        -Ui_ndbm \
-        -Di_gdbm \
-%endif
-        -Di_shadow \
-        -Di_syslog \
-        -Duseperlio \
         -Dscriptdir='%{_bindir}' \
-        -Dusesitecustomize \
+        -Duseshrplib \
+        -Ui_ndbm \
+        -Ui_gdbm \
         -Duse64bitint
+
 make
 make test_pgo
 unset LD_LIBRARY_PATH
