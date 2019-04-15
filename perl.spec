@@ -2996,6 +2996,8 @@ export LD_LIBRARY_PATH="$(pwd)"
         -Duseshrplib \
         -Ui_ndbm \
         -Ui_gdbm \
+        -Uusethreads \
+        -Uuseithreads \
         -Duse64bitint
 
 make
