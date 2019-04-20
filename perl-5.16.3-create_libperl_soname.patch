@@ -1,29 +1,16 @@
-From fa2f0dd5a7767223df10149d3f16d7ed7013e16f Mon Sep 17 00:00:00 2001
-From: Torsten Veller <tove@gentoo.org>
-Date: Sat, 14 Apr 2012 13:49:18 +0200
-Subject: Set libperl soname
-
-Bug-Gentoo: https://bugs.gentoo.org/286840
-
-Patch-Name: gentoo/create_libperl_soname.diff
----
- Makefile.SH | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Makefile.SH b/Makefile.SH
-index d1da0a0..7733a32 100755
---- a/Makefile.SH
-+++ b/Makefile.SH
-@@ -58,7 +58,7 @@ true)
- 				${api_revision}.${api_version}.${api_subversion} \
- 			     -current_version \
- 				${revision}.${patchlevel}.${subversion} \
--			     -install_name \$(shrpdir)/\$@"
-+			     -install_name \$(shrpdir)/libperl.${revision}.${patchlevel}.dylib"
+diff -up perl-5.28.2/Makefile.SH.0015~ perl-5.28.2/Makefile.SH
+--- perl-5.28.2/Makefile.SH.0015~	2019-04-02 22:36:35.000000000 +0200
++++ perl-5.28.2/Makefile.SH	2019-04-20 22:45:49.174197929 +0200
+@@ -74,7 +74,7 @@ true)
+ 			exeldflags="-Xlinker -headerpad_max_install_names"
+ 			;;
+ 		*)
+-			shrpldflags="$shrpldflags -install_name \$(shrpdir)/\$@"
++			shrpldflags="$shrpldflags \$(shrpdir)/libperl.${revision}.${patchlevel}.dylib"
+ 			;;
+ 		esac
  		;;
- 	cygwin*)
- 		shrpldflags="$shrpldflags -Wl,--out-implib=libperl.dll.a -Wl,--image-base,0x52000000"
-@@ -66,13 +66,15 @@ true)
+@@ -84,13 +84,15 @@ true)
  		;;
  	sunos*)
  		linklibperl="-lperl"
@@ -40,7 +27,7 @@ index d1da0a0..7733a32 100755
  		;;
  	aix*)
  		case "$cc" in
-@@ -110,6 +112,9 @@ true)
+@@ -128,6 +130,9 @@ true)
  	    linklibperl='libperl.x'
  	    DPERL_EXTERNAL_GLOB=''
  	    ;;

@@ -111,7 +111,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.28.1
+%global perl_version    5.28.2
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -224,8 +224,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 9 - 2019-02-18
-Release:        10
+# (tpg) for now keep at least 11 - 2019-02-18
+Release:        11
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -2838,32 +2838,32 @@ Perl extension for Version Objects.
 
 %prep
 %setup -q -n perl-%{perl_version}
-%patch1 -p1
+%patch1 -p1 -b .0001~
 %ifarch %{multilib_64_archs}
-%patch3 -p1
+%patch3 -p1 -b .0003~
 %endif
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch15 -p1
-%patch16 -p1
-%patch22 -p1
+%patch4 -p1 -b .0004~
+%patch5 -p1 -b .0005~
+%patch6 -p1 -b .0006~
+%patch7 -p1 -b .0007~
+%patch8 -p1 -b .0008~
+%patch15 -p1 -b .0015~
+%patch16 -p1 -b .0016~
+%patch22 -p1 -b .0022~
 %if !%{with pgo}
-%patch26 -p1
+%patch26 -p1 -b .0026~
 %endif
-%patch30 -p1
-%patch52 -p1
-%patch79 -p1
-%patch200 -p1
-%patch201 -p1
-%patch202 -p1
-%patch203 -p1
-%patch204 -p1
-%patch205 -p1
-%patch300 -p1
-%patch301 -p1
+%patch30 -p1 -b .0030~
+%patch52 -p1 -b .0052~
+%patch79 -p1 -b .0079~
+%patch200 -p1 -b .0200~
+%patch201 -p1 -b .0201~
+%patch202 -p1 -b .0202~
+%patch203 -p1 -b .0203~
+%patch204 -p1 -b .0204~
+%patch205 -p1 -b .0205~
+%patch300 -p1 -b .0206~
+%patch301 -p1 -b .0207~
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
