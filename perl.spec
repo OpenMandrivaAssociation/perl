@@ -158,7 +158,7 @@
 
 # (tpg) enable PGO build
 # BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: lprofMergeValueProfData
-%bcond_with pgo
+%bcond_without pgo
 
 # Optional features
 # We can bootstrap without gdbm
