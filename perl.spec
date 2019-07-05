@@ -157,8 +157,8 @@
 %global perl5_testdir   %{_libexecdir}/perl5-tests
 
 # (tpg) enable PGO build
-# BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: lprofMergeValueProfData
-%bcond_without pgo
+# 2019-07-05 BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: __llvm_profile_filename
+%bcond_with pgo
 
 # Optional features
 # We can bootstrap without gdbm
