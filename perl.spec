@@ -128,7 +128,7 @@
 # if they're empty.
 %define dont_cleanup_perl 1
 
-%global multilib_64_archs aarch64 %{power64} s390x sparc64 %{x86_64}
+%global multilib_64_archs aarch64 %{power64} s390x sparc64 %{x86_64} riscv64
 %global parallel_tests 0
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
@@ -225,7 +225,7 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 13 - 2019-11-11
-Release:        14
+Release:        13
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -516,7 +516,6 @@ License:        (GPL+ or Artistic) and UCD
 %if %{with perl_enables_systemtap}
 Requires:       systemtap-devel
 %endif
-Requires:	perl-srpm-macros
 Requires:       perl(ExtUtils::ParseXS)
 Requires:       %perl_compat
 # Match library and header files when downgrading releases
@@ -2830,7 +2829,6 @@ perl -x patchlevel.h \
     'Fedora Patch200: Link XS modules to libperl.so with EU::CBuilder on Linux' \
     'Fedora Patch201: Link XS modules to libperl.so with EU::MM on Linux' \
     %{nil}
-%endif
 %endif
 
 #copy the example script
