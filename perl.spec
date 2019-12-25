@@ -2831,6 +2831,7 @@ perl -x patchlevel.h \
     'Fedora Patch201: Link XS modules to libperl.so with EU::MM on Linux' \
     %{nil}
 %endif
+%endif
 
 #copy the example script
 cp -a %{SOURCE5} .
