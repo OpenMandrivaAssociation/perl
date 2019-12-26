@@ -2801,9 +2801,9 @@ Perl extension for Version Objects.
 # Local patch tracking
 perl -x patchlevel.h \
     'Fedora Patch1: Removes date check, Fedora/RHEL specific' \
-%ifarch %{multilib_64_archs} \
+%ifarch %{multilib_64_archs}
     'Fedora Patch3: support for libdir64' \
-%endif \
+%endif
     'Fedora Patch4: use libresolv instead of libbind' \
     'Fedora Patch5: USE_MM_LD_RUN_PATH' \
     'Fedora Patch6: Provide MM::maybe_command independently (bug #1129443)' \
