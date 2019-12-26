@@ -225,7 +225,7 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 13 - 2019-11-11
-Release:        13
+Release:        14
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -517,6 +517,7 @@ License:        (GPL+ or Artistic) and UCD
 Requires:       systemtap-devel
 %endif
 Requires:       perl(ExtUtils::ParseXS)
+Requires:	perl-srpm-macros
 Requires:       %perl_compat
 # Match library and header files when downgrading releases
 Requires:       perl-libs%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
