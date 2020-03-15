@@ -111,7 +111,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.30.1
+%global perl_version    5.30.2
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
