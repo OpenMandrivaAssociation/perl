@@ -2901,7 +2901,7 @@ echo "RPM Build arch: %{_arch}"
 # FIXME Building with clang is currently broken due to
 # https://bugs.llvm.org/show_bug.cgi?id=31940
 # Remove gcc hardcode once this is fixed.
-%define __cc clang
+%define __cc gcc
 %endif
 
 BUILD_BZIP2=0
