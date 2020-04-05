@@ -2874,6 +2874,9 @@ rm -rf 'cpan/Memoize/Memoize/NDBM_File.pm'
 sed -i '\|cpan/Memoize/Memoize/NDBM_File.pm|d' MANIFEST
 %endif
 
+# remove weird flag that brokes thing on armx
+sed -i 's!-fpcc-struct-return!!g' Configure
+
 %build
 echo "RPM Build arch: %{_arch}"
 
