@@ -111,7 +111,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.30.2
+%global perl_version    5.30.3
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -224,8 +224,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 13 - 2019-11-11
-Release:        15
+# (tpg) for now keep at least 16 - 2020-06-02
+Release:        16
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
