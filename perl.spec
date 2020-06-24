@@ -342,7 +342,7 @@ BuildRequires:  rsyslog
 %endif
 
 # compat macro needed for rebuild
-%global perl_compat perl(:MODULE_COMPAT_5.28.0)
+%global perl_compat perl(:MODULE_COMPAT_%{perl_version})
 
 Requires:       %perl_compat
 Requires:       perl-base%{?_isa} = %{perl_epoch}:%{perl_version}-%{release}
