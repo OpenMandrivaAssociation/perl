@@ -2905,7 +2905,7 @@ BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
 
 %if %{with pgo}
-%global optflags %{optflags} -O3
+%global optflags %{optflags} -O3 --rtlib=compiler-rt
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 CXXFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 FFLAGS_PGO="$CFLAGS_PGO"
