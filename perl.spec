@@ -1129,7 +1129,7 @@ License:        (GPL+ or Artistic) and UCD
 Epoch:          4
 Version:        3.06
 Requires:       %perl_compat
-Requires:       %{name}-Encode = %{epoch}:%{version}-%{release}
+Requires:       perl(Encode) >= 3.60.0
 Recommends:     perl-devel
 %if %{defined perl_bootstrap}
 %gendep_perl_Encode_devel
@@ -1929,7 +1929,7 @@ Version:        5.20200620
 Requires:       %perl_compat
 Requires:       perl(feature)
 Requires:       perl(version) >= 0.88
-Requires:       perl-Module-CoreList = %{epoch}:%{version}-%{release}
+Requires:       perl(Module::CoreList) >= 5.202.101.230
 %if %{defined perl_bootstrap}
 %gendep_perl_Module_CoreList_tools
 %endif
