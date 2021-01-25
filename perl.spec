@@ -158,7 +158,7 @@
 
 # (tpg) enable PGO build
 # 2019-07-05 BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: __llvm_profile_filename
-%bcond_with pgo
+%bcond_without pgo
 
 # Optional features
 # We can bootstrap without gdbm
