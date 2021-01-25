@@ -224,8 +224,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 16 - 2020-06-02
-Release:        16
+# (tpg) for now keep at least 17 - 2021-01-25
+Release:        17
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -473,6 +473,7 @@ Provides:       %perl_compat
 Provides:       perl(:MODULE_COMPAT_5.26.1)
 Provides:       perl(:MODULE_COMPAT_5.26.0)
 Provides:       perl(:MODULE_COMPAT_5.28.0)
+Provides:       perl(:MODULE_COMPAT_5.32.0)
 # Interpreter version to fulfil required genersted from "require 5.006;"
 Provides:       perl(:VERSION) = %{perl_version}
 # Integeres are 64-bit on all platforms
