@@ -111,7 +111,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.32.1
+%global perl_version    5.34.0
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -224,8 +224,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 17 - 2021-01-25
-Release:        17
+# (tpg) for now keep at least 18 - 2021-05-21
+Release:        18
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -266,7 +266,7 @@ Patch6:         perl-5.22.1-Provide-ExtUtils-MM-methods-as-standalone-ExtUtils-M
 Patch7:         perl-5.10.0-x86_64-io-test-failure.patch
 
 # switch off test, which is failing only on koji (fork)
-Patch8:         perl-5.14.1-offtest.patch
+#Patch8:         perl-5.14.1-offtest.patch
 
 # Define SONAME for libperl.so
 Patch15:        perl-5.16.3-create_libperl_soname.patch
@@ -2780,7 +2780,6 @@ Perl extension for Version Objects.
 %patch5 -p1 -b .0005~
 %patch6 -p1 -b .0006~
 %patch7 -p1 -b .0007~
-%patch8 -p1 -b .0008~
 %patch15 -p1 -b .0015~
 %patch16 -p1 -b .0016~
 %if !%{with pgo}

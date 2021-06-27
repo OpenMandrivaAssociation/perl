@@ -1,41 +1,6 @@
-From 9575301256f67116eccdbb99b38fc804ba3dcf53 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
-Date: Mon, 18 Apr 2016 16:24:03 +0200
-Subject: [PATCH] Provide ExtUtils::MM methods as standalone
- ExtUtils::MM::Utils
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-If you cannot afford depending on ExtUtils::MakeMaker, you can
-depend on ExtUtils::MM::Utils instead.
-
-<https://bugzilla.redhat.com/show_bug.cgi?id=1129443>
-
-Signed-off-by: Petr Písař <ppisar@redhat.com>
----
- MANIFEST                                         |  1 +
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm | 68 ++++++++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm
-
-diff --git a/MANIFEST b/MANIFEST
-index 6af238c..d4f0c56 100644
---- a/MANIFEST
-+++ b/MANIFEST
-@@ -1045,6 +1045,7 @@ cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm			MakeMaker methods for OS/2
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm			MakeMaker methods for OS/2
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_QNX.pm			MakeMaker methods for QNX
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm			MakeMaker methods for Unix
-+cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm		Independed MM methods
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm			MakeMaker methods for U/WIN
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm			MakeMaker methods for VMS
- cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm			MakeMaker methods for VOS
-diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm
-new file mode 100644
-index 0000000..6bbc0d8
---- /dev/null
-+++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm
+diff -up perl-5.34.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm.0006~ perl-5.34.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm
+--- perl-5.34.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm.0006~	2021-06-27 13:48:26.629408006 +0200
++++ perl-5.34.0/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM/Utils.pm	2021-06-27 13:48:26.629408006 +0200
 @@ -0,0 +1,68 @@
 +package ExtUtils::MM::Utils;
 +
@@ -105,6 +70,3 @@ index 0000000..6bbc0d8
 +L<ExtUtils::MakeMaker>, L<ExtUtils::MM>
 +
 +=cut
--- 
-2.5.5
-
