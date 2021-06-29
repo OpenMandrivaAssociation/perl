@@ -9,7 +9,6 @@
 # *** perl-File-Slurp                                            ***
 # *** perl-Test-Pod                                              ***
 # *** perl-Devel-Symdump                                         ***
-# *** perl-PathTools                                             ***
 # *** perl-Pod-Coverage                                          ***
 # *** perl-Test-Pod-Coverage                                     ***
 # *** perl-Try-Tiny                                              ***
@@ -115,6 +114,8 @@
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
+
+%global optflags %{optflags} -O3 --rtlib=compiler-rt -fno-semantic-interposition -Wl,-Bsymbolic
 
 # Avoid nasty circular dependency loop -- gprintify uses perl
 # and various perl-modules not in the perl core distro
@@ -2904,7 +2905,6 @@ BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
 
 %if %{with pgo}
-%global optflags %{optflags} -O3 --rtlib=compiler-rt
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 CXXFLAGS_PGO="%{optflags} -fprofile-instr-generate"
 FFLAGS_PGO="$CFLAGS_PGO"
