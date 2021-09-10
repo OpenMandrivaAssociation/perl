@@ -3175,8 +3175,8 @@ cd -
 # is a meta package.
 
 %files base
-%{_mandir}/man1/*.1*
-%{_mandir}/man3/*.3*
+%doc %{_mandir}/man1/*.1*
+%doc %{_mandir}/man3/*.3*
 %{_bindir}/*
 %{archlib}/*
 %{privlib}/*
@@ -4043,21 +4043,21 @@ cd -
 %{privlib}/warnings.pm
 %{privlib}/XSLoader.pm
 %dir %{perl_vendorlib}
-%{_mandir}/man3/integer.*
-%{_mandir}/man3/re.*
-%{_mandir}/man3/strict.*
-%{_mandir}/man3/utf8.*
-%{_mandir}/man3/warnings.*
-%{_mandir}/man3/XSLoader.*
+%doc %{_mandir}/man3/integer.*
+%doc %{_mandir}/man3/re.*
+%doc %{_mandir}/man3/strict.*
+%doc %{_mandir}/man3/utf8.*
+%doc %{_mandir}/man3/warnings.*
+%doc %{_mandir}/man3/XSLoader.*
 
 %files devel
 %{_bindir}/h2xs
-%{_mandir}/man1/h2xs*
+%doc %{_mandir}/man1/h2xs*
 %{_bindir}/perlivp
-%{_mandir}/man1/perlivp*
+%doc %{_mandir}/man1/perlivp*
 %{archlib}/CORE/*.h
 %{_libdir}/libperl.so
-%{_mandir}/man1/perlxs*
+%doc %{_mandir}/man1/perlxs*
 %if %{with perl_enables_systemtap}
 %{tapsetdir}/%{libperl_stp}
 %doc perl-example.stp
@@ -4078,12 +4078,12 @@ cd -
 %{_bindir}/splain
 %dir %{privlib}/pod
 %{privlib}/pod/perlutil.pod
-%{_mandir}/man1/h2ph.*
-%{_mandir}/man1/perlbug.*
-%{_mandir}/man1/perlthanks.*
-%{_mandir}/man1/perlutil.*
-%{_mandir}/man1/pl2pm.*
-%{_mandir}/man1/splain.*
+%doc %{_mandir}/man1/h2ph.*
+%doc %{_mandir}/man1/perlbug.*
+%doc %{_mandir}/man1/perlthanks.*
+%doc %{_mandir}/man1/perlutil.*
+%doc %{_mandir}/man1/pl2pm.*
+%doc %{_mandir}/man1/splain.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Archive-Tar
@@ -4093,24 +4093,24 @@ cd -
 %dir %{privlib}/Archive
 %{privlib}/Archive/Tar 
 %{privlib}/Archive/Tar.pm
-%{_mandir}/man1/ptar.1*
-%{_mandir}/man1/ptardiff.1*
-%{_mandir}/man1/ptargrep.1*
-%{_mandir}/man3/Archive::Tar* 
+%doc %{_mandir}/man1/ptar.1*
+%doc %{_mandir}/man1/ptardiff.1*
+%doc %{_mandir}/man1/ptargrep.1*
+%doc %{_mandir}/man3/Archive::Tar* 
 %endif
 
 %files Attribute-Handlers
 %{privlib}/Attribute
-%{_mandir}/man3/Attribute::Handlers.*
+%doc %{_mandir}/man3/Attribute::Handlers.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files autodie
 %{privlib}/autodie/
 %{privlib}/autodie.pm
 %{privlib}/Fatal.pm
-%{_mandir}/man3/autodie.3*
-%{_mandir}/man3/autodie::*
-%{_mandir}/man3/Fatal.3*
+%doc %{_mandir}/man3/autodie.3*
+%doc %{_mandir}/man3/autodie::*
+%doc %{_mandir}/man3/Fatal.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4122,14 +4122,14 @@ cd -
 %{privlib}/Math/BigFloat
 %dir %{privlib}/Math/BigInt
 %{privlib}/Math/BigInt/Trace.pm
-%{_mandir}/man3/bigint.*
-%{_mandir}/man3/bignum.*
-%{_mandir}/man3/bigrat.*
+%doc %{_mandir}/man3/bigint.*
+%doc %{_mandir}/man3/bignum.*
+%doc %{_mandir}/man3/bigrat.*
 
 %files Carp
 %{privlib}/Carp
 %{privlib}/Carp.*
-%{_mandir}/man3/Carp.*
+%doc %{_mandir}/man3/Carp.*
 
 %files Compress-Raw-Bzip2
 %dir %{archlib}/Compress
@@ -4138,7 +4138,7 @@ cd -
 %dir %{archlib}/auto/Compress
 %dir %{archlib}/auto/Compress/Raw
 %{archlib}/auto/Compress/Raw/Bzip2
-%{_mandir}/man3/Compress::Raw::Bzip2*
+%doc %{_mandir}/man3/Compress::Raw::Bzip2*
 
 %files Compress-Raw-Zlib
 %dir %{archlib}/Compress
@@ -4147,20 +4147,20 @@ cd -
 %dir %{archlib}/auto/Compress
 %dir %{archlib}/auto/Compress/Raw
 %{archlib}/auto/Compress/Raw/Zlib
-%{_mandir}/man3/Compress::Raw::Zlib*
+%doc %{_mandir}/man3/Compress::Raw::Zlib*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Config-Perl-V
 %dir %{privlib}/Config
 %{privlib}/Config/Perl
-%{_mandir}/man3/Config::Perl::V.*
+%doc %{_mandir}/man3/Config::Perl::V.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files constant
 %{privlib}/constant.pm
-%{_mandir}/man3/constant.3*
+%doc %{_mandir}/man3/constant.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4170,10 +4170,10 @@ cd -
 %{privlib}/App/Cpan.pm
 %{privlib}/CPAN
 %{privlib}/CPAN.pm
-%{_mandir}/man1/cpan.1*
-%{_mandir}/man3/App::Cpan.*
-%{_mandir}/man3/CPAN.*
-%{_mandir}/man3/CPAN:*
+%doc %{_mandir}/man1/cpan.1*
+%doc %{_mandir}/man3/App::Cpan.*
+%doc %{_mandir}/man3/CPAN.*
+%doc %{_mandir}/man3/CPAN:*
 %exclude %{privlib}/CPAN/Meta/
 %exclude %{privlib}/CPAN/Meta.pm
 %exclude %{_mandir}/man3/CPAN::Meta*
@@ -4194,8 +4194,8 @@ cd -
 %dir %{privlib}/Parse/
 %dir %{privlib}/Parse/CPAN/
 %{privlib}/Parse/CPAN/Meta.pm
-%{_mandir}/man3/CPAN::Meta*
-%{_mandir}/man3/Parse::CPAN::Meta.3*
+%doc %{_mandir}/man3/CPAN::Meta*
+%doc %{_mandir}/man3/Parse::CPAN::Meta.3*
 %exclude %{_mandir}/man3/CPAN::Meta::YAML*
 %exclude %{_mandir}/man3/CPAN::Meta::Requirements*
 %endif
@@ -4205,7 +4205,7 @@ cd -
 %dir %{privlib}/CPAN
 %dir %{privlib}/CPAN/Meta
 %{privlib}/CPAN/Meta/Requirements.pm
-%{_mandir}/man3/CPAN::Meta::Requirements.3*
+%doc %{_mandir}/man3/CPAN::Meta::Requirements.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4213,7 +4213,7 @@ cd -
 %dir %{privlib}/CPAN
 %dir %{privlib}/CPAN/Meta
 %{privlib}/CPAN/Meta/YAML.pm
-%{_mandir}/man3/CPAN::Meta::YAML*
+%doc %{_mandir}/man3/CPAN::Meta::YAML*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4223,7 +4223,7 @@ cd -
 %{archlib}/auto/Data/Dumper/Dumper.so
 %dir %{archlib}/Data
 %{archlib}/Data/Dumper.pm
-%{_mandir}/man3/Data::Dumper.3*
+%doc %{_mandir}/man3/Data::Dumper.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4231,7 +4231,7 @@ cd -
 %{archlib}/DB_File.pm
 %dir %{archlib}/auto/DB_File
 %{archlib}/auto/DB_File/DB_File.so
-%{_mandir}/man3/DB_File*
+%doc %{_mandir}/man3/DB_File*
 %endif
 
 %files Devel-Peek
@@ -4239,19 +4239,19 @@ cd -
 %{archlib}/Devel/Peek.pm
 %dir %{archlib}/auto/Devel
 %{archlib}/auto/Devel/Peek
-%{_mandir}/man3/Devel::Peek.*
+%doc %{_mandir}/man3/Devel::Peek.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Devel-PPPort
 %dir %{archlib}/Devel
 %{archlib}/Devel/PPPort.pm
-%{_mandir}/man3/Devel::PPPort.3*
+%doc %{_mandir}/man3/Devel::PPPort.3*
 %endif
 
 %files Devel-SelfStubber
 %dir %{privlib}/Devel
 %{privlib}/Devel/SelfStubber.pm
-%{_mandir}/man3/Devel::SelfStubber.*
+%doc %{_mandir}/man3/Devel::SelfStubber.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Digest
@@ -4259,9 +4259,9 @@ cd -
 %dir %{privlib}/Digest
 %{privlib}/Digest/base.pm
 %{privlib}/Digest/file.pm
-%{_mandir}/man3/Digest.3*
-%{_mandir}/man3/Digest::base.3*
-%{_mandir}/man3/Digest::file.3*
+%doc %{_mandir}/man3/Digest.3*
+%doc %{_mandir}/man3/Digest::base.3*
+%doc %{_mandir}/man3/Digest::file.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4270,7 +4270,7 @@ cd -
 %{archlib}/Digest/MD5.pm
 %dir %{archlib}/auto/Digest
 %{archlib}/auto/Digest/MD5
-%{_mandir}/man3/Digest::MD5.3*
+%doc %{_mandir}/man3/Digest::MD5.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4280,8 +4280,8 @@ cd -
 %{archlib}/Digest/SHA.pm
 %dir %{archlib}/auto/Digest
 %{archlib}/auto/Digest/SHA
-%{_mandir}/man1/shasum.1*
-%{_mandir}/man3/Digest::SHA.3*
+%doc %{_mandir}/man1/shasum.1*
+%doc %{_mandir}/man3/Digest::SHA.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4293,42 +4293,42 @@ cd -
 %{privlib}/Encode
 %exclude %{privlib}/Encode/*.e2x
 %exclude %{privlib}/Encode/encode.h
-%{_mandir}/man1/encguess.1*
-%{_mandir}/man1/piconv.1*
-%{_mandir}/man3/Encode*.3*
+%doc %{_mandir}/man1/encguess.1*
+%doc %{_mandir}/man1/piconv.1*
+%doc %{_mandir}/man3/Encode*.3*
 
 %files encoding
 %{archlib}/encoding.pm
-%{_mandir}/man3/encoding.3*
+%doc %{_mandir}/man3/encoding.3*
 
 %files Encode-devel
 %{_bindir}/enc2xs
 %dir %{privlib}/Encode
 %{privlib}/Encode/*.e2x
 %{privlib}/Encode/encode.h
-%{_mandir}/man1/enc2xs.1*
+%doc %{_mandir}/man1/enc2xs.1*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Env
 %{privlib}/Env.pm
-%{_mandir}/man3/Env.3*
+%doc %{_mandir}/man3/Env.3*
 %endif
 
 %files Errno
 %{archlib}/Errno.pm
-%{_mandir}/man3/Errno.*
+%doc %{_mandir}/man3/Errno.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Exporter
 %{privlib}/Exporter*
-%{_mandir}/man3/Exporter*
+%doc %{_mandir}/man3/Exporter*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files experimental
 %{privlib}/experimental*
-%{_mandir}/man3/experimental*
+%doc %{_mandir}/man3/experimental*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4336,20 +4336,20 @@ cd -
 %dir %{privlib}/ExtUtils
 %{privlib}/ExtUtils/CBuilder
 %{privlib}/ExtUtils/CBuilder.pm
-%{_mandir}/man3/ExtUtils::CBuilder*
+%doc %{_mandir}/man3/ExtUtils::CBuilder*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files ExtUtils-Command
 %dir %{privlib}/ExtUtils
 %{privlib}/ExtUtils/Command.pm
-%{_mandir}/man3/ExtUtils::Command.*
+%doc %{_mandir}/man3/ExtUtils::Command.*
 %endif
 
 %files ExtUtils-Embed
 %dir %{privlib}/ExtUtils
 %{privlib}/ExtUtils/Embed.pm
-%{_mandir}/man3/ExtUtils::Embed*
+%doc %{_mandir}/man3/ExtUtils::Embed*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files ExtUtils-Install
@@ -4357,9 +4357,9 @@ cd -
 %{privlib}/ExtUtils/Install.pm
 %{privlib}/ExtUtils/Installed.pm
 %{privlib}/ExtUtils/Packlist.pm
-%{_mandir}/man3/ExtUtils::Install.3*
-%{_mandir}/man3/ExtUtils::Installed.3*
-%{_mandir}/man3/ExtUtils::Packlist.3*
+%doc %{_mandir}/man3/ExtUtils::Install.3*
+%doc %{_mandir}/man3/ExtUtils::Installed.3*
+%doc %{_mandir}/man3/ExtUtils::Packlist.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4367,7 +4367,7 @@ cd -
 %dir %{privlib}/ExtUtils
 %{privlib}/ExtUtils/Manifest.pm
 %{privlib}/ExtUtils/MANIFEST.SKIP
-%{_mandir}/man3/ExtUtils::Manifest.3*
+%doc %{_mandir}/man3/ExtUtils::Manifest.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4385,29 +4385,29 @@ cd -
 %{privlib}/ExtUtils/Mkbootstrap.pm
 %{privlib}/ExtUtils/Mksymlists.pm
 %{privlib}/ExtUtils/testlib.pm
-%{_mandir}/man1/instmodsh.1*
-%{_mandir}/man3/ExtUtils::Command::MM*
-%{_mandir}/man3/ExtUtils::Liblist.3*
-%{_mandir}/man3/ExtUtils::MM.3*
-%{_mandir}/man3/ExtUtils::MM_*
-%{_mandir}/man3/ExtUtils::MY.3*
-%{_mandir}/man3/ExtUtils::MakeMaker*
-%{_mandir}/man3/ExtUtils::Mkbootstrap.3*
-%{_mandir}/man3/ExtUtils::Mksymlists.3*
-%{_mandir}/man3/ExtUtils::testlib.3*
+%doc %{_mandir}/man1/instmodsh.1*
+%doc %{_mandir}/man3/ExtUtils::Command::MM*
+%doc %{_mandir}/man3/ExtUtils::Liblist.3*
+%doc %{_mandir}/man3/ExtUtils::MM.3*
+%doc %{_mandir}/man3/ExtUtils::MM_*
+%doc %{_mandir}/man3/ExtUtils::MY.3*
+%doc %{_mandir}/man3/ExtUtils::MakeMaker*
+%doc %{_mandir}/man3/ExtUtils::Mkbootstrap.3*
+%doc %{_mandir}/man3/ExtUtils::Mksymlists.3*
+%doc %{_mandir}/man3/ExtUtils::testlib.3*
 %endif
 
 %files ExtUtils-Miniperl
 %dir %{privlib}/ExtUtils
 %{privlib}/ExtUtils/Miniperl.pm
-%{_mandir}/man3/ExtUtils::Miniperl.3*
+%doc %{_mandir}/man3/ExtUtils::Miniperl.3*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files ExtUtils-MM-Utils
 %dir %{privlib}/ExtUtils
 %dir %{privlib}/ExtUtils/MM
 %{privlib}/ExtUtils/MM/Utils.pm
-%{_mandir}/man3/ExtUtils::MM::Utils.*
+%doc %{_mandir}/man3/ExtUtils::MM::Utils.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4428,37 +4428,37 @@ cd -
 %{privlib}/ExtUtils/Typemaps/Type.pm
 %{privlib}/ExtUtils/xsubpp
 %{_bindir}/xsubpp
-%{_mandir}/man1/xsubpp*
-%{_mandir}/man3/ExtUtils::ParseXS.3*
-%{_mandir}/man3/ExtUtils::ParseXS::Constants.3*
-%{_mandir}/man3/ExtUtils::ParseXS::Eval.3*
-%{_mandir}/man3/ExtUtils::ParseXS::Utilities.3*
-%{_mandir}/man3/ExtUtils::Typemaps.3*
-%{_mandir}/man3/ExtUtils::Typemaps::Cmd.3*
-%{_mandir}/man3/ExtUtils::Typemaps::InputMap.3*
-%{_mandir}/man3/ExtUtils::Typemaps::OutputMap.3*
-%{_mandir}/man3/ExtUtils::Typemaps::Type.3*
+%doc %{_mandir}/man1/xsubpp*
+%doc %{_mandir}/man3/ExtUtils::ParseXS.3*
+%doc %{_mandir}/man3/ExtUtils::ParseXS::Constants.3*
+%doc %{_mandir}/man3/ExtUtils::ParseXS::Eval.3*
+%doc %{_mandir}/man3/ExtUtils::ParseXS::Utilities.3*
+%doc %{_mandir}/man3/ExtUtils::Typemaps.3*
+%doc %{_mandir}/man3/ExtUtils::Typemaps::Cmd.3*
+%doc %{_mandir}/man3/ExtUtils::Typemaps::InputMap.3*
+%doc %{_mandir}/man3/ExtUtils::Typemaps::OutputMap.3*
+%doc %{_mandir}/man3/ExtUtils::Typemaps::Type.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files File-Fetch
 %dir %{privlib}/File
 %{privlib}/File/Fetch.pm
-%{_mandir}/man3/File::Fetch.3*
+%doc %{_mandir}/man3/File::Fetch.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files File-Path
 %dir %{privlib}/File
 %{privlib}/File/Path.pm
-%{_mandir}/man3/File::Path.3*
+%doc %{_mandir}/man3/File::Path.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files File-Temp
 %dir %{privlib}/File
 %{privlib}/File/Temp.pm
-%{_mandir}/man3/File::Temp.3*
+%doc %{_mandir}/man3/File::Temp.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4468,22 +4468,22 @@ cd -
 %dir %{archlib}/Filter
 %{archlib}/Filter/Util
 %{privlib}/pod/perlfilter.pod
-%{_mandir}/man1/perlfilter.*
-%{_mandir}/man3/Filter::Util::*
+%doc %{_mandir}/man1/perlfilter.*
+%doc %{_mandir}/man3/Filter::Util::*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Filter-Simple
 %dir %{privlib}/Filter
 %{privlib}/Filter/Simple.pm
-%{_mandir}/man3/Filter::Simple.3*
+%doc %{_mandir}/man3/Filter::Simple.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Getopt-Long
 %dir %{privlib}/Getopt
 %{privlib}/Getopt/Long.pm
-%{_mandir}/man3/Getopt::Long.3*
+%doc %{_mandir}/man3/Getopt::Long.3*
 %endif
 
 %files IO
@@ -4502,17 +4502,17 @@ cd -
 %{archlib}/IO/Socket.pm
 %dir %{archlib}/auto/IO
 %{archlib}/auto/IO/IO.so
-%{_mandir}/man3/IO.*
-%{_mandir}/man3/IO::Dir.*
-%{_mandir}/man3/IO::File.*
-%{_mandir}/man3/IO::Handle.*
-%{_mandir}/man3/IO::Pipe.*
-%{_mandir}/man3/IO::Poll.*
-%{_mandir}/man3/IO::Seekable.*
-%{_mandir}/man3/IO::Select.*
-%{_mandir}/man3/IO::Socket::INET.*
-%{_mandir}/man3/IO::Socket::UNIX.*
-%{_mandir}/man3/IO::Socket.*
+%doc %{_mandir}/man3/IO.*
+%doc %{_mandir}/man3/IO::Dir.*
+%doc %{_mandir}/man3/IO::File.*
+%doc %{_mandir}/man3/IO::Handle.*
+%doc %{_mandir}/man3/IO::Pipe.*
+%doc %{_mandir}/man3/IO::Poll.*
+%doc %{_mandir}/man3/IO::Seekable.*
+%doc %{_mandir}/man3/IO::Select.*
+%doc %{_mandir}/man3/IO::Socket::INET.*
+%doc %{_mandir}/man3/IO::Socket::UNIX.*
+%doc %{_mandir}/man3/IO::Socket.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files IO-Compress
@@ -4521,12 +4521,12 @@ cd -
 %dir %{privlib}/IO
 %dir %{privlib}/IO/Compress
 %{privlib}/IO/Compress/FAQ.pod
-%{_mandir}/man1/zipdetails.*
-%{_mandir}/man3/IO::Compress::FAQ.*
+%doc %{_mandir}/man1/zipdetails.*
+%doc %{_mandir}/man3/IO::Compress::FAQ.*
 # Compress-Zlib
 %dir %{privlib}/Compress
 %{privlib}/Compress/Zlib.pm
-%{_mandir}/man3/Compress::Zlib*
+%doc %{_mandir}/man3/Compress::Zlib*
 #IO-Compress-Base
 %dir %{privlib}/File
 %{privlib}/File/GlobMapper.pm
@@ -4537,10 +4537,10 @@ cd -
 %dir %{privlib}/IO/Uncompress
 %{privlib}/IO/Uncompress/AnyUncompress.pm
 %{privlib}/IO/Uncompress/Base.pm
-%{_mandir}/man3/File::GlobMapper.*
-%{_mandir}/man3/IO::Compress::Base.*
-%{_mandir}/man3/IO::Uncompress::AnyUncompress.*
-%{_mandir}/man3/IO::Uncompress::Base.*
+%doc %{_mandir}/man3/File::GlobMapper.*
+%doc %{_mandir}/man3/IO::Compress::Base.*
+%doc %{_mandir}/man3/IO::Uncompress::AnyUncompress.*
+%doc %{_mandir}/man3/IO::Uncompress::Base.*
 # IO-Compress-Zlib
 %dir %{privlib}/IO
 %dir %{privlib}/IO/Compress
@@ -4561,17 +4561,17 @@ cd -
 %{privlib}/IO/Uncompress/Inflate.pm
 %{privlib}/IO/Uncompress/RawInflate.pm
 %{privlib}/IO/Uncompress/Unzip.pm
-%{_mandir}/man3/IO::Compress::Deflate*
-%{_mandir}/man3/IO::Compress::Gzip*
-%{_mandir}/man3/IO::Compress::Bzip2*
-%{_mandir}/man3/IO::Compress::RawDeflate*
-%{_mandir}/man3/IO::Compress::Zip*
-%{_mandir}/man3/IO::Uncompress::AnyInflate*
-%{_mandir}/man3/IO::Uncompress::Bunzip2*
-%{_mandir}/man3/IO::Uncompress::Gunzip*
-%{_mandir}/man3/IO::Uncompress::Inflate*
-%{_mandir}/man3/IO::Uncompress::RawInflate*
-%{_mandir}/man3/IO::Uncompress::Unzip*
+%doc %{_mandir}/man3/IO::Compress::Deflate*
+%doc %{_mandir}/man3/IO::Compress::Gzip*
+%doc %{_mandir}/man3/IO::Compress::Bzip2*
+%doc %{_mandir}/man3/IO::Compress::RawDeflate*
+%doc %{_mandir}/man3/IO::Compress::Zip*
+%doc %{_mandir}/man3/IO::Uncompress::AnyInflate*
+%doc %{_mandir}/man3/IO::Uncompress::Bunzip2*
+%doc %{_mandir}/man3/IO::Uncompress::Gunzip*
+%doc %{_mandir}/man3/IO::Uncompress::Inflate*
+%doc %{_mandir}/man3/IO::Uncompress::RawInflate*
+%doc %{_mandir}/man3/IO::Uncompress::Unzip*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4579,26 +4579,26 @@ cd -
 %dir %{privlib}/IO
 %dir %{privlib}/IO/Socket
 %{privlib}/IO/Socket/IP.pm
-%{_mandir}/man3/IO::Socket::IP.*
+%doc %{_mandir}/man3/IO::Socket::IP.*
 %endif
 
 %files IO-Zlib
 %dir %{privlib}/IO
 %{privlib}/IO/Zlib.pm
-%{_mandir}/man3/IO::Zlib.*
+%doc %{_mandir}/man3/IO::Zlib.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files HTTP-Tiny
 %dir %{privlib}/HTTP
 %{privlib}/HTTP/Tiny.pm
-%{_mandir}/man3/HTTP::Tiny*
+%doc %{_mandir}/man3/HTTP::Tiny*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files IPC-Cmd
 %dir %{privlib}/IPC
 %{privlib}/IPC/Cmd.pm
-%{_mandir}/man3/IPC::Cmd.3*
+%doc %{_mandir}/man3/IPC::Cmd.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4609,10 +4609,10 @@ cd -
 %{archlib}/IPC/Semaphore.pm
 %{archlib}/IPC/SharedMem.pm
 %{archlib}/IPC/SysV.pm
-%{_mandir}/man3/IPC::Msg.*
-%{_mandir}/man3/IPC::Semaphore.*
-%{_mandir}/man3/IPC::SharedMem.*
-%{_mandir}/man3/IPC::SysV.*
+%doc %{_mandir}/man3/IPC::Msg.*
+%doc %{_mandir}/man3/IPC::Semaphore.*
+%doc %{_mandir}/man3/IPC::SharedMem.*
+%doc %{_mandir}/man3/IPC::SysV.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4621,9 +4621,9 @@ cd -
 %dir %{privlib}/JSON
 %{privlib}/JSON/PP
 %{privlib}/JSON/PP.pm
-%{_mandir}/man1/json_pp.1*
-%{_mandir}/man3/JSON::PP.3*
-%{_mandir}/man3/JSON::PP::Boolean.3pm*
+%doc %{_mandir}/man1/json_pp.1*
+%doc %{_mandir}/man3/JSON::PP.3*
+%doc %{_mandir}/man3/JSON::PP::Boolean.3pm*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4640,21 +4640,21 @@ cd -
 %{privlib}/Net/POP3.pm
 %{privlib}/Net/SMTP.pm
 %{privlib}/Net/Time.pm
-%{_mandir}/man3/Net::Cmd.*
-%{_mandir}/man3/Net::Config.*
-%{_mandir}/man3/Net::Domain.*
-%{_mandir}/man3/Net::FTP.*
-%{_mandir}/man3/Net::libnetFAQ.*
-%{_mandir}/man3/Net::NNTP.*
-%{_mandir}/man3/Net::Netrc.*
-%{_mandir}/man3/Net::POP3.*
-%{_mandir}/man3/Net::SMTP.*
-%{_mandir}/man3/Net::Time.*
+%doc %{_mandir}/man3/Net::Cmd.*
+%doc %{_mandir}/man3/Net::Config.*
+%doc %{_mandir}/man3/Net::Domain.*
+%doc %{_mandir}/man3/Net::FTP.*
+%doc %{_mandir}/man3/Net::libnetFAQ.*
+%doc %{_mandir}/man3/Net::NNTP.*
+%doc %{_mandir}/man3/Net::Netrc.*
+%doc %{_mandir}/man3/Net::POP3.*
+%doc %{_mandir}/man3/Net::SMTP.*
+%doc %{_mandir}/man3/Net::Time.*
 %endif
 
 %files libnetcfg
 %{_bindir}/libnetcfg
-%{_mandir}/man1/libnetcfg*
+%doc %{_mandir}/man1/libnetcfg*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Locale-Maketext
@@ -4665,18 +4665,18 @@ cd -
 %{privlib}/Locale/Maketext/Guts.*
 %{privlib}/Locale/Maketext/GutsLoader.*
 %{privlib}/Locale/Maketext/TPJ13.*
-%{_mandir}/man3/Locale::Maketext.*
-%{_mandir}/man3/Locale::Maketext::Cookbook.*
-%{_mandir}/man3/Locale::Maketext::Guts.*
-%{_mandir}/man3/Locale::Maketext::GutsLoader.*
-%{_mandir}/man3/Locale::Maketext::TPJ13.*
+%doc %{_mandir}/man3/Locale::Maketext.*
+%doc %{_mandir}/man3/Locale::Maketext::Cookbook.*
+%doc %{_mandir}/man3/Locale::Maketext::Guts.*
+%doc %{_mandir}/man3/Locale::Maketext::GutsLoader.*
+%doc %{_mandir}/man3/Locale::Maketext::TPJ13.*
 %endif
 
 %files Locale-Maketext-Simple
 %dir %{privlib}/Locale
 %dir %{privlib}/Locale/Maketext
 %{privlib}/Locale/Maketext/Simple.pm
-%{_mandir}/man3/Locale::Maketext::Simple.*
+%doc %{_mandir}/man3/Locale::Maketext::Simple.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Math-BigInt
@@ -4686,40 +4686,40 @@ cd -
 %dir %{privlib}/Math/BigInt
 %{privlib}/Math/BigInt/Calc.pm
 %{privlib}/Math/BigInt/Lib.pm
-%{_mandir}/man3/Math::BigFloat.*
-%{_mandir}/man3/Math::BigInt.*
-%{_mandir}/man3/Math::BigInt::Calc.*
-%{_mandir}/man3/Math::BigInt::Lib.*
+%doc %{_mandir}/man3/Math::BigFloat.*
+%doc %{_mandir}/man3/Math::BigInt.*
+%doc %{_mandir}/man3/Math::BigInt::Calc.*
+%doc %{_mandir}/man3/Math::BigInt::Lib.*
 
 %files Math-BigInt-FastCalc
 %{archlib}/Math
 %{archlib}/auto/Math
-%{_mandir}/man3/Math::BigInt::FastCalc.*
+%doc %{_mandir}/man3/Math::BigInt::FastCalc.*
 
 %files Math-BigRat
 %dir %{privlib}/Math
 %{privlib}/Math/BigRat.pm
-%{_mandir}/man3/Math::BigRat.*
+%doc %{_mandir}/man3/Math::BigRat.*
 %endif
 
 %files Math-Complex
 %dir %{privlib}/Math
 %{privlib}/Math/Complex.pm
 %{privlib}/Math/Trig.pm
-%{_mandir}/man3/Math::Complex.*
-%{_mandir}/man3/Math::Trig.*
+%doc %{_mandir}/man3/Math::Complex.*
+%doc %{_mandir}/man3/Math::Trig.*
 
 %files Memoize
 %{privlib}/Memoize
 %{privlib}/Memoize.pm
-%{_mandir}/man3/Memoize::*
-%{_mandir}/man3/Memoize.*
+%doc %{_mandir}/man3/Memoize::*
+%doc %{_mandir}/man3/Memoize.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files MIME-Base64
 %{archlib}/auto/MIME
 %{archlib}/MIME
-%{_mandir}/man3/MIME::*
+%doc %{_mandir}/man3/MIME::*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4728,43 +4728,43 @@ cd -
 %{privlib}/Module/CoreList
 %{privlib}/Module/CoreList.pm
 %{privlib}/Module/CoreList.pod
-%{_mandir}/man3/Module::CoreList*
+%doc %{_mandir}/man3/Module::CoreList*
 
 %files Module-CoreList-tools
 %{_bindir}/corelist
-%{_mandir}/man1/corelist*
+%doc %{_mandir}/man1/corelist*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Module-Load
 %dir %{privlib}/Module
 %{privlib}/Module/Load.pm
-%{_mandir}/man3/Module::Load.*
+%doc %{_mandir}/man3/Module::Load.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Module-Load-Conditional
 %dir %{privlib}/Module
 %{privlib}/Module/Load
-%{_mandir}/man3/Module::Load::Conditional* 
+%doc %{_mandir}/man3/Module::Load::Conditional* 
 %endif
 
 %files Module-Loaded
 %dir %{privlib}/Module
 %{privlib}/Module/Loaded.pm
-%{_mandir}/man3/Module::Loaded*
+%doc %{_mandir}/man3/Module::Loaded*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Module-Metadata
 %dir %{privlib}/Module
 %{privlib}/Module/Metadata.pm
-%{_mandir}/man3/Module::Metadata.3pm*
+%doc %{_mandir}/man3/Module::Metadata.3pm*
 %endif
 
 %files Net-Ping
 %dir %{privlib}/Net
 %{privlib}/Net/Ping.pm
-%{_mandir}/man3/Net::Ping.*
+%doc %{_mandir}/man3/Net::Ping.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files PathTools
@@ -4772,24 +4772,24 @@ cd -
 %dir %{archlib}/File
 %{archlib}/File/Spec*
 %{archlib}/auto/Cwd
-%{_mandir}/man3/Cwd*
-%{_mandir}/man3/File::Spec*
+%doc %{_mandir}/man3/Cwd*
+%doc %{_mandir}/man3/File::Spec*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Params-Check
 %{privlib}/Params/
-%{_mandir}/man3/Params::Check*
+%doc %{_mandir}/man3/Params::Check*
 %endif
 
 %files open
 %{privlib}/open.pm
-%{_mandir}/man3/open.3*
+%doc %{_mandir}/man3/open.3*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files parent
 %{privlib}/parent.pm
-%{_mandir}/man3/parent.3*
+%doc %{_mandir}/man3/parent.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4798,21 +4798,21 @@ cd -
 %dir %{privlib}/pod
 %{privlib}/pod/perlfaq*
 %{privlib}/pod/perlglossary.pod
-%{_mandir}/man1/perlfaq*
-%{_mandir}/man1/perlglossary.*
+%doc %{_mandir}/man1/perlfaq*
+%doc %{_mandir}/man1/perlglossary.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files PerlIO-via-QuotedPrint
 %{privlib}/PerlIO
-%{_mandir}/man3/PerlIO::via::QuotedPrint.*
+%doc %{_mandir}/man3/PerlIO::via::QuotedPrint.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Perl-OSType
 %dir %{privlib}/Perl
 %{privlib}/Perl/OSType.pm
-%{_mandir}/man3/Perl::OSType.3pm*
+%doc %{_mandir}/man3/Perl::OSType.3pm*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4820,15 +4820,15 @@ cd -
 %{_bindir}/podchecker
 %dir %{privlib}/Pod
 %{privlib}/Pod/Checker.pm
-%{_mandir}/man1/podchecker.*
-%{_mandir}/man3/Pod::Checker.*
+%doc %{_mandir}/man1/podchecker.*
+%doc %{_mandir}/man3/Pod::Checker.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Pod-Escapes
 %dir %{privlib}/Pod
 %{privlib}/Pod/Escapes.pm
-%{_mandir}/man3/Pod::Escapes.*
+%doc %{_mandir}/man3/Pod::Escapes.*
 %endif
 
 %files Pod-Html
@@ -4836,8 +4836,8 @@ cd -
 %dir %{privlib}/Pod
 %{_bindir}/pod2html
 %{privlib}/Pod/Html.pm
-%{_mandir}/man1/pod2html.1*
-%{_mandir}/man3/Pod::Html.*
+%doc %{_mandir}/man1/pod2html.1*
+%doc %{_mandir}/man3/Pod::Html.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Pod-Perldoc
@@ -4846,8 +4846,8 @@ cd -
 %dir %{privlib}/Pod
 %{privlib}/Pod/Perldoc
 %{privlib}/Pod/Perldoc.pm
-%{_mandir}/man1/perldoc.1*
-%{_mandir}/man3/Pod::Perldoc*
+%doc %{_mandir}/man1/perldoc.1*
+%doc %{_mandir}/man3/Pod::Perldoc*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4855,8 +4855,8 @@ cd -
 %{_bindir}/pod2usage
 %dir %{privlib}/Pod
 %{privlib}/Pod/Usage.pm
-%{_mandir}/man1/pod2usage.*
-%{_mandir}/man3/Pod::Usage.*
+%doc %{_mandir}/man1/pod2usage.*
+%doc %{_mandir}/man3/Pod::Usage.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4869,12 +4869,12 @@ cd -
 %{privlib}/Pod/ParseLink.pm
 %{privlib}/Pod/Text
 %{privlib}/Pod/Text.pm
-%{_mandir}/man1/pod2man.1*
-%{_mandir}/man1/pod2text.1*
-%{_mandir}/man1/perlpodstyle.1*
-%{_mandir}/man3/Pod::Man*
-%{_mandir}/man3/Pod::ParseLink*
-%{_mandir}/man3/Pod::Text*
+%doc %{_mandir}/man1/pod2man.1*
+%doc %{_mandir}/man1/pod2text.1*
+%doc %{_mandir}/man1/perlpodstyle.1*
+%doc %{_mandir}/man3/Pod::Man*
+%doc %{_mandir}/man3/Pod::ParseLink*
+%doc %{_mandir}/man3/Pod::Text*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4883,7 +4883,7 @@ cd -
 %{privlib}/Pod/Simple
 %{privlib}/Pod/Simple.pm
 %{privlib}/Pod/Simple.pod
-%{_mandir}/man3/Pod::Simple*
+%doc %{_mandir}/man3/Pod::Simple*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4892,14 +4892,14 @@ cd -
 %{archlib}/Scalar
 %{archlib}/Sub
 %{archlib}/auto/List
-%{_mandir}/man3/List::Util*
-%{_mandir}/man3/Scalar::Util*
-%{_mandir}/man3/Sub::Util*
+%doc %{_mandir}/man3/List::Util*
+%doc %{_mandir}/man3/Scalar::Util*
+%doc %{_mandir}/man3/Sub::Util*
 %endif
 
 %files SelfLoader
 %{privlib}/SelfLoader.pm
-%{_mandir}/man3/SelfLoader*
+%doc %{_mandir}/man3/SelfLoader*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Sys-Syslog
@@ -4907,7 +4907,7 @@ cd -
 %{archlib}/Sys/Syslog.pm
 %dir %{archlib}/auto/Sys
 %{archlib}/auto/Sys/Syslog
-%{_mandir}/man3/Sys::Syslog.*
+%doc %{_mandir}/man3/Sys::Syslog.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4915,33 +4915,33 @@ cd -
 %dir %{archlib}/auto/Socket
 %{archlib}/auto/Socket/Socket.*
 %{archlib}/Socket.pm
-%{_mandir}/man3/Socket.3*
+%doc %{_mandir}/man3/Socket.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Storable
 %{archlib}/Storable.pm
 %{archlib}/auto/Storable
-%{_mandir}/man3/Storable.*
+%doc %{_mandir}/man3/Storable.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Term-ANSIColor
 %dir %{privlib}/Term
 %{privlib}/Term/ANSIColor.pm
-%{_mandir}/man3/Term::ANSIColor*
+%doc %{_mandir}/man3/Term::ANSIColor*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Term-Cap
 %dir %{privlib}/Term
 %{privlib}/Term/Cap.pm
-%{_mandir}/man3/Term::Cap.*
+%doc %{_mandir}/man3/Term::Cap.*
 %endif
 
 %files Test
 %{privlib}/Test.pm
-%{_mandir}/man3/Test.*
+%doc %{_mandir}/man3/Test.*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Test-Harness
@@ -4951,10 +4951,10 @@ cd -
 %{privlib}/TAP*
 %dir %{privlib}/Test
 %{privlib}/Test/Harness*
-%{_mandir}/man1/prove.1*
-%{_mandir}/man3/App::Prove*
-%{_mandir}/man3/TAP*
-%{_mandir}/man3/Test::Harness*
+%doc %{_mandir}/man1/prove.1*
+%doc %{_mandir}/man3/App::Prove*
+%doc %{_mandir}/man3/TAP*
+%doc %{_mandir}/man3/Test::Harness*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4968,28 +4968,28 @@ cd -
 %{privlib}/Test/Tutorial*
 %{privlib}/Test/use
 %{privlib}/Test2*
-%{_mandir}/man3/ok*
-%{_mandir}/man3/Test::More*
-%{_mandir}/man3/Test::Builder*
-%{_mandir}/man3/Test::Tester*
-%{_mandir}/man3/Test::Simple*
-%{_mandir}/man3/Test::Tutorial*
-%{_mandir}/man3/Test::use::*
-%{_mandir}/man3/Test2*
+%doc %{_mandir}/man3/ok*
+%doc %{_mandir}/man3/Test::More*
+%doc %{_mandir}/man3/Test::Builder*
+%doc %{_mandir}/man3/Test::Tester*
+%doc %{_mandir}/man3/Test::Simple*
+%doc %{_mandir}/man3/Test::Tutorial*
+%doc %{_mandir}/man3/Test::use::*
+%doc %{_mandir}/man3/Test2*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Text-Balanced
 %dir %{privlib}/Text
 %{privlib}/Text/Balanced.pm
-%{_mandir}/man3/Text::Balanced.*
+%doc %{_mandir}/man3/Text::Balanced.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Text-ParseWords
 %dir %{privlib}/Text
 %{privlib}/Text/ParseWords.pm
-%{_mandir}/man3/Text::ParseWords.*
+%doc %{_mandir}/man3/Text::ParseWords.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4997,15 +4997,15 @@ cd -
 %dir %{privlib}/Text
 %{privlib}/Text/Tabs.pm
 %{privlib}/Text/Wrap.pm
-%{_mandir}/man3/Text::Tabs.*
-%{_mandir}/man3/Text::Wrap.*
+%doc %{_mandir}/man3/Text::Tabs.*
+%doc %{_mandir}/man3/Text::Wrap.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Thread-Queue
 %dir %{privlib}/Thread
 %{privlib}/Thread/Queue.pm
-%{_mandir}/man3/Thread::Queue.*
+%doc %{_mandir}/man3/Thread::Queue.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -5014,14 +5014,14 @@ cd -
 %{archlib}/Time/HiRes.pm
 %dir %{archlib}/auto/Time
 %{archlib}/auto/Time/HiRes
-%{_mandir}/man3/Time::HiRes.*
+%doc %{_mandir}/man3/Time::HiRes.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files Time-Local
 %dir %{privlib}/Time
 %{privlib}/Time/Local.pm
-%{_mandir}/man3/Time::Local.*
+%doc %{_mandir}/man3/Time::Local.*
 %endif
 
 %files Time-Piece
@@ -5030,15 +5030,15 @@ cd -
 %{archlib}/Time/Seconds.pm
 %dir %{archlib}/auto/Time
 %{archlib}/auto/Time/Piece
-%{_mandir}/man3/Time::Piece.3*
-%{_mandir}/man3/Time::Seconds.3*
+%doc %{_mandir}/man3/Time::Piece.3*
+%doc %{_mandir}/man3/Time::Seconds.3*
 
 %if %{dual_life} || %{rebuild_from_scratch}
 %files threads
 %dir %{archlib}/auto/threads
 %{archlib}/auto/threads/threads*
 %{archlib}/threads.pm
-%{_mandir}/man3/threads.3*
+%doc %{_mandir}/man3/threads.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -5047,7 +5047,7 @@ cd -
 %{archlib}/auto/threads/shared*
 %dir %{archlib}/threads
 %{archlib}/threads/shared*
-%{_mandir}/man3/threads::shared*
+%doc %{_mandir}/man3/threads::shared*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -5059,8 +5059,8 @@ cd -
 %{archlib}/Unicode/Collate.pm
 %dir %{privlib}/Unicode
 %{privlib}/Unicode/Collate
-%{_mandir}/man3/Unicode::Collate.*
-%{_mandir}/man3/Unicode::Collate::*
+%doc %{_mandir}/man3/Unicode::Collate.*
+%doc %{_mandir}/man3/Unicode::Collate::*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -5069,7 +5069,7 @@ cd -
 %{archlib}/auto/Unicode/Normalize
 %dir %{archlib}/Unicode
 %{archlib}/Unicode/Normalize.pm
-%{_mandir}/man3/Unicode::Normalize.*
+%doc %{_mandir}/man3/Unicode::Normalize.*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -5077,6 +5077,6 @@ cd -
 %{privlib}/version.pm
 %{privlib}/version.pod
 %{privlib}/version/
-%{_mandir}/man3/version.3*
-%{_mandir}/man3/version::Internals.3*
+%doc %{_mandir}/man3/version.3*
+%doc %{_mandir}/man3/version::Internals.3*
 %endif
