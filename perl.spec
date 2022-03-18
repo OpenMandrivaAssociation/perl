@@ -4542,8 +4542,8 @@ cd -
 %doc %{_mandir}/man3/IO::Uncompress::AnyUncompress.*
 %doc %{_mandir}/man3/IO::Uncompress::Base.*
 # IO-Compress-Zlib
-%dir %{privlib}/IO
-%dir %{privlib}/IO/Compress
+#dir #{privlib}/IO
+#dir #{privlib}/IO/Compress
 %{privlib}/IO/Compress/Adapter
 %{privlib}/IO/Compress/Deflate.pm
 %{privlib}/IO/Compress/Bzip2.pm
