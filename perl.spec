@@ -4518,8 +4518,8 @@ cd -
 %files IO-Compress
 # IO-Compress
 %{_bindir}/zipdetails
-%dir %{privlib}/IO
-%dir %{privlib}/IO/Compress
+#dir #{privlib}/IO
+#dir #{privlib}/IO/Compress
 %{privlib}/IO/Compress/FAQ.pod
 %doc %{_mandir}/man1/zipdetails.*
 %doc %{_mandir}/man3/IO::Compress::FAQ.*
@@ -4534,7 +4534,7 @@ cd -
 %dir %{privlib}/IO/Compress
 %{privlib}/IO/Compress/Base
 %{privlib}/IO/Compress/Base.pm
-%dir %{privlib}/IO/Uncompress
+#dir #{privlib}/IO/Uncompress
 %{privlib}/IO/Uncompress/AnyUncompress.pm
 %{privlib}/IO/Uncompress/Base.pm
 %doc %{_mandir}/man3/File::GlobMapper.*
