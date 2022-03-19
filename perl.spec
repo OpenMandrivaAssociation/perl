@@ -157,6 +157,8 @@
 # same as we provide in /usr/lib/rpm/macros.d/macros.perl
 %global perl5_testdir   %{_libexecdir}/perl5-tests
 
+%define _empty_manifest_terminate_build 0
+
 # (tpg) enable PGO build
 # 2021-01-25 BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: __llvm_profile_filename
 %bcond_with pgo
