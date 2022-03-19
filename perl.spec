@@ -110,7 +110,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.34.0
+%global perl_version    5.34.1
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -156,6 +156,8 @@
 
 # same as we provide in /usr/lib/rpm/macros.d/macros.perl
 %global perl5_testdir   %{_libexecdir}/perl5-tests
+
+%define _empty_manifest_terminate_build 0
 
 # (tpg) enable PGO build
 # 2021-01-25 BUILDSTDERR: ./perl: symbol lookup error: ./perl: undefined symbol: __llvm_profile_filename
@@ -225,8 +227,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 18 - 2021-05-21
-Release:        18
+# (tpg) for now keep at least 19 - 2022-03-19
+Release:        19
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
@@ -4518,8 +4520,8 @@ cd -
 %files IO-Compress
 # IO-Compress
 %{_bindir}/zipdetails
-%dir %{privlib}/IO
-%dir %{privlib}/IO/Compress
+#dir #{privlib}/IO
+#dir #{privlib}/IO/Compress
 %{privlib}/IO/Compress/FAQ.pod
 %doc %{_mandir}/man1/zipdetails.*
 %doc %{_mandir}/man3/IO::Compress::FAQ.*
@@ -4534,7 +4536,7 @@ cd -
 %dir %{privlib}/IO/Compress
 %{privlib}/IO/Compress/Base
 %{privlib}/IO/Compress/Base.pm
-%dir %{privlib}/IO/Uncompress
+#dir #{privlib}/IO/Uncompress
 %{privlib}/IO/Uncompress/AnyUncompress.pm
 %{privlib}/IO/Uncompress/Base.pm
 %doc %{_mandir}/man3/File::GlobMapper.*
@@ -4542,8 +4544,8 @@ cd -
 %doc %{_mandir}/man3/IO::Uncompress::AnyUncompress.*
 %doc %{_mandir}/man3/IO::Uncompress::Base.*
 # IO-Compress-Zlib
-%dir %{privlib}/IO
-%dir %{privlib}/IO/Compress
+#dir #{privlib}/IO
+#dir #{privlib}/IO/Compress
 %{privlib}/IO/Compress/Adapter
 %{privlib}/IO/Compress/Deflate.pm
 %{privlib}/IO/Compress/Bzip2.pm
