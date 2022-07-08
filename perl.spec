@@ -110,7 +110,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.34.1
+%global perl_version    5.36.0
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -242,10 +242,8 @@ Source6:        Pod-Html-license-clarification
 # Pregenerated dependencies for bootstrap.
 # If your RPM tool fails on including the source file, then you forgot to
 # define _sourcedir macro to point to the directory with the sources.
-Source7:        gendep.macros
-%if %{defined perl_bootstrap}
+Source7:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/gendep.macros
 %include %{SOURCE7}
-%endif
 
 # Removes date check, Fedora/RHEL specific
 Patch1:         perl-perlbug-tag.patch
@@ -272,13 +270,13 @@ Patch7:         perl-5.10.0-x86_64-io-test-failure.patch
 #Patch8:         perl-5.14.1-offtest.patch
 
 # Define SONAME for libperl.so
-Patch15:        perl-5.16.3-create_libperl_soname.patch
+Patch15:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/perl-5.16.3-create_libperl_soname.patch
 
 # Install libperl.so to -Dshrpdir value
 Patch16:        perl-5.22.0-Install-libperl.so-to-shrpdir-on-Linux.patch
 
 # Make *DBM_File desctructors thread-safe, bug #1107543, RT#61912
-Patch26:        https://src.fedoraproject.org/rpms/perl/raw/master/f/perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
+Patch26:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/perl-5.34.0-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
 
 # Replace ExtUtils::MakeMaker dependency with ExtUtils::MM::Utils.
 # This allows not to require perl-devel. Bug #1129443
