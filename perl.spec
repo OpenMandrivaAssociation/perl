@@ -301,6 +301,7 @@ Patch205:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
 Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 BuildRequires:  bash
+BuildRequires:	locales-extra-charsets
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
