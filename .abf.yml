@@ -1,2 +1,3 @@
 sources:
-  perl-5.36.0.tar.xz: 938c56a77ae094eb7f5019318a5e4efb2d9c74fa
+  perl-5.36.1.tar.xz: 7b766266af08a6cef0487308e80b40d5d8069df7
+  perl-cross-1.4.1.tar.gz: de799fa19890b59b49c8c9d289da5ef9b086c6b8

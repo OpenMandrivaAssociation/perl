@@ -110,7 +110,7 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.36.0
+%global perl_version    5.36.1
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -227,11 +227,12 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 20 - 2022-07-10
-Release:        21
+# (tpg) for now keep at least 22 - 2023-05-31
+Release:        22
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
+Source1:	https://github.com/arsv/perl-cross/releases/download/1.4.1/perl-cross-1.4.1.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
@@ -2835,6 +2836,10 @@ cp -a %{SOURCE5} .
 #copy Pod-Html license clarification
 cp %{SOURCE6} .
 
+%if %{cross_compiling}
+tar x --strip-components=1 -f %{S:1}
+%endif
+
 #
 # Candidates for doc recoding (need case by case review):
 # find . -name "*.pod" -o -name "README*" -o -name "*.pm" | xargs file -i | grep charset= | grep -v '\(us-ascii\|utf-8\)'
@@ -2952,9 +2957,34 @@ export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
 # Only ldflags is used when linking miniperl.
 # Only ccflags and ldflags are used for Configure's compiler checks.
 # Set optimize=none to prevent from injecting upstream's value.
+%if %{cross_compiling}
+./configure \
+	--prefix=%{_prefix} \
+	--target=%{_target_platform} \
+	--host=%{_target_platform} \
+	-Duse64bitint \
+	-Duse64bitall \
+	-Dusethreads \
+	-Duselargefiles \
+	--sysroot=%{_prefix}/%{_target_platform} \
+%if %{without perl_enables_groff}
+        -Dman1dir="%{_mandir}/man1" \
+        -Dman3dir="%{_mandir}/man3" \
+%endif
+        -Dvendorprefix=%{_prefix} \
+        -Dsiteprefix=%{_prefix}/local \
+        -Dsitelib="%{_prefix}/local/share/perl5" \
+        -Dsitearch="%{_prefix}/local/%{_lib}/perl5" \
+        -Dprivlib="%{privlib}" \
+        -Dvendorlib="%{perl_vendorlib}" \
+        -Darchlib="%{archlib}" \
+        -Dvendorarch="%{perl_vendorarch}" \
+        -Duseshrplib \
+	-Duseithreads
+%else
 /bin/sh Configure -des \
         -Doptimize="none" \
-        -Dccflags="${CFLAGS}" \
+        -Dccflags="${CFLAGS} -Wno-error=int-conversion" \
         -Dldflags="${CFLAGS} ${LDFLAGS}" \
         -Dccdlflags="-Wl,--enable-new-dtags ${CFLAGS} ${LDFLAGS}" \
         -Dlddlflags="-shared ${CFLAGS} ${LDFLAGS}" \
@@ -3014,6 +3044,7 @@ export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
         -Dscriptdir='%{_bindir}' \
         -Dusesitecustomize \
         -Duse64bitint
+%endif
 
 # -Duseshrplib creates libperl.so, -Ubincompat5005 help create DSO -> libperl.so
 
@@ -3026,11 +3057,9 @@ export BUILD_BZIP2 BZIP2_LIB
 %global soname libperl.so.%(echo '%{perl_version}' | sed 's/^\\([^.]*\\.[^.]*\\).*/\\1/')
 test -L %soname || ln -s libperl.so %soname
 
-%ifarch sparc64 %{arm}
+# In parallel builds, stuff that needs to link to libperl.so is frequently
+# built before libperl.so
 %make_build -j1
-%else
-%make_build
-%endif
 
 %install
 %make_install DESTDIR=%{buildroot}
@@ -3038,10 +3067,14 @@ test -L %soname || ln -s libperl.so %soname
 %global build_archlib %{buildroot}%{archlib}
 %global build_privlib %{buildroot}%{privlib}
 %global build_bindir  %{buildroot}%{_bindir}
+%if %{cross_compiling}
+%global new_perl perl
+%else
 %global new_perl LD_PRELOAD="%{build_archlib}/CORE/libperl.so" \\\
     LD_LIBRARY_PATH="%{build_archlib}/CORE" \\\
     PERL5LIB="%{build_archlib}:%{build_privlib}" \\\
     %{build_bindir}/perl
+%endif
 
 # Make proper DSO names, move libperl to standard path.
 mv "%{build_archlib}/CORE/libperl.so" \
@@ -3147,6 +3180,7 @@ sed \
   > %{buildroot}%{tapsetdir}/%{libperl_stp}
 %endif
 
+%if ! %{cross_compiling}
 # TODO: Canonicalize test files (rewrite intrerpreter path, fix permissions)
 # XXX: We cannot rewrite ./perl before %%check phase. Otherwise the test
 # would run against system perl at build-time.
@@ -3168,6 +3202,7 @@ cd -
     LC_ALL=C TEST_JOBS=$JOBS make test_harness
 %else
     LC_ALL=C make test
+%endif
 %endif
 %endif
 
@@ -4227,7 +4262,7 @@ cd -
 %doc %{_mandir}/man3/Data::Dumper.3*
 %endif
 
-%if %{dual_life} || %{rebuild_from_scratch}
+%if %{dual_life} || %{rebuild_from_scratch} && ! %{cross_compiling}
 %files DB_File
 %{archlib}/DB_File.pm
 %dir %{archlib}/auto/DB_File
@@ -4624,7 +4659,9 @@ cd -
 %{privlib}/JSON/PP.pm
 %doc %{_mandir}/man1/json_pp.1*
 %doc %{_mandir}/man3/JSON::PP.3*
+%if ! %{cross_compiling}
 %doc %{_mandir}/man3/JSON::PP::Boolean.3pm*
+%endif
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
@@ -4759,7 +4796,9 @@ cd -
 %files Module-Metadata
 %dir %{privlib}/Module
 %{privlib}/Module/Metadata.pm
+%if ! %{cross_compiling}
 %doc %{_mandir}/man3/Module::Metadata.3pm*
+%endif
 %endif
 
 %files Net-Ping
@@ -4813,7 +4852,9 @@ cd -
 %files Perl-OSType
 %dir %{privlib}/Perl
 %{privlib}/Perl/OSType.pm
+%if ! %{cross_compiling}
 %doc %{_mandir}/man3/Perl::OSType.3pm*
+%endif
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
