@@ -477,6 +477,8 @@ Provides:       perl(:MODULE_COMPAT_5.26.1)
 Provides:       perl(:MODULE_COMPAT_5.26.0)
 Provides:       perl(:MODULE_COMPAT_5.28.0)
 Provides:       perl(:MODULE_COMPAT_5.32.0)
+Provides:       perl(:MODULE_COMPAT_5.34.0)
+Provides:       perl(:MODULE_COMPAT_5.36.0)
 # Interpreter version to fulfil required genersted from "require 5.006;"
 Provides:       perl(:VERSION) = %{perl_version}
 # Integeres are 64-bit on all platforms
@@ -495,7 +497,7 @@ Requires:       perl(Carp)
 Requires:       perl(Exporter)
 # Term::Cap is optional
 Requires:       perl(XSLoader)
-Requires:	%{_lib}perl5 = %{perl_epoch}:%{perl_version}-%{release}
+Requires:	%{_lib}perl = %{perl_epoch}:%{perl_version}-%{release}
 %if %{defined perl_bootstrap}
 %gendep_perl_libs
 %endif
