@@ -110,10 +110,11 @@
 # *** perl-YAML-Tiny                                             ***
 # ******************************************************************
 
-%global perl_version    5.36.1
+%global perl_version    5.38.0
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
+%define beta RC2
 
 %global optflags %{optflags} -O3 --rtlib=compiler-rt -fno-semantic-interposition -Wl,-Bsymbolic
 
@@ -228,10 +229,10 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 22 - 2023-05-31
-Release:        22
+Release:        22%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
-Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}.tar.xz
+Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
 Source1:	https://github.com/arsv/perl-cross/releases/download/1.4.1/perl-cross-1.4.1.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
@@ -295,6 +296,8 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 
 # https://rt.perl.org/Public/Bug/Display.html?id=131388
 Patch205:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
+
+Patch206:	perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
@@ -479,6 +482,7 @@ Provides:       perl(:MODULE_COMPAT_5.28.0)
 Provides:       perl(:MODULE_COMPAT_5.32.0)
 Provides:       perl(:MODULE_COMPAT_5.34.0)
 Provides:       perl(:MODULE_COMPAT_5.36.0)
+Provides:       perl(:MODULE_COMPAT_5.38.0)
 # Interpreter version to fulfil required genersted from "require 5.006;"
 Provides:       perl(:VERSION) = %{perl_version}
 # Integeres are 64-bit on all platforms
@@ -2776,7 +2780,7 @@ Perl extension for Version Objects.
 %endif
 
 %prep
-%setup -q -n perl-%{perl_version}
+%setup -q -n perl-%{perl_version}%{?beta:-%{beta}}
 %patch1 -p1 -b .0001~
 %ifarch %{multilib_64_archs}
 %patch3 -p1 -b .0003~
@@ -2795,8 +2799,9 @@ Perl extension for Version Objects.
 %patch200 -p1 -b .0200~
 %patch201 -p1 -b .0201~
 %patch205 -p1 -b .0205~
-%patch300 -p1 -b .0206~
-%patch301 -p1 -b .0207~
+%patch206 -p1 -b .0206~
+%patch300 -p1 -b .0300~
+%patch301 -p1 -b .0301~
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
@@ -3137,7 +3142,7 @@ rm %{buildroot}%{_mandir}/man3/File::Spec::VMS.3*
 # Fix some manpages to be UTF-8
 mkdir -p %{buildroot}%{_mandir}/man1/
 cd %{buildroot}%{_mandir}/man1/
-  for i in perl588delta.1 perldelta.1 ; do
+  for i in perl588delta.1 ; do
     iconv -f MS-ANSI -t UTF-8 $i --output new-$i
     rm $i
     mv new-$i $i
