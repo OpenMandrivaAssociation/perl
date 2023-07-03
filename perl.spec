@@ -114,7 +114,7 @@
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
-%define beta RC2
+#define beta RC2
 
 %global optflags %{optflags} -O3 --rtlib=compiler-rt -fno-semantic-interposition -Wl,-Bsymbolic
 
@@ -229,11 +229,11 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 22 - 2023-05-31
-Release:        23%{?beta:.%{beta}}
+Release:        24%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:	https://github.com/arsv/perl-cross/releases/download/1.4.1/perl-cross-1.4.1.tar.gz
+Source1:	https://github.com/arsv/perl-cross/releases/download/1.5/perl-cross-1.5.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
