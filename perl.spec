@@ -2846,6 +2846,10 @@ cp %{SOURCE6} .
 
 %if %{cross_compiling}
 tar x --strip-components=1 -f %{S:1}
+# perl-cross unconditionally disables TLS. Let's enable it instead. If we
+# ever cross-compile to anything "weird", may have to %%ifarch and/or
+# %%ifos this.
+sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_misc.sh
 %endif
 
 #
