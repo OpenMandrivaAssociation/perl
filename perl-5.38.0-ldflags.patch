@@ -1,0 +1,17 @@
+diff -up perl-5.38.0/lib/ExtUtils/Embed.pm.omv~ perl-5.38.0/lib/ExtUtils/Embed.pm
+--- perl-5.38.0/lib/ExtUtils/Embed.pm.omv~	2023-08-08 03:50:51.692674412 +0200
++++ perl-5.38.0/lib/ExtUtils/Embed.pm	2023-08-08 03:53:32.628692900 +0200
+@@ -222,10 +222,10 @@ sub ldopts {
+ 		|| "-lperl";
+     }
+ 
+-    my $lpath = File::Spec->catdir($Config{archlibexp}, 'CORE');
+-    $lpath = qq["$lpath"] if $^O eq 'MSWin32';
++    #    my $lpath = File::Spec->catdir($Config{archlibexp}, 'CORE');
++    #    $lpath = qq["$lpath"] if $^O eq 'MSWin32';
+     my($extralibs, $bsloadlibs, $ldloadlibs, $ld_run_path) =
+-	MM->ext(join ' ', "-L$lpath", $libperl, @potential_libs);
++	MM->ext(join ' ', $libperl, @potential_libs);
+ 
+     my $ld_or_bs = $bsloadlibs || $ldloadlibs;
+     print STDERR "bs: $bsloadlibs ** ld: $ldloadlibs" if $Verbose;

@@ -232,7 +232,7 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 22 - 2023-05-31
-Release:        25%{?beta:.%{beta}}
+Release:        26%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
@@ -252,6 +252,12 @@ Source7:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/gendep.mac
 
 # Removes date check, Fedora/RHEL specific
 Patch1:         perl-perlbug-tag.patch
+
+# Don't add a bogus -L/usr/lib64/perl5/CORE to
+# perl -MExtUtils::Embed -e ldopts
+# (it breaks crosscompiling if configure scripts
+# assume target perl and build perl link the same way)
+Patch2:		perl-5.38.0-ldflags.patch
 
 # Fedora/RHEL only (64bit only)
 Patch3:         perl-5.8.0-libdir64.patch
@@ -2783,6 +2789,7 @@ Perl extension for Version Objects.
 %prep
 %setup -q -n perl-%{perl_version}%{?beta:-%{beta}}
 %patch1 -p1 -b .0001~
+%patch2 -p1 -b .0002~
 %ifarch %{multilib_64_archs}
 %patch3 -p1 -b .0003~
 %endif
