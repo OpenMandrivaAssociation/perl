@@ -119,7 +119,11 @@
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
 #define beta RC2
 
+%if %{cross_compiling}
+%global optflags %{optflags} -O3 -fno-semantic-interposition -Wl,-Bsymbolic
+%else
 %global optflags %{optflags} -O3 --rtlib=compiler-rt -fno-semantic-interposition -Wl,-Bsymbolic
+%endif
 
 # Avoid nasty circular dependency loop -- gprintify uses perl
 # and various perl-modules not in the perl core distro
@@ -149,7 +153,7 @@
 # This overrides filters from build root (/usr/lib/rpm/macros.d/macros.perl)
 # intentionally (unversioned perl(DB) is removed and versioned one is kept).
 # Filter provides from *.pl files, bug #924938
-%global __provides_exclude_from .*%{_docdir}|.*%{this_perl_archlib}/.*\\.pl$|.*%{perl_privlib}/.*\\.pl$
+%global __provides_exclude_from .*%{_docdir}|.*%{this_perl_archlib}/.*\\.pl$
 %global __requires_exclude_from %{_docdir}
 %global __provides_exclude perl\\((VMS|Win32|BSD::|DB\\)$)
 %global __requires_exclude perl\\((VMS|BSD::|Win32|Tk|Mac::|Your::Module::Here|unicore::Name|FCGI|Locale::Codes::.*(Code|Retired))
@@ -279,6 +283,8 @@ Patch7:         perl-5.10.0-x86_64-io-test-failure.patch
 
 # switch off test, which is failing only on koji (fork)
 #Patch8:         perl-5.14.1-offtest.patch
+
+Patch9:		perl-5.38.0-crosscompile.patch
 
 # Define SONAME for libperl.so
 Patch15:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/perl-5.16.3-create_libperl_soname.patch
@@ -2797,6 +2803,7 @@ Perl extension for Version Objects.
 %patch5 -p1 -b .0005~
 %patch6 -p1 -b .0006~
 %patch7 -p1 -b .0007~
+%patch9 -p1 -b .0009~
 %patch15 -p1 -b .0015~
 %patch16 -p1 -b .0016~
 %if !%{with pgo}
@@ -3000,6 +3007,7 @@ export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
         -Dvendorarch="%{perl_vendorarch}" \
         -Duseshrplib \
 	-Duseithreads
+sed -i -e 's|^CFLAGS =|CFLAGS = %{optflags}|g' Makefile.config
 %else
 /bin/sh Configure -des \
         -Doptimize="none" \
