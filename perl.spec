@@ -3006,7 +3006,8 @@ export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
         -Darchlib="%{archlib}" \
         -Dvendorarch="%{perl_vendorarch}" \
         -Duseshrplib \
-	-Duseithreads
+	-Duseithreads \
+	-Dusesoname
 sed -i -e 's|^CFLAGS =|CFLAGS = %{optflags}|g' Makefile.config
 %else
 /bin/sh Configure -des \
@@ -3096,12 +3097,17 @@ test -L %soname || ln -s libperl.so %soname
 %global build_bindir  %{buildroot}%{_bindir}
 %if %{cross_compiling}
 %global new_perl perl
+
+# perl-cross throws libraries at /usr/lib no matter what
+%if "%{_lib}" != "lib"
+rm -f %{buildroot}%{_libdir}/libperl.so*
+mv %{buildroot}%{_prefix}/lib/libperl.so* %{buildroot}%{_libdir}/
+%endif
 %else
 %global new_perl LD_PRELOAD="%{build_archlib}/CORE/libperl.so" \\\
     LD_LIBRARY_PATH="%{build_archlib}/CORE" \\\
     PERL5LIB="%{build_archlib}:%{build_privlib}" \\\
     %{build_bindir}/perl
-%endif
 
 # Make proper DSO names, move libperl to standard path.
 mv "%{build_archlib}/CORE/libperl.so" \
@@ -3115,6 +3121,7 @@ ln -s "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
 # a symlink in build section and installed as a regular file by perl build
 # system.
 rm -f "%{build_archlib}/CORE/%{soname}"
+%endif
 
 install -p -m 755 utils/pl2pm %{build_bindir}/pl2pm
 
