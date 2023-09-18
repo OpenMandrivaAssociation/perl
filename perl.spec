@@ -2864,6 +2864,7 @@ tar x --strip-components=1 -f %{S:1}
 # ever cross-compile to anything "weird", may have to %%ifarch and/or
 # %%ifos this.
 sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_misc.sh
+sed -i -e "/d_thread_local/idefine perl_thread_local _Thread_local" cnf/configure_misc.sh
 %endif
 
 #
@@ -3083,7 +3084,11 @@ export BUILD_BZIP2 BZIP2_LIB
 # Prepapre a symlink from proper DSO name to libperl.so now so that new perl
 # can be executed from make.
 %global soname libperl.so.%(echo '%{perl_version}' | sed 's/^\\([^.]*\\.[^.]*\\).*/\\1/')
+%if %{cross_compiling}
+ln -s libperl.so.%(echo %{perl_version} |cut -d. -f1-2) libperl.so
+%else
 test -L %soname || ln -s libperl.so %soname
+%endif
 
 # In parallel builds, stuff that needs to link to libperl.so is frequently
 # built before libperl.so
