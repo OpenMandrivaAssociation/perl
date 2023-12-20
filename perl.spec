@@ -236,11 +236,11 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 27 - 2023-11-26
-Release:        28%{?beta:.%{beta}}
+Release:        29%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:	https://github.com/arsv/perl-cross/releases/download/1.5/perl-cross-1.5.tar.gz
+Source1:        https://github.com/arsv/perl-cross/releases/download/1.5/perl-cross-1.5.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
@@ -261,7 +261,7 @@ Patch1:         perl-perlbug-tag.patch
 # perl -MExtUtils::Embed -e ldopts
 # (it breaks crosscompiling if configure scripts
 # assume target perl and build perl link the same way)
-Patch2:		perl-5.38.0-ldflags.patch
+Patch2:         perl-5.38.0-ldflags.patch
 
 # Fedora/RHEL only (64bit only)
 Patch3:         perl-5.8.0-libdir64.patch
@@ -284,7 +284,7 @@ Patch7:         perl-5.10.0-x86_64-io-test-failure.patch
 # switch off test, which is failing only on koji (fork)
 #Patch8:         perl-5.14.1-offtest.patch
 
-Patch9:		perl-5.38.0-crosscompile.patch
+Patch9:         perl-5.38.0-crosscompile.patch
 
 # Define SONAME for libperl.so
 Patch15:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/perl-5.16.3-create_libperl_soname.patch
@@ -312,7 +312,7 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 # https://rt.perl.org/Public/Bug/Display.html?id=131388
 Patch205:       0001-toke.c-Cast-I32-to-NV-in-Perl_pow-call.patch
 
-Patch206:	perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
+Patch206:       perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
@@ -320,7 +320,7 @@ Patch206:	perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 BuildRequires:  bash
-BuildRequires:	locales-extra-charsets
+BuildRequires:  locales-extra-charsets
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  coreutils
 BuildRequires:  findutils
@@ -516,7 +516,7 @@ Requires:       perl(Carp)
 Requires:       perl(Exporter)
 # Term::Cap is optional
 Requires:       perl(XSLoader)
-Requires:	%{_lib}perl = %{perl_epoch}:%{perl_version}-%{release}
+Requires:       %{_lib}perl = %{perl_epoch}:%{perl_version}-%{release}
 %if %{defined perl_bootstrap}
 %gendep_perl_libs
 %endif
@@ -2495,7 +2495,7 @@ Epoch:          0
 Version:        1.18
 Requires:       %perl_compat
 # ncurses for infocmp tool
-Requires:       ncurses
+Suggests:       ncurses
 Requires:       perl(Carp)
 %if %{defined perl_bootstrap}
 %gendep_perl_Term_Cap
