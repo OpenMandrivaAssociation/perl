@@ -240,7 +240,7 @@ Release:        29%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:        https://github.com/arsv/perl-cross/releases/download/1.5/perl-cross-1.5.tar.gz
+Source1:        https://github.com/arsv/perl-cross/releases/download/1.5.2/perl-cross-1.5.2.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
