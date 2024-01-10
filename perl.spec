@@ -2863,8 +2863,8 @@ tar x --strip-components=1 -f %{S:1}
 # perl-cross unconditionally disables TLS. Let's enable it instead. If we
 # ever cross-compile to anything "weird", may have to %%ifarch and/or
 # %%ifos this.
-sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_misc.sh
-sed -i -e "/d_thread_local/idefine perl_thread_local _Thread_local" cnf/configure_misc.sh
+sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_thrd.sh
+sed -i -e "/d_thread_local/idefine perl_thread_local _Thread_local" cnf/configure_thrd.sh
 %endif
 
 #
