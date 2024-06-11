@@ -2794,29 +2794,29 @@ Perl extension for Version Objects.
 
 %prep
 %setup -q -n perl-%{perl_version}%{?beta:-%{beta}}
-%patch1 -p1 -b .0001~
-%patch2 -p1 -b .0002~
+%patch 1 -p1 -b .0001~
+%patch 2 -p1 -b .0002~
 %ifarch %{multilib_64_archs}
-%patch3 -p1 -b .0003~
+%patch 3 -p1 -b .0003~
 %endif
-%patch4 -p1 -b .0004~
-%patch5 -p1 -b .0005~
-%patch6 -p1 -b .0006~
-%patch7 -p1 -b .0007~
-%patch9 -p1 -b .0009~
-%patch15 -p1 -b .0015~
-%patch16 -p1 -b .0016~
+%patch 4 -p1 -b .0004~
+%patch 5 -p1 -b .0005~
+%patch 6 -p1 -b .0006~
+%patch 7 -p1 -b .0007~
+%patch 9 -p1 -b .0009~
+%patch 15 -p1 -b .0015~
+%patch 16 -p1 -b .0016~
 %if !%{with pgo}
-%patch26 -p1 -b .0026~
+%patch 26 -p1 -b .0026~
 %endif
-%patch30 -p1 -b .0030~
-%patch79 -p1 -b .0079~
-%patch200 -p1 -b .0200~
-%patch201 -p1 -b .0201~
-%patch205 -p1 -b .0205~
-%patch206 -p1 -b .0206~
-%patch300 -p1 -b .0300~
-%patch301 -p1 -b .0301~
+%patch 30 -p1 -b .0030~
+%patch 79 -p1 -b .0079~
+%patch 200 -p1 -b .0200~
+%patch 201 -p1 -b .0201~
+%patch 205 -p1 -b .0205~
+%patch 206 -p1 -b .0206~
+%patch 300 -p1 -b .0300~
+%patch 301 -p1 -b .0301~
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
