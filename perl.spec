@@ -113,7 +113,7 @@
 # To verify version numbers of subpackages containing perl modules:
 # while read r; do perl -M$r -e "print \$$r::VERSION . \"\n\";"; done
 
-%global perl_version    5.38.2
+%global perl_version    5.40.0
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -137,7 +137,6 @@
 # if they're empty.
 %define dont_cleanup_perl 1
 
-%global multilib_64_archs aarch64 %{power64} s390x sparc64 %{x86_64} riscv64
 %global parallel_tests 0
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
@@ -236,11 +235,11 @@ Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 # (tpg) for now keep at least 27 - 2023-11-26
-Release:        29%{?beta:.%{beta}}
+Release:        30%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            http://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:        https://github.com/arsv/perl-cross/releases/download/1.5.2/perl-cross-1.5.2.tar.gz
+Source1:        https://github.com/arsv/perl-cross/releases/download/1.5.3/perl-cross-1.5.3.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
@@ -319,6 +318,10 @@ Patch206:       perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 
 Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
+
+# Patches for perl-cross
+Patch1000:	https://github.com/arsv/perl-cross/commit/36279737fc04559c10a2c1017b58ccc1ce59d233.patch
+
 BuildRequires:  bash
 BuildRequires:  locales-extra-charsets
 BuildRequires:  pkgconfig(bzip2)
@@ -2794,37 +2797,13 @@ Perl extension for Version Objects.
 
 %prep
 %setup -q -n perl-%{perl_version}%{?beta:-%{beta}}
-%patch 1 -p1 -b .0001~
-%patch 2 -p1 -b .0002~
-%ifarch %{multilib_64_archs}
-%patch 3 -p1 -b .0003~
-%endif
-%patch 4 -p1 -b .0004~
-%patch 5 -p1 -b .0005~
-%patch 6 -p1 -b .0006~
-%patch 7 -p1 -b .0007~
-%patch 9 -p1 -b .0009~
-%patch 15 -p1 -b .0015~
-%patch 16 -p1 -b .0016~
-%if !%{with pgo}
-%patch 26 -p1 -b .0026~
-%endif
-%patch 30 -p1 -b .0030~
-%patch 79 -p1 -b .0079~
-%patch 200 -p1 -b .0200~
-%patch 201 -p1 -b .0201~
-%patch 205 -p1 -b .0205~
-%patch 206 -p1 -b .0206~
-%patch 300 -p1 -b .0300~
-%patch 301 -p1 -b .0301~
+%autopatch -p1 -M 999
 
 %if !%{defined perl_bootstrap}
 # Local patch tracking
 perl -x patchlevel.h \
     'Fedora Patch1: Removes date check, Fedora/RHEL specific' \
-%ifarch %{multilib_64_archs}
     'Fedora Patch3: support for libdir64' \
-%endif
     'Fedora Patch4: use libresolv instead of libbind' \
     'Fedora Patch5: USE_MM_LD_RUN_PATH' \
     'Fedora Patch6: Provide MM::maybe_command independently (bug #1129443)' \
@@ -2860,6 +2839,7 @@ cp %{SOURCE6} .
 
 %if %{cross_compiling}
 tar x --strip-components=1 -f %{S:1}
+%autopatch -p1 -m 1000
 # perl-cross unconditionally disables TLS. Let's enable it instead. If we
 # ever cross-compile to anything "weird", may have to %%ifarch and/or
 # %%ifos this.
@@ -2972,9 +2952,6 @@ llvm-profdata merge --output=%{name}.profile *.profile.d
 rm -f *.profile.d
 make clean
 
-# (tpg) apply patch after PGO build
-%patch26 -p1
-
 export CFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
 export CXXFLAGS="%{optflags} -fprofile-instr-use=$(realpath %{name}.profile)"
 export LDFLAGS="%{ldflags} -fprofile-instr-use=$(realpath %{name}.profile)"
@@ -3038,9 +3015,7 @@ sed -i -e 's|^CFLAGS =|CFLAGS = %{optflags}|g' Makefile.config
         -Darchlib="%{archlib}" \
         -Dvendorarch="%{perl_vendorarch}" \
         -Darchname=%{perl_archname} \
-%ifarch %{multilib_64_archs}
         -Dlibpth="/usr/local/lib64 /lib64 %{_prefix}/lib64" \
-%endif
 %ifarch sparc sparcv9
         -Ud_longdbl \
 %endif
@@ -3207,10 +3182,10 @@ done
 %if %{with perl_enables_systemtap}
 # Systemtap tapset install
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{multilib_64_archs}
-%global libperl_stp libperl%{perl_version}-64.stp
-%else
+%ifarch %{ix86} %{riscv32}
 %global libperl_stp libperl%{perl_version}-32.stp
+%else
+%global libperl_stp libperl%{perl_version}-64.stp
 %endif
 
 sed \
