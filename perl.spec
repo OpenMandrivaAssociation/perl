@@ -238,7 +238,7 @@ Version:        %{perl_version}
 # (tpg) for now keep at least 27 - 2023-11-26
 Release:        29%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
-Url:            http://www.perl.org/
+Url:            https://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
 Source1:        https://github.com/arsv/perl-cross/releases/download/1.5.2/perl-cross-1.5.2.tar.gz
 Source3:        macros.perl
