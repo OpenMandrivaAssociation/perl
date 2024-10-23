@@ -769,7 +769,7 @@ Requires: perl(Carp) \
 Requires: perl(Cwd) \
 Requires: perl(Errno) \
 Requires: perl(Exporter) >= 5.57 \
-Requires: perl(Fcntl) >= 1.03 \
+Requires: perl(Fcntl) \
 Requires: perl(File::Path) >= 2.06 \
 Requires: perl(File::Spec) >= 0.8 \
 Requires: perl(IO::Handle) \
