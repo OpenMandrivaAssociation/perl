@@ -423,7 +423,8 @@ Requires: perl(strict) \
 Requires: perl(utf8) \
 Requires: perl(vars) \
 Requires: perl(warnings) \
-Provides: perl(Encode) = 3.17 \
+Provides: perl(Encode) = 3.190.0 \
+Provides: perl(Encode) = v3.190.0 \
 Provides: perl(Encode::Alias) = 2.24 \
 Provides: perl(Encode::Byte) = 2.4 \
 Provides: perl(Encode::CJKConstants) = 2.2 \
