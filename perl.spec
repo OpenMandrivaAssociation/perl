@@ -501,6 +501,7 @@ Provides:       perl(:MODULE_COMPAT_5.32.0)
 Provides:       perl(:MODULE_COMPAT_5.34.0)
 Provides:       perl(:MODULE_COMPAT_5.36.0)
 Provides:       perl(:MODULE_COMPAT_5.38.0)
+Provides:       perl(:MODULE_COMPAT_5.38.2)
 # Interpreter version to fulfil required genersted from "require 5.006;"
 Provides:       perl(:VERSION) = %{perl_version}
 # Integeres are 64-bit on all platforms
