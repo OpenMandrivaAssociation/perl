@@ -909,7 +909,8 @@ Requires:       %perl_compat
 BuildArch:      noarch
 # CPAN-Meta-Requirements used to have six decimal places
 %global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(CPAN::Meta::Requirements\\)
-Provides:       perl(CPAN::Meta::Requirements) = %{version}000
+Provides:       perl(CPAN::Meta::Requirements) = 2.140.0
+Provides:       perl(CPAN::Meta::Requirements) = v2.140.0
 %if %{defined perl_bootstrap}
 %gendep_perl_CPAN_Meta_Requirements
 %endif

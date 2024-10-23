@@ -196,7 +196,7 @@ Requires: perl(:VERSION) >= 5.8.1 \
 Requires: perl(CPAN::Meta::Converter) >= 2.141170 \
 Requires: perl(CPAN::Meta::Feature) \
 Requires: perl(CPAN::Meta::Prereqs) \
-Requires: perl(CPAN::Meta::Requirements) >= 2.121 \
+Requires: perl(CPAN::Meta::Requirements) \
 Requires: perl(CPAN::Meta::Validator) \
 Requires: perl(Carp) \
 Requires: perl(Exporter) \
