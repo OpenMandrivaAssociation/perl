@@ -113,7 +113,7 @@
 # To verify version numbers of subpackages containing perl modules:
 # while read r; do perl -M$r -e "print \$$r::VERSION . \"\n\";"; done
 
-%global perl_version    5.40.0
+%global perl_version    5.40.1
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -234,8 +234,8 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 27 - 2023-11-26
-Release:        30%{?beta:.%{beta}}
+# (tpg) for now keep at least 31 - 2025-01-25
+Release:        31%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
@@ -321,6 +321,7 @@ Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 
 # Patches for perl-cross
 Patch1000:	https://github.com/arsv/perl-cross/commit/36279737fc04559c10a2c1017b58ccc1ce59d233.patch
+Patch1001:	https://github.com/arsv/perl-cross/commit/afc5d71244ef6ef4c1c672153ac1040181f58b40.patch
 
 BuildRequires:  bash
 BuildRequires:  locales-extra-charsets
