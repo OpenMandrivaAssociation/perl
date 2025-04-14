@@ -113,7 +113,7 @@
 # To verify version numbers of subpackages containing perl modules:
 # while read r; do perl -M$r -e "print \$$r::VERSION . \"\n\";"; done
 
-%global perl_version    5.40.1
+%global perl_version    5.40.2
 %global perl_epoch      4
 %global perl_arch_stem -thread-multi
 %global perl_archname %{_arch}-%{_os}%{perl_arch_stem}
@@ -234,12 +234,12 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 31 - 2025-01-25
-Release:        31%{?beta:.%{beta}}
+# (tpg) for now keep at least 32 - 2025-04-14
+Release:        32%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:        https://github.com/arsv/perl-cross/releases/download/1.6/perl-cross-1.6.tar.gz
+Source1:        https://github.com/arsv/perl-cross/releases/download/1.6.1/perl-cross-1.6.1.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
