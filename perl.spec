@@ -323,6 +323,10 @@ Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 Patch1000:	https://github.com/arsv/perl-cross/commit/36279737fc04559c10a2c1017b58ccc1ce59d233.patch
 Patch1001:	https://github.com/arsv/perl-cross/commit/afc5d71244ef6ef4c1c672153ac1040181f58b40.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
 BuildRequires:  bash
 BuildRequires:  locales-extra-charsets
 BuildRequires:  pkgconfig(bzip2)
