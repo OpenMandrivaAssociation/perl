@@ -239,7 +239,7 @@ Release:        33%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        http://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
-Source1:        https://github.com/arsv/perl-cross/releases/download/1.6.3/perl-cross-1.6.3.tar.gz
+Source1:        https://github.com/arsv/perl-cross/releases/download/1.6.4/perl-cross-1.6.4.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
@@ -319,9 +319,8 @@ Patch206:       perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 
-# Patches for perl-cross
-Patch1000:	https://github.com/arsv/perl-cross/commit/36279737fc04559c10a2c1017b58ccc1ce59d233.patch
-Patch1001:	https://github.com/arsv/perl-cross/commit/afc5d71244ef6ef4c1c672153ac1040181f58b40.patch
+# Patches for perl-cross are numbered 1000+
+# currently none required
 
 BuildRequires:	autoconf
 BuildRequires:	automake
