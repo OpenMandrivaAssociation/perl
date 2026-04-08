@@ -2856,6 +2856,10 @@ tar x --strip-components=1 -f %{S:1}
 # %%ifos this.
 sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_thrd.sh
 sed -i -e "/d_thread_local/idefine perl_thread_local _Thread_local" cnf/configure_thrd.sh
+if ! [ -d cnf/diffs/perl5-%{perl_version} ]; then
+	echo "Current perl doesn't seem to be supported by perl-cross, attempting workaround" >&2
+	ln -s perl5-5.24.0 cnf/diffs/perl5-%{perl_version}
+fi
 %endif
 
 #
