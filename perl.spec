@@ -3092,12 +3092,10 @@ test -L %soname || ln -s libperl.so %soname
 %global build_bindir  %{buildroot}%{_bindir}
 %if %{cross_compiling}
 %global new_perl perl
-
-# perl-cross throws libraries at /usr/lib no matter what
-%if "%{_lib}" != "lib"
-rm -f %{buildroot}%{_libdir}/libperl.so*
-mv %{buildroot}%{_prefix}/lib/libperl.so* %{buildroot}%{_libdir}/
-%endif
+# Move libperl where it will be found
+mkdir -p "%{buildroot}%{_libdir}"
+mv "%{build_archlib}"/CORE/libperl.so* \
+    "%{buildroot}%{_libdir}/"
 %else
 %global new_perl LD_PRELOAD="%{build_archlib}/CORE/libperl.so" \\\
     LD_LIBRARY_PATH="%{build_archlib}/CORE" \\\
@@ -3109,14 +3107,14 @@ mv "%{build_archlib}/CORE/libperl.so" \
     "%{buildroot}%{_libdir}/libperl.so.%{perl_version}"
 ln -s "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/%{soname}"
 ln -s "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/libperl.so"
-# XXX: Keep symlink from original location because various code glues
-# $archlib/CORE/$libperl to get the DSO.
-ln -s "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
 # XXX: Remove the soname named file from CORE directory that was created as
 # a symlink in build section and installed as a regular file by perl build
 # system.
 rm -f "%{build_archlib}/CORE/%{soname}"
 %endif
+# XXX: Keep symlink from original location because various code glues
+# $archlib/CORE/$libperl to get the DSO.
+ln -s "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
 
 install -p -m 755 utils/pl2pm %{build_bindir}/pl2pm
 
