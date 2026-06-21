@@ -2263,24 +2263,6 @@ can automatically generate indexes and cross-references, and it keeps a cache
 of things it knows how to cross-reference.
 
 %if %{dual_life} || %{rebuild_from_scratch}
-%package Pod-Parser
-Summary:        Basic perl modules for handling Plain Old Documentation (POD)
-License:        GPL+ or Artistic
-Epoch:          0
-Version:        1.63
-Requires:       %perl_compat
-%if %{defined perl_bootstrap}
-%gendep_perl_Pod_Parser
-%endif
-BuildArch:      noarch
-
-%description Pod-Parser
-This software distribution contains the packages for using Perl5 POD (Plain
-Old Documentation). See the "perlpod" and "perlsyn" manual pages from your
-Perl5 distribution for more information about POD.
-%endif
-
-%if %{dual_life} || %{rebuild_from_scratch}
 %package Pod-Perldoc
 Summary:        Look up Perl documentation in Pod format
 License:        GPL+ or Artistic
