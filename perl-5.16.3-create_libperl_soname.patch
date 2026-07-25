@@ -18,8 +18,8 @@ index d1da0a0..7733a32 100755
  				${revision}.${patchlevel}.${subversion}"
  		case "$osvers" in
  	        1[5-9]*|[2-9]*)
--			shrpldflags="$shrpldflags -install_name `pwd`/\$@ -Xlinker -headerpad_max_install_names"
-+			shrpldflags="$shrpldflags -install_name `pwd`/libperl.${revision}.${patchlevel}.dylib -Xlinker -headerpad_max_install_names"
+-			shrpldflags="$shrpldflags -install_name `pwd -P`/\$@ -Xlinker -headerpad_max_install_names"
++			shrpldflags="$shrpldflags -install_name `pwd -P`/libperl.${revision}.${patchlevel}.dylib -Xlinker -headerpad_max_install_names"
  			exeldflags="-Xlinker -headerpad_max_install_names"
  			;;
  		*)
@@ -45,10 +45,11 @@ index d1da0a0..7733a32 100755
  		;;
  	aix*)
  		case "$cc" in
-@@ -127,6 +129,9 @@ true)
- 	           ;;
-             esac
-             ;;
+@@ -130,6 +132,10 @@ true)
+ 	os390*)
+             shrpldflags='-shared'
+             linklibperl='libperl.x'
++		;;
 +	linux*)
 +	    shrpldflags="$shrpldflags -Wl,-soname -Wl,libperl.so.${revision}.${patchlevel}"
 +	    ;;
