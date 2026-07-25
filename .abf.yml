@@ -1,3 +1,4 @@
 sources:
   perl-cross-1.6.4.tar.gz: e35361bfa9ee63826f33409591f47ad01fc05597
   perl-5.44.0.tar.xz: f64277b1a19107491ebd59249a33b7ea986eadd4
+  perl-cross-diffs-5.44.0.tar.gz: 434c60b8c4bca2c9e42b95b8275fbc9f2ee86caf

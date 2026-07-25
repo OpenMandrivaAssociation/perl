@@ -242,6 +242,9 @@ Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
 Source1:        https://github.com/arsv/perl-cross/releases/download/1.6.4/perl-cross-1.6.4.tar.gz
+# Vendored perl-cross patchset for this perl version (upstream has no 5.44 yet;
+# based on cnf/diffs/perl5-5.42.0 from perl-cross 1.6.4, verified to apply on 5.44.0)
+Source2:        perl-cross-diffs-5.44.0.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
 # build requirement. Written by lberk; Not yet upstream.
@@ -2834,16 +2837,27 @@ cp %{SOURCE6} .
 
 %if %{cross_compiling}
 tar x --strip-components=1 -f %{S:1}
+# Install version-specific perl-cross diffs when not shipped by upstream perl-cross
+# (1.6.4 tops out at 5.42.0; Source2 provides a 5.44.0 set derived from 5.42.0).
+if [ -f %{S:2} ]; then
+	tar x -f %{S:2}
+fi
+if ! [ -d cnf/diffs/perl5-%{perl_version} ]; then
+	echo "No perl-cross diffs for perl5-%{perl_version}; using closest available tree" >&2
+	if [ -d cnf/diffs/perl5-5.42.0 ]; then
+		ln -s perl5-5.42.0 cnf/diffs/perl5-%{perl_version}
+	elif [ -d cnf/diffs/perl5-5.40.3 ]; then
+		ln -s perl5-5.40.3 cnf/diffs/perl5-%{perl_version}
+	else
+		ln -s perl5-5.24.0 cnf/diffs/perl5-%{perl_version}
+	fi
+fi
 %autopatch -p1 -m 1000
 # perl-cross unconditionally disables TLS. Let's enable it instead. If we
 # ever cross-compile to anything "weird", may have to %%ifarch and/or
 # %%ifos this.
 sed -i -e "s,^define d_thread_local.*,define d_thread_local 'define'," cnf/configure_thrd.sh
 sed -i -e "/d_thread_local/idefine perl_thread_local _Thread_local" cnf/configure_thrd.sh
-if ! [ -d cnf/diffs/perl5-%{perl_version} ]; then
-	echo "Current perl doesn't seem to be supported by perl-cross, attempting workaround" >&2
-	ln -s perl5-5.24.0 cnf/diffs/perl5-%{perl_version}
-fi
 %endif
 
 #
