@@ -252,10 +252,11 @@ Source4:        perl.stp
 Source5:        perl-example.stp
 # Tom Christiansen confirms Pod::Html uses the same license as perl
 Source6:        Pod-Html-license-clarification
-# Pregenerated dependencies for bootstrap.
+# Pregenerated dependencies for bootstrap (OpenMandriva copy; keep in sync
+# with dual-life subpackages — Fedora no longer ships Math-BigRat separately).
 # If your RPM tool fails on including the source file, then you forgot to
 # define _sourcedir macro to point to the directory with the sources.
-Source7:        https://src.fedoraproject.org/rpms/perl/raw/rawhide/f/gendep.macros
+Source7:        gendep.macros
 %include %{SOURCE7}
 
 # Removes date check, Fedora/RHEL specific
