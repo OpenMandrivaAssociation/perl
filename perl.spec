@@ -234,8 +234,10 @@ License:        GPL+ or Artistic
 Epoch:          %{perl_epoch}
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-# (tpg) for now keep at least 33 - 2025-12-17
-Release:        1%{?beta:.%{beta}}
+# Keep Release high: dual-life subpackages inherit it.
+# Unchanged dual-life Versions would regress if Release were reset on major bumps.
+# (was 33 on 5.42.2; 34 on 5.44.0)
+Release:        34%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
