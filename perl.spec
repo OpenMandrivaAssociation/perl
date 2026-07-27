@@ -237,7 +237,7 @@ Version:        %{perl_version}
 # Keep Release high: dual-life subpackages inherit it.
 # Unchanged dual-life Versions would regress if Release were reset on major bumps.
 # (was 33 on 5.42.2; 34 on 5.44.0)
-Release:        34%{?beta:.%{beta}}
+Release:        35%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
@@ -3372,11 +3372,13 @@ cd -
 %exclude %{_mandir}/man3/CPAN::Meta*
 %exclude %{_mandir}/man3/Parse::CPAN::Meta.3*
 
-# CPAN-Meta-Requirements
+# CPAN-Meta-Requirements (includes Range.pm dual-life helper)
 %exclude %dir %{privlib}/CPAN
 %exclude %dir %{privlib}/CPAN/Meta
 %exclude %{privlib}/CPAN/Meta/Requirements.pm
+%exclude %{privlib}/CPAN/Meta/Requirements
 %exclude %{_mandir}/man3/CPAN::Meta::Requirements.3*
+%exclude %{_mandir}/man3/CPAN::Meta::Requirements::Range.3*
 
 # CPAN-Meta-YAML
 %exclude %dir %{privlib}/CPAN
@@ -4267,8 +4269,11 @@ cd -
 %files CPAN-Meta-Requirements
 %dir %{privlib}/CPAN
 %dir %{privlib}/CPAN/Meta
+%dir %{privlib}/CPAN/Meta/Requirements
 %{privlib}/CPAN/Meta/Requirements.pm
+%{privlib}/CPAN/Meta/Requirements/Range.pm
 %doc %{_mandir}/man3/CPAN::Meta::Requirements.3*
+%doc %{_mandir}/man3/CPAN::Meta::Requirements::Range.3*
 %endif
 
 %if %{dual_life} || %{rebuild_from_scratch}
