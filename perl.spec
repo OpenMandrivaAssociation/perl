@@ -242,8 +242,9 @@ Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
 Source1:        https://github.com/arsv/perl-cross/releases/download/1.6.4/perl-cross-1.6.4.tar.gz
-# Vendored perl-cross patchset for this perl version (upstream has no 5.44 yet;
-# based on cnf/diffs/perl5-5.42.0 from perl-cross 1.6.4, verified to apply on 5.44.0)
+# Vendored perl-cross diffs for 5.44.0 (upstream 1.6.4 tops out at 5.42.0).
+# Content matches arsv/perl-cross#178 symlink targets (same 5.42.0 set).
+# Configure-script 5.44 bits from that PR live in Patch1000.
 Source2:        perl-cross-diffs-5.44.0.tar.gz
 Source3:        macros.perl
 #Systemtap tapset and example that make use of systemtap-sdt-devel
@@ -326,7 +327,9 @@ Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
 
 # Patches for perl-cross are numbered 1000+
-# currently none required
+# 5.44.0 config symbols + C23 checkfield fix (arsv/perl-cross#178, getentropy
+# probe also includes sys/random.h).
+Patch1000:	perl-cross-5.44.0-configure.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -2839,7 +2842,8 @@ cp %{SOURCE6} .
 %if %{cross_compiling}
 tar x --strip-components=1 -f %{S:1}
 # Install version-specific perl-cross diffs when not shipped by upstream perl-cross
-# (1.6.4 tops out at 5.42.0; Source2 provides a 5.44.0 set derived from 5.42.0).
+# (1.6.4 tops out at 5.42.0; Source2 is the 5.42.0 set, same as arsv/perl-cross#178).
+# Patch1000 then adds that PR's 5.44 configure checks and C23 field-detect fix.
 if [ -f %{S:2} ]; then
 	tar x -f %{S:2}
 fi

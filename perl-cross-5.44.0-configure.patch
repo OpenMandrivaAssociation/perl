@@ -1,0 +1,60 @@
+perl-cross 1.6.4 has no 5.44.0 configure coverage. Combine the
+useful parts of https://github.com/arsv/perl-cross/pull/178 with a
+more portable getentropy probe.
+
+New 5.44.0 config symbols (from PR 178):
+  d_getentropy  -> HAS_GETENTROPY
+  i_stdckdint   -> I_STDCKDINT
+  i_sysrandom   -> I_SYS_RANDOM
+
+getentropy lives in <unistd.h> on Linux/glibc and in <sys/random.h>
+on macOS/Android, so probe both (PR 178 only used unistd.h).
+
+C23 / GCC 16: void foo() is a no-parameter prototype, so
+foo(value.field) fails under -Werror and breaks tm_gmtoff / tm_zone
+detection. Use (void)value.field instead.
+
+--- a/cnf/configure_func.sh
++++ b/cnf/configure_func.sh
+@@ -104,6 +104,7 @@
+ checkfunc d_get_current_dir_name 'get_current_dir_name' "" 'unistd.h'
+ checkfunc d_getcwd 'getcwd' 'NULL,0' 'unistd.h'
+ checkfunc d_getespwnam 'getespwnam'
++checkfunc d_getentropy 'getentropy' 'NULL,0' 'unistd.h sys/random.h'
+ checkfunc d_getfsstat 'getfsstat' "NULL,0,0" 'sys/types.h sys/mount.h'
+ checkfunc d_getgrent 'getgrent' "" 'sys/types.h grp.h'
+ checkfunc d_getgrps 'getgroups' "0,NULL" 'unistd.h'
+--- a/cnf/configure_hdrs.sh
++++ b/cnf/configure_hdrs.sh
+@@ -64,6 +64,7 @@
+ # i_stdarg below
+ checkhdr i_stdbool 'stdbool.h'
+ checkhdr i_stddef 'stddef.h'
++checkhdr i_stdckdint 'stdckdint.h'
+ checkhdr i_stdint 'stdint.h'
+ checkhdr i_stdlib 'stdlib.h'
+ checkhdr i_string 'string.h'
+@@ -88,6 +89,7 @@
+ checkhdr i_sysstat 'sys/stat.h'
+ checkhdr i_sysstatfs 'sys/statfs.h'
+ checkhdr i_sysstatvfs 'sys/statvfs.h'
++checkhdr i_sysrandom 'sys/random.h'
+ checkhdr i_systime 'sys/time.h'
+ define i_systimek 'undef' # not a plain header check
+ checkhdr i_systimes 'sys/times.h'
+--- a/cnf/configure_type_ext.sh
++++ b/cnf/configure_type_ext.sh
+@@ -7,11 +7,9 @@
+ 	
+ 	try_start
+ 	try_includes $4
+-	try_add 'void foo();'
+-	try_add 'void bar()'
+-        try_add "{"
++	try_add 'void bar(void) {'
+ 	try_add "	$2 value;"
+-	try_add "	foo(value.$3);"
++	try_add "	(void)value.$3;"
+ 	try_add "}"
+ 	try_compile
+ 
