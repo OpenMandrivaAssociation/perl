@@ -237,7 +237,7 @@ Version:        %{perl_version}
 # Keep Release high: dual-life subpackages inherit it.
 # Unchanged dual-life Versions would regress if Release were reset on major bumps.
 # (was 33 on 5.42.2; 34 on 5.44.0)
-Release:        35%{?beta:.%{beta}}
+Release:        36%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
@@ -3095,10 +3095,21 @@ test -L %soname || ln -s libperl.so %soname
 %global build_bindir  %{buildroot}%{_bindir}
 %if %{cross_compiling}
 %global new_perl perl
-# Move libperl where it will be found
+# perl-cross -Dusesoname installs versioned libperl into /usr/lib.
+# Native builds use %{_libdir}/libperl.so.%%{version} plus soname links;
+# %%libpackage perl 5 requires that layout.
 mkdir -p "%{buildroot}%{_libdir}"
-mv "%{build_archlib}"/CORE/libperl.so* \
-    "%{buildroot}%{_libdir}/"
+if [ -f "%{buildroot}/usr/lib/libperl.so.%{perl_version}" ]; then
+	cp -a "%{buildroot}/usr/lib/libperl.so.%{perl_version}" \
+		"%{buildroot}%{_libdir}/libperl.so.%{perl_version}"
+	rm -f %{buildroot}/usr/lib/libperl.so*
+elif [ -e "%{build_archlib}/CORE/libperl.so" ]; then
+	mv "%{build_archlib}/CORE/libperl.so" \
+		"%{buildroot}%{_libdir}/libperl.so.%{perl_version}"
+fi
+ln -sf "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/%{soname}"
+ln -sf "libperl.so.%{perl_version}" "%{buildroot}%{_libdir}/libperl.so"
+rm -f "%{build_archlib}/CORE/%{soname}"
 %else
 %global new_perl LD_PRELOAD="%{build_archlib}/CORE/libperl.so" \\\
     LD_LIBRARY_PATH="%{build_archlib}/CORE" \\\
@@ -3117,7 +3128,7 @@ rm -f "%{build_archlib}/CORE/%{soname}"
 %endif
 # XXX: Keep symlink from original location because various code glues
 # $archlib/CORE/$libperl to get the DSO.
-ln -s "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
+ln -sfn "../../libperl.so.%{perl_version}" "%{build_archlib}/CORE/libperl.so"
 
 install -p -m 755 utils/pl2pm %{build_bindir}/pl2pm
 
