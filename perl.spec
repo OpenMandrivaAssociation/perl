@@ -2885,10 +2885,17 @@ recode()
 find . -name \*.orig -exec rm -fv {} \;
 
 # Configure Compress::Zlib to use system zlib
+%if %{cross_compiling}
+sed -i 's|BUILD_ZLIB      = True|BUILD_ZLIB      = False|
+    s|INCLUDE         = ./zlib-src|INCLUDE         = %{_prefix}/%{_target_platform}%{_includedir}|
+    s|LIB             = ./zlib-src|LIB             = %{_prefix}/%{_target_platform}%{_libdir}|' \
+    cpan/Compress-Raw-Zlib/config.in
+%else
 sed -i 's|BUILD_ZLIB      = True|BUILD_ZLIB      = False|
     s|INCLUDE         = ./zlib-src|INCLUDE         = %{_includedir}|
     s|LIB             = ./zlib-src|LIB             = %{_libdir}|' \
     cpan/Compress-Raw-Zlib/config.in
+%endif
 
 # Ensure that we never accidentally bundle zlib or bzip2
 rm -rf cpan/Compress-Raw-Zlib/zlib-src
@@ -2932,8 +2939,14 @@ echo "RPM Build arch: %{_arch}"
 #endif
 
 BUILD_BZIP2=0
+%if %{cross_compiling}
+BZIP2_LIB=%{_prefix}/%{_target_platform}%{_libdir}
+BZIP2_INCLUDE=%{_prefix}/%{_target_platform}%{_includedir}
+export BUILD_BZIP2 BZIP2_LIB BZIP2_INCLUDE
+%else
 BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
+%endif
 
 %if %{with pgo}
 CFLAGS_PGO="%{optflags} -fprofile-instr-generate"
@@ -3071,8 +3084,14 @@ sed -i -e 's|^CFLAGS =|CFLAGS = %{optflags}|g' Makefile.config
 # -Duseshrplib creates libperl.so, -Ubincompat5005 help create DSO -> libperl.so
 
 BUILD_BZIP2=0
+%if %{cross_compiling}
+BZIP2_LIB=%{_prefix}/%{_target_platform}%{_libdir}
+BZIP2_INCLUDE=%{_prefix}/%{_target_platform}%{_includedir}
+export BUILD_BZIP2 BZIP2_LIB BZIP2_INCLUDE
+%else
 BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
+%endif
 
 # Prepapre a symlink from proper DSO name to libperl.so now so that new perl
 # can be executed from make.
