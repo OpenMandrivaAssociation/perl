@@ -237,7 +237,7 @@ Version:        %{perl_version}
 # Keep Release high: dual-life subpackages inherit it.
 # Unchanged dual-life Versions would regress if Release were reset on major bumps.
 # (was 33 on 5.42.2; 34 on 5.44.0)
-Release:        36%{?beta:.%{beta}}
+Release:        37%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
