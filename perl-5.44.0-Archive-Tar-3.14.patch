@@ -1,0 +1,99 @@
+diff -ruN a/Porting/Maintainers.pl b/Porting/Maintainers.pl
+--- a/Porting/Maintainers.pl	2026-07-13 13:21:04.000000000 +0200
++++ b/Porting/Maintainers.pl	2026-10-02 16:25:07.149853789 +0200
+@@ -129,8 +129,8 @@
+ our %Modules = (
+ 
+     'Archive::Tar' => {
+-        'DISTRIBUTION' => 'BINGOS/Archive-Tar-3.12.tar.gz',
+-        'SYNCINFO'     => 'leont on Wed Jun  3 15:24:01 2026',
++        'DISTRIBUTION' => 'BINGOS/Archive-Tar-3.14.tar.gz',
++        'SYNCINFO'     => 'bingos on Thu Oct  1 23:11:53 2026',
+         'FILES'        => q[cpan/Archive-Tar],
+         'BUGS'         => 'bug-archive-tar@rt.cpan.org',
+         'EXCLUDED'     => [
+diff -ruN a/cpan/Archive-Tar/lib/Archive/Tar/Constant.pm b/cpan/Archive-Tar/lib/Archive/Tar/Constant.pm
+--- a/cpan/Archive-Tar/lib/Archive/Tar/Constant.pm	2026-06-22 16:48:00.000000000 +0200
++++ b/cpan/Archive-Tar/lib/Archive/Tar/Constant.pm	2026-10-02 16:25:07.149622385 +0200
+@@ -8,7 +8,7 @@
+ BEGIN {
+     require Exporter;
+ 
+-    $VERSION    = '3.12';
++    $VERSION    = '3.14';
+     @ISA        = qw[Exporter];
+ 
+     require Time::Local if $^O eq "MacOS";
+diff -ruN a/cpan/Archive-Tar/lib/Archive/Tar/File.pm b/cpan/Archive-Tar/lib/Archive/Tar/File.pm
+--- a/cpan/Archive-Tar/lib/Archive/Tar/File.pm	2026-06-22 16:48:00.000000000 +0200
++++ b/cpan/Archive-Tar/lib/Archive/Tar/File.pm	2026-10-02 16:25:07.149576195 +0200
+@@ -11,7 +11,7 @@
+ 
+ use vars qw[@ISA $VERSION];
+ #@ISA        = qw[Archive::Tar];
+-$VERSION    = '3.12';
++$VERSION    = '3.14';
+ 
+ ### set value to 1 to oct() it during the unpack ###
+ 
+diff -ruN a/cpan/Archive-Tar/lib/Archive/Tar.pm b/cpan/Archive-Tar/lib/Archive/Tar.pm
+--- a/cpan/Archive-Tar/lib/Archive/Tar.pm	2026-06-22 16:48:00.000000000 +0200
++++ b/cpan/Archive-Tar/lib/Archive/Tar.pm	2026-10-02 16:25:07.149491483 +0200
+@@ -32,7 +32,7 @@
+ $DEBUG                  = 0;
+ $WARN                   = 1;
+ $FOLLOW_SYMLINK         = 0;
+-$VERSION                = "3.12";
++$VERSION                = "3.14";
+ $CHOWN                  = 1;
+ $CHMOD                  = 1;
+ $SAME_PERMISSIONS       = $> == 0 ? 1 : 0;
+@@ -247,7 +247,7 @@
+         ### reading. otherwise, just use what the user requested.
+         my $magic = '';
+         if( MODE_READ->($mode) ) {
+-            open my $tmp, $file or do {
++            open my $tmp, '<', $file or do {
+                 $self->_error( qq[Could not open '$file' for reading: $!] );
+                 return;
+             };
+diff -ruN a/cpan/Archive-Tar/t/08_ptargrep.t b/cpan/Archive-Tar/t/08_ptargrep.t
+--- a/cpan/Archive-Tar/t/08_ptargrep.t	2026-06-03 15:23:17.000000000 +0200
++++ b/cpan/Archive-Tar/t/08_ptargrep.t	2026-10-02 16:25:07.149660976 +0200
+@@ -11,7 +11,7 @@
+ my $foo = File::Spec->catfile("t", "ptargrep", "foo");
+ my $tarfile = File::Spec->catfile("t", "ptargrep.tar");
+ my $ptargrep = File::Spec->catfile($Bin, "..", "bin", "ptargrep");
+-my $cmd = qq/$^X $ptargrep --list-only "file foo" $tarfile/;
++my $cmd = qq/"$^X" "$ptargrep" --list-only "file foo" $tarfile/;
+ 
+ # create directory/files
+ mkdir $tartest;
+diff -ruN a/cpan/Archive-Tar/t/10_ptar.t b/cpan/Archive-Tar/t/10_ptar.t
+--- a/cpan/Archive-Tar/t/10_ptar.t	2026-06-03 15:23:17.000000000 +0200
++++ b/cpan/Archive-Tar/t/10_ptar.t	2026-10-02 16:25:07.149693586 +0200
+@@ -11,7 +11,7 @@
+ my $foo = File::Spec->catfile("t", "ptar", "foo");
+ my $tarfile = File::Spec->catfile("t", "ptar.tar");
+ my $ptar = File::Spec->catfile($Bin, "..", "bin", "ptar");
+-my $cmd = "$^X $ptar";
++my $cmd = qq/"$^X" "$ptar"/;
+ 
+ plan tests => 11;
+ my $out;
+diff -ruN a/dist/Module-CoreList/lib/Module/CoreList.pm b/dist/Module-CoreList/lib/Module/CoreList.pm
+--- a/dist/Module-CoreList/lib/Module/CoreList.pm	2026-07-13 13:21:04.000000000 +0200
++++ b/dist/Module-CoreList/lib/Module/CoreList.pm	2026-10-02 16:25:07.151484205 +0200
+@@ -24745,9 +24745,9 @@
+     5.044000 => {
+         delta_from => 5.043011,
+         changed => {
+-            'Archive::Tar'          => '3.12',
+-            'Archive::Tar::Constant'=> '3.12',
+-            'Archive::Tar::File'    => '3.12',
++            'Archive::Tar'          => '3.14',
++            'Archive::Tar::Constant'=> '3.14',
++            'Archive::Tar::File'    => '3.14',
+             'B::Op_private'         => '5.044000',
+             'Compress::Zlib'        => '2.223',
+             'Config'                => '5.044',

@@ -25,9 +25,9 @@ Requires: perl(constant) \
 Requires: perl(strict) \
 Requires: perl(vars) \
 Requires: perl(warnings) \
-Provides: perl(Archive::Tar) = 3.12 \
-Provides: perl(Archive::Tar::Constant) = 3.12 \
-Provides: perl(Archive::Tar::File) = 3.12 \
+Provides: perl(Archive::Tar) = 3.14 \
+Provides: perl(Archive::Tar::Constant) = 3.14 \
+Provides: perl(Archive::Tar::File) = 3.14 \
 %{nil}
 %global gendep_perl_Attribute_Handlers \
 Requires: perl(:VERSION) >= 5.6.0 \

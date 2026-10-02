@@ -237,7 +237,7 @@ Version:        %{perl_version}
 # Keep Release high: dual-life subpackages inherit it.
 # Unchanged dual-life Versions would regress if Release were reset on major bumps.
 # (was 33 on 5.42.2; 34 on 5.44.0)
-Release:        37%{?beta:.%{beta}}
+Release:        38%{?beta:.%{beta}}
 Summary:        Practical Extraction and Report Language
 Url:            https://www.perl.org/
 Source0:        https://www.cpan.org/src/5.0/perl-%{perl_version}%{?beta:-%{beta}}.tar.xz
@@ -325,6 +325,11 @@ Patch206:       perl-5.38.0-rc2-ZLIBNG_VER_STATUS.patch
 
 Patch300:       0001-Add-perlbench-for-pgo-optimization.patch
 Patch301:       0001-Add-option-for-pgo-profiling-test-with-perlbench.patch
+
+# Archive::Tar 3.14 (CPAN). The separate perl-Archive-Tar repo is archived;
+# this dual-life subpackage is the copy we ship. 3.14 probes tar magic with
+# a three-arg open and quotes $^X in the ptar tests.
+Patch302:       perl-5.44.0-Archive-Tar-3.14.patch
 
 # Patches for perl-cross are numbered 1000+
 # 5.44.0 config symbols + C23 checkfield fix (arsv/perl-cross#178, getentropy
@@ -629,7 +634,7 @@ packages like perldoc by perl-Pod-Perldoc.
 Summary:        A module for Perl manipulation of .tar files
 License:        GPL+ or Artistic
 Epoch:          0
-Version:        3.12
+Version:        3.14
 BuildArch:      noarch
 Requires:       %perl_compat
 Requires:       perl(IO::Zlib) >= 1.01
